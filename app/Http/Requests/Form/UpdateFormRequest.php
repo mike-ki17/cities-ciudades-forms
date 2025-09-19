@@ -1,0 +1,188 @@
+<?php
+
+namespace App\Http\Requests\Form;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateFormRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true; // Authorization is handled by middleware
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     */
+    public function rules(): array
+    {
+        return [
+            'city_id' => ['required', 'integer', 'exists:city,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'schema_json' => ['required', 'array'],
+            'is_active' => ['boolean'],
+            'version' => ['nullable', 'integer', 'min:1'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     */
+    public function messages(): array
+    {
+        return [
+            'city_id.required' => 'Debe seleccionar una ciudad.',
+            'city_id.exists' => 'La ciudad seleccionada no existe.',
+            'name.required' => 'El nombre del formulario es obligatorio.',
+            'name.max' => 'El nombre del formulario no puede tener más de 255 caracteres.',
+            'schema_json.required' => 'La configuración del formulario es obligatoria.',
+            'version.min' => 'La versión debe ser al menos 1.',
+        ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        // Convert JSON string to array for validation
+        if ($this->has('schema_json') && is_string($this->schema_json)) {
+            $schemaArray = json_decode($this->schema_json, true);
+            
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $this->merge([
+                    'schema_json' => $schemaArray
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            // Validate JSON structure
+            if ($this->has('schema_json') && is_array($this->schema_json)) {
+                $this->validateSchemaStructure($validator);
+            }
+        });
+    }
+
+    /**
+     * Validate the schema structure.
+     */
+    private function validateSchemaStructure($validator): void
+    {
+        $schema = $this->schema_json;
+
+        // Check if schema has fields
+        if (!isset($schema['fields']) || !is_array($schema['fields'])) {
+            $validator->errors()->add('schema_json', 'El esquema debe contener un array de campos.');
+            return;
+        }
+
+        // Validate each field
+        foreach ($schema['fields'] as $index => $field) {
+            $fieldPrefix = "schema_json.fields.{$index}";
+
+            if (!isset($field['key']) || empty($field['key'])) {
+                $validator->errors()->add($fieldPrefix . '.key', 'Cada campo debe tener una clave (key).');
+            }
+
+            if (!isset($field['label']) || empty($field['label'])) {
+                $validator->errors()->add($fieldPrefix . '.label', 'Cada campo debe tener una etiqueta (label).');
+            }
+
+            if (!isset($field['type']) || empty($field['type'])) {
+                $validator->errors()->add($fieldPrefix . '.type', 'Cada campo debe tener un tipo (type).');
+            } else {
+                $validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date'];
+                if (!in_array($field['type'], $validTypes)) {
+                    $validator->errors()->add($fieldPrefix . '.type', 'El tipo de campo debe ser uno de: ' . implode(', ', $validTypes));
+                }
+            }
+
+            // Validate select options
+            if (isset($field['type']) && $field['type'] === 'select') {
+                if (!isset($field['options']) || !is_array($field['options']) || empty($field['options'])) {
+                    $validator->errors()->add($fieldPrefix . '.options', 'Los campos de tipo select deben tener opciones.');
+                }
+            }
+
+            // Validate field validations if they exist
+            if (isset($field['validations'])) {
+                $this->validateFieldValidations($field['validations'], $fieldPrefix, $validator);
+            }
+        }
+    }
+
+    protected function validateFieldValidations(array $validations, string $fieldPrefix, $validator): void
+    {
+        // Validate dates
+        if (isset($validations['min_date']) && !$this->isValidDate($validations['min_date'])) {
+            $validator->errors()->add($fieldPrefix . '.validations.min_date', 'La fecha mínima debe tener formato YYYY-MM-DD.');
+        }
+
+        if (isset($validations['max_date']) && !$this->isValidDate($validations['max_date'])) {
+            $validator->errors()->add($fieldPrefix . '.validations.max_date', 'La fecha máxima debe tener formato YYYY-MM-DD.');
+        }
+
+        if (isset($validations['date_range'])) {
+            $range = $validations['date_range'];
+            if (isset($range['start']) && !$this->isValidDate($range['start'])) {
+                $validator->errors()->add($fieldPrefix . '.validations.date_range.start', 'La fecha de inicio debe tener formato YYYY-MM-DD.');
+            }
+            if (isset($range['end']) && !$this->isValidDate($range['end'])) {
+                $validator->errors()->add($fieldPrefix . '.validations.date_range.end', 'La fecha de fin debe tener formato YYYY-MM-DD.');
+            }
+        }
+
+        // Validate ages
+        if (isset($validations['min_age']) && (!is_numeric($validations['min_age']) || $validations['min_age'] < 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.min_age', 'La edad mínima debe ser un número positivo.');
+        }
+
+        if (isset($validations['max_age']) && (!is_numeric($validations['max_age']) || $validations['max_age'] < 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.max_age', 'La edad máxima debe ser un número positivo.');
+        }
+
+        // Validate lengths
+        if (isset($validations['min_length']) && (!is_numeric($validations['min_length']) || $validations['min_length'] < 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.min_length', 'La longitud mínima debe ser un número positivo.');
+        }
+
+        if (isset($validations['max_length']) && (!is_numeric($validations['max_length']) || $validations['max_length'] < 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.max_length', 'La longitud máxima debe ser un número positivo.');
+        }
+
+        // Validate numeric values
+        if (isset($validations['min_value']) && !is_numeric($validations['min_value'])) {
+            $validator->errors()->add($fieldPrefix . '.validations.min_value', 'El valor mínimo debe ser un número.');
+        }
+
+        if (isset($validations['max_value']) && !is_numeric($validations['max_value'])) {
+            $validator->errors()->add($fieldPrefix . '.validations.max_value', 'El valor máximo debe ser un número.');
+        }
+
+        // Validate selections
+        if (isset($validations['min_selections']) && (!is_numeric($validations['min_selections']) || $validations['min_selections'] < 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.min_selections', 'El número mínimo de selecciones debe ser un número positivo.');
+        }
+
+        if (isset($validations['max_selections']) && (!is_numeric($validations['max_selections']) || $validations['max_selections'] < 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.max_selections', 'El número máximo de selecciones debe ser un número positivo.');
+        }
+    }
+
+    protected function isValidDate(string $date): bool
+    {
+        $d = \DateTime::createFromFormat('Y-m-d', $date);
+        return $d && $d->format('Y-m-d') === $date;
+    }
+}
