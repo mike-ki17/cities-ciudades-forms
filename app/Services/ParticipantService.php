@@ -15,12 +15,11 @@ class ParticipantService
     public function createParticipant(array $data): Participant
     {
         return Participant::create([
-            'first_name' => $data['name'] ?? 'Usuario',
-            'last_name' => '',
+            'name' => $data['name'] ?? $data['first_name'] ?? 'Usuario',
             'email' => $data['email'] ?? 'anonymous@example.com',
             'phone' => $data['phone'] ?? null,
-            'document_type' => 'CC', // Default document type
-            'document_number' => '00000000', // Default document number for anonymous users
+            'document_type' => $data['document_type'] ?? 'DNI',
+            'document_number' => $data['document_number'] ?? '00000000',
             'city_id' => $data['city_id'] ?? null,
         ]);
     }
@@ -37,8 +36,7 @@ class ParticipantService
             if ($participant) {
                 // Update participant data if needed
                 $participant->update([
-                    'first_name' => $data['first_name'],
-                    'last_name' => $data['last_name'],
+                    'name' => $data['name'] ?? $data['first_name'] ?? $participant->name,
                     'phone' => $data['phone'] ?? $participant->phone,
                     'document_type' => $data['document_type'],
                     'document_number' => $data['document_number'],
@@ -57,8 +55,7 @@ class ParticipantService
             if ($participant) {
                 // Update participant data if needed
                 $participant->update([
-                    'first_name' => $data['first_name'],
-                    'last_name' => $data['last_name'],
+                    'name' => $data['name'] ?? $data['first_name'] ?? 'Usuario',
                     'email' => $data['email'],
                     'phone' => $data['phone'] ?? $participant->phone,
                     'city_id' => $data['city_id'] ?? $participant->city_id,
@@ -69,8 +66,7 @@ class ParticipantService
 
             // Create new participant
             return Participant::create([
-                'first_name' => $data['first_name'],
-                'last_name' => $data['last_name'],
+                'name' => $data['name'] ?? $data['first_name'] ?? 'Usuario',
                 'email' => $data['email'],
                 'phone' => $data['phone'] ?? null,
                 'document_type' => $data['document_type'],
@@ -100,8 +96,7 @@ class ParticipantService
 
         // Create participant from user data
         $data = array_merge([
-            'first_name' => $user->name,
-            'last_name' => '',
+            'name' => $user->name,
             'email' => $user->email,
         ], $participantData);
 
@@ -150,8 +145,7 @@ class ParticipantService
     public function searchParticipants(string $query): \Illuminate\Database\Eloquent\Collection
     {
         return Participant::where(function ($q) use ($query) {
-            $q->where('first_name', 'like', "%{$query}%")
-              ->orWhere('last_name', 'like', "%{$query}%")
+                    $q->where('name', 'like', "%{$query}%")
               ->orWhere('email', 'like', "%{$query}%")
               ->orWhere('document_number', 'like', "%{$query}%");
         })->get();

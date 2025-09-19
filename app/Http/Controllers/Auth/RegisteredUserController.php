@@ -38,8 +38,7 @@ class RegisteredUserController extends Controller
 
         // Create or get participant
         $participant = $this->participantService->createOrGetParticipant([
-            'first_name' => $validated['name'],
-            'last_name' => '', // We'll use the name as first_name for now
+            'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
             'document_type' => $validated['document_type'],
@@ -59,10 +58,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // Redirect to city form
-        $city = City::find($validated['city_id']);
-        return redirect()->route('public.forms.show', [
-            'city' => $city->name
-        ]);
+        // Redirect to welcome page with success message
+        return redirect('/')->with('success', '¡Registro exitoso! Ya puedes acceder a los formularios disponibles.');
     }
 }

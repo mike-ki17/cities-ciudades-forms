@@ -30,7 +30,7 @@ class RegisterRequest extends FormRequest
                 'email',
                 'max:255',
                 'unique:users,email',
-                'unique:participant,email'
+                'unique:participants,email'
             ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phone' => ['nullable', 'string', 'max:20'],
@@ -57,7 +57,7 @@ class RegisterRequest extends FormRequest
             'city_id' => [
                 'required',
                 'integer',
-                'exists:city,id'
+                'exists:cities,id'
             ],
         ];
     }

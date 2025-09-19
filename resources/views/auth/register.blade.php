@@ -98,7 +98,7 @@
                         <option value="">Selecciona una ciudad</option>
                         @foreach($cities as $city)
                             <option value="{{ $city->id }}" {{ old('city_id') == $city->id ? 'selected' : '' }}>
-                                {{ $city->name }}, {{ $city->country }}
+                                {{ $city->name }}{{ $city->timezone ? ', ' . $city->timezone : '' }}
                             </option>
                         @endforeach
                     </select>

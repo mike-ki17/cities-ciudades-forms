@@ -11,19 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Generate slugs for existing forms
-        $forms = \App\Models\Form::all();
-        foreach ($forms as $form) {
-            if (empty($form->slug)) {
-                $form->slug = \Illuminate\Support\Str::slug($form->name . '-' . $form->id);
-                $form->save();
+        // Only proceed if form table exists
+        if (Schema::hasTable('form')) {
+            // Generate slugs for existing forms
+            $forms = \App\Models\Form::all();
+            foreach ($forms as $form) {
+                if (empty($form->slug)) {
+                    $form->slug = \Illuminate\Support\Str::slug($form->name . '-' . $form->id);
+                    $form->save();
+                }
             }
-        }
 
-        // Add the unique constraint
-        Schema::table('form', function (Blueprint $table) {
-            $table->unique('slug');
-        });
+            // Add the unique constraint
+            Schema::table('form', function (Blueprint $table) {
+                $table->unique('slug');
+            });
+        }
     }
 
     /**

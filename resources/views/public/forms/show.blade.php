@@ -11,7 +11,7 @@
                 <p class="mt-2 text-sm text-gray-600">{{ $form->description }}</p>
             @endif
             @if($form->city)
-                <p class="mt-1 text-sm text-primary-600 font-medium">{{ $form->city->name }}, {{ $form->city->country }}</p>
+                <p class="mt-1 text-sm text-primary-600 font-medium">{{ $form->city ? $form->city->name : 'General' }}{{ $form->city && $form->city->country ? ', ' . $form->city->country : '' }}</p>
             @endif
         </div>
 
@@ -36,6 +36,30 @@
                 </div>
             @endif
 
+            {{-- Mostrar errores generales del formulario --}}
+            @if($errors->any())
+                <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">
+                                Por favor corrige los siguientes errores:
+                            </h3>
+                            <div class="mt-2 text-sm text-red-700">
+                                <ul class="list-disc list-inside space-y-1">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <form method="POST" action="{{ route('public.forms.slug.submit', ['slug' => $form->slug]) }}" class="space-y-6">
                 @csrf
@@ -67,7 +91,7 @@
                                            maxlength="{{ $field['validations']['max_elements'] }}"
                                            data-max-elements="{{ $field['validations']['max_elements'] }}"
                                        @endif
-                                       class="form-input @error($field['key']) border-red-300 @enderror"
+                                       class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                        {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                 @break
 
@@ -81,7 +105,7 @@
                                            maxlength="{{ $field['validations']['max_elements'] }}"
                                            data-max-elements="{{ $field['validations']['max_elements'] }}"
                                        @endif
-                                       class="form-input @error($field['key']) border-red-300 @enderror"
+                                       class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                        {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                 @break
 
@@ -97,7 +121,7 @@
                                        @elseif(isset($field['validations']['max_digits']) && str_contains(strtolower($field['key']), 'document'))
                                            data-max-elements="{{ $field['validations']['max_digits'] }}"
                                        @endif
-                                       class="form-input @error($field['key']) border-red-300 @enderror"
+                                       class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                        {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                 @break
 
@@ -106,14 +130,14 @@
                                        id="{{ $field['key'] }}" 
                                        name="{{ $field['key'] }}" 
                                        value="{{ old($field['key']) }}"
-                                       class="form-input @error($field['key']) border-red-300 @enderror"
+                                       class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                        {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                 @break
 
                             @case('select')
                                 <select id="{{ $field['key'] }}" 
                                         name="{{ $field['key'] }}" 
-                                        class="form-input @error($field['key']) border-red-300 @enderror"
+                                        class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                         {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                     <option value="">Selecciona una opción</option>
                                     @foreach($field['options'] ?? [] as $option)
@@ -143,7 +167,7 @@
                                               maxlength="{{ $field['validations']['max_elements'] }}"
                                               data-max-elements="{{ $field['validations']['max_elements'] }}"
                                           @endif
-                                          class="form-input @error($field['key']) border-red-300 @enderror"
+                                          class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                           {{ ($field['required'] ?? false) ? 'required' : '' }}>{{ old($field['key']) }}</textarea>
                                 @break
 
@@ -166,7 +190,7 @@
                                                        name="{{ $checkboxName }}" 
                                                        value="{{ $optionValue }}"
                                                        {{ $isChecked ? 'checked' : '' }}
-                                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded @error($field['key']) border-red-300 @enderror">
+                                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded @error($field['key']) border-red-500 @enderror">
                                                 <label for="{{ $checkboxId }}" class="ml-2 block text-sm text-gray-900">
                                                     {{ $optionLabel }}
                                                 </label>
@@ -181,7 +205,7 @@
                                                name="{{ $field['key'] }}" 
                                                value="1"
                                                {{ old($field['key']) ? 'checked' : '' }}
-                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded @error($field['key']) border-red-300 @enderror"
+                                               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded @error($field['key']) border-red-500 @enderror"
                                                {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                         <label for="{{ $field['key'] }}" class="ml-2 block text-sm text-gray-900">
                                             {{ $field['label'] }}
@@ -192,7 +216,12 @@
                         @endswitch
 
                         @error($field['key'])
-                            <p class="form-error">{{ $message }}</p>
+                            <div class="mt-1 flex items-center">
+                                <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="form-error">{{ $message }}</p>
+                            </div>
                         @enderror
 
                         @if(isset($field['help']))
@@ -368,10 +397,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // Mostrar u ocultar el campo
             if (shouldShow) {
                 field.style.display = 'block';
-                // Marcar campos requeridos como válidos si están ocultos
-                const requiredInputs = field.querySelectorAll('input[required], select[required], textarea[required]');
+                // Restaurar atributo required para campos visibles
+                const requiredInputs = field.querySelectorAll('input, select, textarea');
                 requiredInputs.forEach(function(input) {
-                    input.removeAttribute('required');
+                    const originalRequired = input.getAttribute('data-original-required');
+                    if (originalRequired === 'true') {
+                        input.setAttribute('required', 'required');
+                    }
                 });
             } else {
                 field.style.display = 'none';
@@ -383,14 +415,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         input.value = '';
                     }
-                });
-                // Restaurar atributo required para validación del servidor
-                const requiredInputs = field.querySelectorAll('input, select, textarea');
-                requiredInputs.forEach(function(input) {
-                    const originalRequired = input.getAttribute('data-original-required');
-                    if (originalRequired === 'true') {
-                        input.setAttribute('required', 'required');
-                    }
+                    // Remover atributo required de campos ocultos
+                    input.removeAttribute('required');
                 });
             }
         });
@@ -410,6 +436,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Verificar campos condicionales al cargar la página
     checkConditionalFields();
+    
+    // Manejar envío del formulario
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Verificar campos condicionales antes del envío
+            checkConditionalFields();
+            
+            // Remover required de campos ocultos antes de la validación
+            const hiddenFields = document.querySelectorAll('[data-conditional-field="true"][style*="display: none"]');
+            hiddenFields.forEach(function(field) {
+                const inputs = field.querySelectorAll('input, select, textarea');
+                inputs.forEach(function(input) {
+                    input.removeAttribute('required');
+                });
+            });
+        });
+    }
 });
 </script>
 @endsection

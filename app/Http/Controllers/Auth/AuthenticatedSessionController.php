@@ -35,11 +35,9 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        // Redirect to city form if user has a participant
+        // Redirect to welcome page if user has a participant
         if ($user->participant && $user->participant->city) {
-            return redirect()->intended(route('public.forms.show', [
-                'city' => $user->participant->city->name
-            ]));
+            return redirect()->intended('/');
         }
 
         return redirect()->intended(route('dashboard'));

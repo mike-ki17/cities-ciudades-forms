@@ -36,7 +36,11 @@
   }
 
   .form-error {
-    @apply mt-1 text-sm text-red-600;
+    @apply mt-1 text-sm text-red-600 font-medium;
+  }
+  
+  .form-input.error {
+    @apply border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500;
   }
 
   .card {

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -59,10 +60,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the form submissions for the user.
+     */
+    public function formSubmissions(): HasMany
+    {
+        return $this->hasMany(FormSubmission::class);
+    }
+
+    /**
      * Check if the user is an admin.
      */
     public function isAdmin(): bool
     {
         return $this->is_admin;
+    }
+
+    /**
+     * Check if the user has submitted a specific form.
+     */
+    public function hasSubmittedForm(int $formId): bool
+    {
+        return $this->formSubmissions()->where('form_id', $formId)->exists();
     }
 }

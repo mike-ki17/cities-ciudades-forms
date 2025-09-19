@@ -15,7 +15,7 @@ class Form extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'form';
+    protected $table = 'forms';
 
     /**
      * The attributes that are mass assignable.

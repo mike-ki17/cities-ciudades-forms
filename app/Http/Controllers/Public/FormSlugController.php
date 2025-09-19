@@ -24,20 +24,23 @@ class FormSlugController extends Controller
             abort(404, 'Formulario no encontrado.');
         }
 
-        $participant = null;
+        $user = $request->user();
+        $participant = $user->participant ?? null;
         $hasSubmitted = false;
         $latestSubmission = null;
 
-        // If user is authenticated and has a participant
-        if ($request->user() && $request->user()->participant) {
-            $participant = $request->user()->participant;
-            $hasSubmitted = $this->formService->hasParticipantSubmitted($form, $participant);
+        // Check if user has already submitted this form
+        if ($user) {
+            $hasSubmitted = $user->hasSubmittedForm($form->id);
             
             if ($hasSubmitted) {
-                $latestSubmission = $this->formService->getLatestSubmission($form, $participant);
+                $latestSubmission = $user->formSubmissions()
+                    ->where('form_id', $form->id)
+                    ->latest()
+                    ->first();
             }
         }
 
-        return view('public.forms.show', compact('form', 'participant', 'hasSubmitted', 'latestSubmission'));
+        return view('public.forms.show', compact('form', 'participant', 'hasSubmitted', 'latestSubmission', 'user'));
     }
 }

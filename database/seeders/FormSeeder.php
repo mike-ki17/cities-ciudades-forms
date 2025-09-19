@@ -17,7 +17,7 @@ class FormSeeder extends Seeder
             Form::firstOrCreate(
                 ['city_id' => $generalCity->id, 'version' => 1],
                 [
-                    'title' => 'Formulario General de Participación',
+                    'name' => 'Formulario General de Participación',
                     'description' => 'Formulario general para todas las ciudades',
                     'schema_json' => [
                         'fields' => [
@@ -108,7 +108,7 @@ class FormSeeder extends Seeder
             Form::firstOrCreate(
                 ['city_id' => $bogotaCity->id, 'version' => 1],
                 [
-                    'title' => 'Formulario Específico de Bogotá',
+                    'name' => 'Formulario Específico de Bogotá',
                     'description' => 'Formulario específico para participantes de Bogotá',
                     'schema_json' => [
                         'fields' => [

@@ -13,7 +13,7 @@ class FormSubmission extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'form_submission';
+    protected $table = 'form_submissions';
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +21,7 @@ class FormSubmission extends Model
     protected $fillable = [
         'form_id',
         'participant_id',
+        'user_id',
         'data_json',
         'submitted_at',
     ];
@@ -55,6 +56,14 @@ class FormSubmission extends Model
     }
 
     /**
+     * Get the user that owns the submission.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * Scope a query to only include submissions for a specific form.
      */
     public function scopeForForm($query, $formId)
@@ -68,6 +77,14 @@ class FormSubmission extends Model
     public function scopeForParticipant($query, $participantId)
     {
         return $query->where('participant_id', $participantId);
+    }
+
+    /**
+     * Scope a query to only include submissions for a specific user.
+     */
+    public function scopeForUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
     }
 
     /**

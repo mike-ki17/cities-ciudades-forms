@@ -15,19 +15,19 @@ class CitySeeder extends Seeder
         $cities = [
             [
                 'name' => 'General',
-                'country' => 'Internacional',
+                'timezone' => 'UTC',
             ],
             [
                 'name' => 'Bogotá',
-                'country' => 'Colombia',
+                'timezone' => 'America/Bogota',
             ],
             [
                 'name' => 'Lima',
-                'country' => 'Perú',
+                'timezone' => 'America/Lima',
             ],
             [
                 'name' => 'Quito',
-                'country' => 'Ecuador',
+                'timezone' => 'America/Guayaquil',
             ],
         ];
 

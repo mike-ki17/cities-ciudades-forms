@@ -430,6 +430,19 @@
         </div>
     </nav>
 
+    <!-- Messages -->
+    @if(session('success'))
+        <div class="alert alert-success" style="background: rgba(0, 255, 189, 0.1); color: #00ffbd; padding: 15px; margin: 20px; border-radius: 8px; border: 1px solid rgba(0, 255, 189, 0.3); text-align: center;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-error" style="background: rgba(187, 37, 88, 0.1); color: #bb2558; padding: 15px; margin: 20px; border-radius: 8px; border: 1px solid rgba(187, 37, 88, 0.3); text-align: center;">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
@@ -485,7 +498,7 @@
                                 @foreach($forms as $form)
                         <div class="form-card">
                             <h3 class="form-title">{{ $form->name }}</h3>
-                            <p class="form-city">{{ $form->city->name }}</p>
+                            <p class="form-city">{{ $form->city ? $form->city->name : 'General' }}</p>
                             <p class="form-description">
                                 {{ $form->description ?? 'Formulario municipal disponible para completar en línea.' }}
                             </p>

@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('participant_id')->references('id')->on('participant')->onDelete('set null');
-        });
+        // Only add foreign key if participant table exists
+        if (Schema::hasTable('participant')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->foreign('participant_id')->references('id')->on('participant')->onDelete('set null');
+            });
+        }
     }
 
     /**

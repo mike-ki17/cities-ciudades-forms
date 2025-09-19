@@ -51,8 +51,7 @@ class SubmissionRepository
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->whereHas('participant', function ($participantQuery) use ($search) {
-                    $participantQuery->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%")
+                    $participantQuery->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%");
                 })
                 ->orWhereHas('form', function ($formQuery) use ($search) {
@@ -209,8 +208,7 @@ class SubmissionRepository
     {
         return FormSubmission::where(function ($q) use ($query) {
                 $q->whereHas('participant', function ($participantQuery) use ($query) {
-                    $participantQuery->where('first_name', 'like', "%{$query}%")
-                        ->orWhere('last_name', 'like', "%{$query}%")
+                    $participantQuery->where('name', 'like', "%{$query}%")
                         ->orWhere('email', 'like', "%{$query}%");
                 })
                 ->orWhereHas('form', function ($formQuery) use ($query) {

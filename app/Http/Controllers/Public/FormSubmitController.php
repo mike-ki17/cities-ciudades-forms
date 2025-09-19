@@ -45,7 +45,7 @@ class FormSubmitController extends Controller
             // Submit the form with validated data
             $submission = $this->formService->submitForm($form, $participant, $request->validated());
 
-            return redirect()->route('public.forms.show', ['city' => $city])
+            return redirect('/')
                 ->with('success', 'Formulario enviado exitosamente.');
                 
         } catch (ValidationException $e) {

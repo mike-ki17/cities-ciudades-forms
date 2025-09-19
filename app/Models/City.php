@@ -14,14 +14,15 @@ class City extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'city';
+    protected $table = 'cities';
 
     /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
         'name',
-        'country',
+        'timezone',
+        'extra_data',
     ];
 
     /**

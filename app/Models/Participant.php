@@ -15,20 +15,20 @@ class Participant extends Model
     /**
      * The table associated with the model.
      */
-    protected $table = 'participant';
+    protected $table = 'participants';
 
     /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'name',
         'email',
         'phone',
         'document_type',
         'document_number',
         'birth_date',
         'city_id',
+        'extra_data',
     ];
 
     /**
@@ -81,7 +81,24 @@ class Participant extends Model
      */
     public function getFullNameAttribute(): string
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->name;
+    }
+
+    /**
+     * Get the first name of the participant.
+     */
+    public function getFirstNameAttribute(): string
+    {
+        return explode(' ', $this->name)[0] ?? $this->name;
+    }
+
+    /**
+     * Get the last name of the participant.
+     */
+    public function getLastNameAttribute(): string
+    {
+        $nameParts = explode(' ', $this->name);
+        return count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
     }
 
     /**

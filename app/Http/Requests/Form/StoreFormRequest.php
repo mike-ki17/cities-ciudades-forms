@@ -20,7 +20,7 @@ class StoreFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'city_id' => ['required', 'integer', 'exists:city,id'],
+            'city_id' => ['required', 'integer', 'exists:cities,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'schema_json' => ['required', 'array'],
