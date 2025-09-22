@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Form;
 use App\Models\FormSubmission;
 use App\Models\User;
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Participant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -24,13 +24,14 @@ class FormSubmissionTest extends TestCase
 
     public function test_user_must_be_authenticated_to_access_form()
     {
-        $city = City::create([
-            'name' => 'Test City',
-            'timezone' => 'America/Bogota'
+        $event = Event::create([
+            'name' => 'Smart Films Festival',
+            'city' => 'Bogotá',
+            'year' => 2024
         ]);
 
         $form = Form::create([
-            'city_id' => $city->id,
+            'city_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',
@@ -57,13 +58,14 @@ class FormSubmissionTest extends TestCase
     {
         $user = User::factory()->create();
         
-        $city = City::create([
-            'name' => 'Test City',
-            'timezone' => 'America/Bogota'
+        $event = Event::create([
+            'name' => 'Smart Films Festival',
+            'city' => 'Bogotá',
+            'year' => 2024
         ]);
 
         $form = Form::create([
-            'city_id' => $city->id,
+            'city_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',
@@ -91,13 +93,14 @@ class FormSubmissionTest extends TestCase
     {
         $user = User::factory()->create();
         
-        $city = City::create([
-            'name' => 'Test City',
-            'timezone' => 'America/Bogota'
+        $event = Event::create([
+            'name' => 'Smart Films Festival',
+            'city' => 'Bogotá',
+            'year' => 2024
         ]);
 
         $participant = Participant::create([
-            'city_id' => $city->id,
+            'city_id' => $event->id,
             'name' => 'Test Participant',
             'email' => 'test@example.com',
             'phone' => '1234567890',
@@ -108,7 +111,7 @@ class FormSubmissionTest extends TestCase
         $user->update(['participant_id' => $participant->id]);
 
         $form = Form::create([
-            'city_id' => $city->id,
+            'city_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',
@@ -146,13 +149,14 @@ class FormSubmissionTest extends TestCase
     {
         $user = User::factory()->create();
         
-        $city = City::create([
-            'name' => 'Test City',
-            'timezone' => 'America/Bogota'
+        $event = Event::create([
+            'name' => 'Smart Films Festival',
+            'city' => 'Bogotá',
+            'year' => 2024
         ]);
 
         $participant = Participant::create([
-            'city_id' => $city->id,
+            'city_id' => $event->id,
             'name' => 'Test Participant',
             'email' => 'test@example.com',
             'phone' => '1234567890',
@@ -163,7 +167,7 @@ class FormSubmissionTest extends TestCase
         $user->update(['participant_id' => $participant->id]);
 
         $form = Form::create([
-            'city_id' => $city->id,
+            'city_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',
@@ -209,13 +213,14 @@ class FormSubmissionTest extends TestCase
     {
         $user = User::factory()->create();
         
-        $city = City::create([
-            'name' => 'Test City',
-            'timezone' => 'America/Bogota'
+        $event = Event::create([
+            'name' => 'Smart Films Festival',
+            'city' => 'Bogotá',
+            'year' => 2024
         ]);
 
         $form = Form::create([
-            'city_id' => $city->id,
+            'city_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Form;
 use Illuminate\Database\Seeder;
 
@@ -13,14 +13,14 @@ class MultipleFormsSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get the first city or create a test city
-        $city = City::first();
+        // Get the first event or create a test event
+        $event = Event::first();
         
-        if (!$city) {
-            $city = City::create([
-                'name' => 'Ciudad de Prueba',
-                'country' => 'Colombia',
-                'is_active' => true,
+        if (!$event) {
+            $event = Event::create([
+                'name' => 'Smart Films Festival',
+                'city' => 'Bogotá',
+                'year' => 2024,
             ]);
         }
 
@@ -177,13 +177,13 @@ class MultipleFormsSeeder extends Seeder
 
         foreach ($forms as $formData) {
             $form = Form::create(array_merge($formData, [
-                'city_id' => $city->id,
+                'city_id' => $event->id,
             ]));
 
             $this->command->info("Formulario '{$form->name}' creado con slug: {$form->slug}");
             $this->command->info("URL pública: " . route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]));
         }
 
-        $this->command->info("Se crearon " . count($forms) . " formularios activos para la ciudad: {$city->name}");
+        $this->command->info("Se crearon " . count($forms) . " formularios activos para el evento: {$event->full_name}");
     }
 }

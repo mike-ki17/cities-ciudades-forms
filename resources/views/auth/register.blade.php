@@ -101,10 +101,10 @@
                     <label for="city_id" class="block text-sm font-medium text-gray-700">Ciudad</label>
                     <select id="city_id" name="city_id" required 
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm @error('city_id') border-red-300 @enderror">
-                        <option value="">Selecciona una ciudad</option>
-                        @foreach($cities as $city)
-                            <option value="{{ $city->id }}" {{ old('city_id') == $city->id ? 'selected' : '' }}>
-                                {{ $city->name }}{{ $city->timezone ? ', ' . $city->timezone : '' }}
+                        <option value="">Selecciona un evento</option>
+                        @foreach($events as $event)
+                            <option value="{{ $event->id }}" {{ old('city_id') == $event->id ? 'selected' : '' }}>
+                                {{ $event->full_name }}
                             </option>
                         @endforeach
                     </select>

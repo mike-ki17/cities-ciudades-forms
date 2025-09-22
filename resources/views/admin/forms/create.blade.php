@@ -64,10 +64,10 @@
                                 Ciudad *
                             </label>
                             <select name="city_id" id="city_id" class="admin-select w-full">
-                                <option value="">Seleccionar ciudad</option>
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->id }}" {{ old('city_id') == $city->id ? 'selected' : '' }}>
-                                        {{ $city->name }}
+                                <option value="">Seleccionar evento</option>
+                                @foreach($events as $event)
+                                    <option value="{{ $event->id }}" {{ old('city_id') == $event->id ? 'selected' : '' }}>
+                                        {{ $event->full_name }}
                                     </option>
                                 @endforeach
                             </select>

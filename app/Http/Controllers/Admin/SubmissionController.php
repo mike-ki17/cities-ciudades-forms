@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Form;
 use App\Models\FormSubmission;
 use App\Repositories\SubmissionRepository;
@@ -25,10 +25,10 @@ class SubmissionController extends Controller
         
         $submissions = $this->submissionRepository->getWithFilters($filters);
         
-        $forms = Form::with('city')->orderBy('name')->get();
-        $cities = City::orderBy('name')->get();
+        $forms = Form::with('event')->orderBy('name')->get();
+        $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();
 
-        return view('admin.submissions.index', compact('submissions', 'forms', 'cities', 'filters'));
+        return view('admin.submissions.index', compact('submissions', 'forms', 'events', 'filters'));
     }
 
     /**
@@ -36,7 +36,7 @@ class SubmissionController extends Controller
      */
     public function show(FormSubmission $submission): View
     {
-        $submission->load(['form', 'participant', 'form.city']);
+        $submission->load(['form', 'participant', 'form.event']);
         
         return view('admin.submissions.show', compact('submission'));
     }
@@ -65,7 +65,7 @@ class SubmissionController extends Controller
                 'ID',
                 'Fecha de Envío',
                 'Formulario',
-                'Ciudad',
+                'Evento',
                 'Participante',
                 'Email',
                 'Datos del Formulario'
@@ -76,7 +76,7 @@ class SubmissionController extends Controller
                     $submission->id,
                     $submission->submitted_at->format('Y-m-d H:i:s'),
                     $submission->form->name,
-                    $submission->form->city?->name ?? 'General',
+                    $submission->form->event?->full_name ?? 'General',
                     $submission->participant->full_name,
                     $submission->participant->email,
                     json_encode($submission->data_json, JSON_UNESCAPED_UNICODE)
@@ -98,9 +98,9 @@ class SubmissionController extends Controller
         
         $statistics = $this->submissionRepository->getStatistics($filters);
         
-        $forms = Form::with('city')->orderBy('name')->get();
-        $cities = City::orderBy('name')->get();
+        $forms = Form::with('event')->orderBy('name')->get();
+        $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();
 
-        return view('admin.submissions.statistics', compact('statistics', 'forms', 'cities', 'filters'));
+        return view('admin.submissions.statistics', compact('statistics', 'forms', 'events', 'filters'));
     }
 }

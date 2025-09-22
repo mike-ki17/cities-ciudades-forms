@@ -130,10 +130,10 @@
                                     Ciudad
                                 </label>
                                 <select id="city_id" name="city_id" class="admin-input w-full">
-                                    <option value="">Todas las ciudades</option>
-                                    @foreach($cities as $city)
-                                        <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
-                                            {{ $city->name }}
+                                    <option value="">Todos los eventos</option>
+                                    @foreach($events as $event)
+                                        <option value="{{ $event->id }}" {{ request('city_id') == $event->id ? 'selected' : '' }}>
+                                            {{ $event->full_name }}
                                         </option>
                                     @endforeach
                                 </select>

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Form;
 use Illuminate\Database\Seeder;
 
@@ -13,20 +13,20 @@ class TestFormSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get the first city or create a test city
-        $city = City::first();
+        // Get the first event or create a test event
+        $event = Event::first();
         
-        if (!$city) {
-            $city = City::create([
-                'name' => 'Ciudad de Prueba',
-                'country' => 'Colombia',
-                'is_active' => true,
+        if (!$event) {
+            $event = Event::create([
+                'name' => 'Smart Films Festival',
+                'city' => 'Bogotá',
+                'year' => 2024,
             ]);
         }
 
         // Create a test form
         $form = Form::create([
-            'city_id' => $city->id,
+            'city_id' => $event->id,
             'name' => 'Formulario de Prueba - URLs Públicas',
             'description' => 'Formulario para probar la funcionalidad de URLs públicas sin autenticación',
             'schema_json' => [

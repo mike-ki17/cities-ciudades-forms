@@ -159,7 +159,7 @@
                                             {{ $form->name }}
                                         </p>
                                         <p class="text-sm admin-text-secondary truncate">
-                                            {{ $form->city?->name ?? 'General' }}
+                                            {{ $form->event?->full_name ?? 'General' }}
                                         </p>
                                     </div>
                                     <div class="flex-shrink-0 text-sm admin-text-secondary">
@@ -198,19 +198,19 @@
                         </tr>
                     </thead>
                     <tbody class="admin-card divide-y" style="border-color: #333333;">
-                        @forelse($submissionsByCity as $city)
+                        @forelse($submissionsByEvent as $event)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium admin-text">
-                                    {{ $city->name }}
+                                    {{ $event->full_name }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm admin-text-secondary">
-                                    {{ $city->forms_count }}
+                                    {{ $event->forms_count }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm admin-text-secondary">
-                                    {{ $city->participants_count }}
+                                    {{ $event->participants_count }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm admin-text-secondary">
-                                    {{ $city->submissions_count }}
+                                    {{ $event->submissions_count }}
                                 </td>
                             </tr>
                         @empty

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Form;
 use App\Models\FormSubmission;
 use App\Models\Participant;
@@ -23,7 +23,7 @@ class DashboardController extends Controller
     public function index(): View
     {
         // Get basic statistics
-        $totalCities = City::count();
+        $totalEvents = Event::count();
         $totalForms = Form::count();
         $activeForms = Form::active()->count();
         $totalParticipants = Participant::count();
@@ -32,17 +32,17 @@ class DashboardController extends Controller
         // Get recent submissions
         $recentSubmissions = $this->submissionRepository->getRecent(10);
 
-        // Get submissions by city
-        $submissionsByCity = City::withCount(['forms' => function ($query) {
+        // Get submissions by event
+        $submissionsByEvent = Event::withCount(['forms' => function ($query) {
             $query->where('is_active', true);
         }])
         ->withCount(['participants'])
         ->get()
-        ->map(function ($city) {
-            $city->submissions_count = FormSubmission::whereHas('form', function ($query) use ($city) {
-                $query->where('city_id', $city->id);
+        ->map(function ($event) {
+            $event->submissions_count = FormSubmission::whereHas('form', function ($query) use ($event) {
+                $query->where('city_id', $event->id);
             })->count();
-            return $city;
+            return $event;
         });
 
         // Get submissions by date (last 30 days)
@@ -54,19 +54,19 @@ class DashboardController extends Controller
 
         // Get top forms by submissions
         $topForms = Form::withCount('formSubmissions')
-            ->with('city')
+            ->with('event')
             ->orderBy('form_submissions_count', 'desc')
             ->limit(5)
             ->get();
 
         return view('admin.dashboard', compact(
-            'totalCities',
+            'totalEvents',
             'totalForms',
             'activeForms',
             'totalParticipants',
             'totalSubmissions',
             'recentSubmissions',
-            'submissionsByCity',
+            'submissionsByEvent',
             'submissionsByDate',
             'topForms'
         ));

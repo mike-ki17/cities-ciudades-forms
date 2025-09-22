@@ -48,11 +48,19 @@ class Form extends Model
     }
 
     /**
-     * Get the city that owns the form.
+     * Get the event that owns the form.
+     */
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class, 'city_id');
+    }
+
+    /**
+     * Get the city that owns the form (alias for backward compatibility).
      */
     public function city(): BelongsTo
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(Event::class, 'city_id');
     }
 
     /**

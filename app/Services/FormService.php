@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Form;
 use App\Models\FormSubmission;
 use App\Models\Participant;
-use App\Repositories\CityRepository;
+use App\Repositories\EventRepository;
 use App\Repositories\FormRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -16,21 +16,29 @@ class FormService
 {
     public function __construct(
         private FormRepository $formRepository,
-        private CityRepository $cityRepository
+        private EventRepository $eventRepository
     ) {}
 
     /**
-     * Get all active forms for a city.
+     * Get all active forms for an event.
      */
-    public function getActiveFormsForCity(string $cityName): \Illuminate\Database\Eloquent\Collection
+    public function getActiveFormsForEvent(string $eventName): \Illuminate\Database\Eloquent\Collection
     {
-        $city = $this->cityRepository->findByNameInsensitive($cityName);
+        $event = $this->eventRepository->findByNameInsensitive($eventName);
         
-        if (!$city) {
+        if (!$event) {
             return collect();
         }
 
-        return $this->formRepository->getActiveFormsForCity($city->id);
+        return $this->formRepository->getActiveFormsForCity($event->id);
+    }
+
+    /**
+     * Get all active forms for a city (alias for backward compatibility).
+     */
+    public function getActiveFormsForCity(string $cityName): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->getActiveFormsForEvent($cityName);
     }
 
     /**
@@ -156,7 +164,7 @@ class FormService
      */
     public function getSubmissions(array $filters = []): Collection
     {
-        $query = FormSubmission::with(['form', 'participant', 'form.city']);
+        $query = FormSubmission::with(['form', 'participant', 'form.event']);
 
         if (isset($filters['form_id'])) {
             $query->where('form_id', $filters['form_id']);

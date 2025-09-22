@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Participant;
 use App\Models\User;
 use App\Services\ParticipantService;
@@ -25,8 +25,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        $cities = City::orderBy('name')->get();
-        return view('auth.register', compact('cities'));
+        $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();
+        return view('auth.register', compact('events'));
     }
 
     /**

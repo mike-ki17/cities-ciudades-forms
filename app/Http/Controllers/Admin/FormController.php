@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Form\StoreFormRequest;
 use App\Http\Requests\Form\UpdateFormRequest;
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Form;
 use App\Services\FormService;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +23,7 @@ class FormController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Form::with('city');
+        $query = Form::with('event');
 
         // Filtros de búsqueda
         if ($request->filled('search')) {
@@ -31,13 +31,14 @@ class FormController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('id', 'like', "%{$search}%")
-                  ->orWhereHas('city', function ($cityQuery) use ($search) {
-                      $cityQuery->where('name', 'like', "%{$search}%");
+                  ->orWhereHas('event', function ($eventQuery) use ($search) {
+                      $eventQuery->where('name', 'like', "%{$search}%")
+                                 ->orWhere('city', 'like', "%{$search}%");
                   });
             });
         }
 
-        // Filtro por ciudad específica
+        // Filtro por evento específico
         if ($request->filled('city_id')) {
             $query->where('city_id', $request->get('city_id'));
         }
@@ -53,10 +54,10 @@ class FormController extends Controller
             ->paginate(15)
             ->withQueryString(); // Mantener parámetros de búsqueda en la paginación
 
-        // Obtener todas las ciudades para el filtro
-        $cities = City::orderBy('name')->get();
+        // Obtener todos los eventos para el filtro
+        $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();
 
-        return view('admin.forms.index', compact('forms', 'cities'));
+        return view('admin.forms.index', compact('forms', 'events'));
     }
 
     /**
@@ -64,8 +65,8 @@ class FormController extends Controller
      */
     public function create(): View
     {
-        $cities = City::orderBy('name')->get();
-        return view('admin.forms.create', compact('cities'));
+        $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();
+        return view('admin.forms.create', compact('events'));
     }
 
     /**
@@ -84,7 +85,7 @@ class FormController extends Controller
      */
     public function show(Form $form): View
     {
-        $form->load('city', 'formSubmissions.participant');
+        $form->load('event', 'formSubmissions.participant');
         
         return view('admin.forms.show', compact('form'));
     }
@@ -94,8 +95,8 @@ class FormController extends Controller
      */
     public function edit(Form $form): View
     {
-        $cities = City::orderBy('name')->get();
-        return view('admin.forms.edit', compact('form', 'cities'));
+        $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();
+        return view('admin.forms.edit', compact('form', 'events'));
     }
 
     /**

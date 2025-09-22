@@ -55,10 +55,10 @@
                                 Ciudad
                             </label>
                             <select name="city_id" id="city_id" class="admin-select w-full">
-                                <option value="">Todas las ciudades</option>
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
-                                        {{ $city->name }}
+                                <option value="">Todos los eventos</option>
+                                @foreach($events as $event)
+                                    <option value="{{ $event->id }}" {{ request('city_id') == $event->id ? 'selected' : '' }}>
+                                        {{ $event->full_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -76,7 +76,7 @@
                                 <option value="">Todos los formularios</option>
                                 @foreach($forms as $form)
                                     <option value="{{ $form->id }}" {{ request('form_id') == $form->id ? 'selected' : '' }}>
-                                        {{ $form->name }} ({{ $form->city ? $form->city->name : 'General' }})
+                                        {{ $form->name }} ({{ $form->event ? $form->event->full_name : 'General' }})
                                     </option>
                                 @endforeach
                             </select>
@@ -288,7 +288,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 </svg>
-                                                {{ $submission->form->city ? $submission->form->city->name : 'General' }}
+                                                {{ $submission->form->event ? $submission->form->event->full_name : 'General' }}
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Form;
 use App\Models\FormSubmission;
 use App\Models\Participant;
-use App\Models\City;
+use App\Models\Event;
 use App\Models\User;
 use Illuminate\Console\Command;
 
@@ -33,10 +33,10 @@ class TestModels extends Command
         $this->info('Testing all models...');
         
         try {
-            // Test City model
-            $this->info('Testing City model...');
-            $cities = City::count();
-            $this->info("Cities found: {$cities}");
+            // Test Event model
+            $this->info('Testing Event model...');
+            $events = Event::count();
+            $this->info("Events found: {$events}");
             
             // Test Form model
             $this->info('Testing Form model...');

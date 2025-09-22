@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Participant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -57,7 +57,7 @@ class RegisterRequest extends FormRequest
             'city_id' => [
                 'required',
                 'integer',
-                'exists:cities,id'
+                'exists:events,id'
             ],
         ];
     }

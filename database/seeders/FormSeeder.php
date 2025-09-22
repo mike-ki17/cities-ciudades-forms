@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\City;
+use App\Models\Event;
 use App\Models\Form;
 use Illuminate\Database\Seeder;
 
@@ -10,12 +10,12 @@ class FormSeeder extends Seeder
 {
     public function run(): void
     {
-        $generalCity = City::where('name', 'General')->first();
-        $bogotaCity = City::where('name', 'Bogotá')->first();
+        $generalEvent = Event::where('name', 'Smart Films Festival')->where('city', 'Bogotá')->where('year', 2024)->first();
+        $bogotaEvent = Event::where('name', 'Smart Films Festival')->where('city', 'Bogotá')->where('year', 2024)->first();
 
-        if ($generalCity) {
+        if ($generalEvent) {
             Form::firstOrCreate(
-                ['city_id' => $generalCity->id, 'version' => 1],
+                ['city_id' => $generalEvent->id, 'version' => 1],
                 [
                     'name' => 'Formulario General de Participación',
                     'description' => 'Formulario general para todas las ciudades',
@@ -104,9 +104,9 @@ class FormSeeder extends Seeder
             );
         }
 
-        if ($bogotaCity) {
+        if ($bogotaEvent) {
             Form::firstOrCreate(
-                ['city_id' => $bogotaCity->id, 'version' => 1],
+                ['city_id' => $bogotaEvent->id, 'version' => 1],
                 [
                     'name' => 'Formulario Específico de Bogotá',
                     'description' => 'Formulario específico para participantes de Bogotá',
