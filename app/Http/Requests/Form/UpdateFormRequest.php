@@ -24,6 +24,7 @@ class UpdateFormRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'schema_json' => ['required', 'array'],
+            'style_json' => ['nullable', 'array'],
             'is_active' => ['boolean'],
             'version' => ['nullable', 'integer', 'min:1'],
         ];
@@ -59,6 +60,27 @@ class UpdateFormRequest extends FormRequest
                 ]);
             }
         }
+
+        // Convert style_json string to array for validation
+        if ($this->has('style_json') && is_string($this->style_json)) {
+            $styleArray = json_decode($this->style_json, true);
+            
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $this->merge([
+                    'style_json' => $styleArray
+                ]);
+            }
+        }
+
+        // Convert form_shadow string values to boolean
+        if ($this->has('style_json') && is_array($this->style_json) && isset($this->style_json['form_shadow'])) {
+            $formShadow = $this->style_json['form_shadow'];
+            if (in_array($formShadow, ['0', '1', 0, 1], true)) {
+                $styleJson = $this->style_json;
+                $styleJson['form_shadow'] = (bool) $formShadow;
+                $this->merge(['style_json' => $styleJson]);
+            }
+        }
     }
 
     /**
@@ -70,6 +92,11 @@ class UpdateFormRequest extends FormRequest
             // Validate JSON structure
             if ($this->has('schema_json') && is_array($this->schema_json)) {
                 $this->validateSchemaStructure($validator);
+            }
+            
+            // Validate style structure
+            if ($this->has('style_json') && is_array($this->style_json)) {
+                $this->validateStyleStructure($validator);
             }
         });
     }
@@ -184,5 +211,63 @@ class UpdateFormRequest extends FormRequest
     {
         $d = \DateTime::createFromFormat('Y-m-d', $date);
         return $d && $d->format('Y-m-d') === $date;
+    }
+
+    /**
+     * Validate the style structure.
+     */
+    private function validateStyleStructure($validator): void
+    {
+        $style = $this->style_json;
+
+        // Validate header images
+        if (isset($style['header_image_1']) && !empty($style['header_image_1'])) {
+            if (!filter_var($style['header_image_1'], FILTER_VALIDATE_URL)) {
+                $validator->errors()->add('style_json.header_image_1', 'La URL de la imagen principal del header no es válida.');
+            }
+        }
+
+        if (isset($style['header_image_2']) && !empty($style['header_image_2'])) {
+            if (!filter_var($style['header_image_2'], FILTER_VALIDATE_URL)) {
+                $validator->errors()->add('style_json.header_image_2', 'La URL de la imagen secundaria del header no es válida.');
+            }
+        }
+
+        // Validate background color
+        if (isset($style['background_color']) && !empty($style['background_color'])) {
+            if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $style['background_color'])) {
+                $validator->errors()->add('style_json.background_color', 'El color de fondo debe ser un código hexadecimal válido (ej: #ffffff).');
+            }
+        }
+
+        // Validate background texture
+        if (isset($style['background_texture']) && !empty($style['background_texture'])) {
+            if (!filter_var($style['background_texture'], FILTER_VALIDATE_URL)) {
+                $validator->errors()->add('style_json.background_texture', 'La URL de la textura de fondo no es válida.');
+            }
+        }
+
+        // Validate primary color
+        if (isset($style['primary_color']) && !empty($style['primary_color'])) {
+            if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $style['primary_color'])) {
+                $validator->errors()->add('style_json.primary_color', 'El color principal debe ser un código hexadecimal válido (ej: #00ffbd).');
+            }
+        }
+
+        // Validate border radius
+        if (isset($style['border_radius']) && !empty($style['border_radius'])) {
+            $validRadius = ['0px', '4px', '8px', '12px', '16px', '24px'];
+            if (!in_array($style['border_radius'], $validRadius)) {
+                $validator->errors()->add('style_json.border_radius', 'El border radius debe ser uno de: ' . implode(', ', $validRadius));
+            }
+        }
+
+        // Validate form shadow (should be boolean or string "0"/"1")
+        if (isset($style['form_shadow'])) {
+            $formShadow = $style['form_shadow'];
+            if (!is_bool($formShadow) && !in_array($formShadow, ['0', '1', 0, 1], true)) {
+                $validator->errors()->add('style_json.form_shadow', 'El valor de sombra del formulario debe ser verdadero o falso.');
+            }
+        }
     }
 }

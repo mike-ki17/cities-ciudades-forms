@@ -29,37 +29,61 @@ class FormSlugSubmitController extends Controller
             abort(404, 'Formulario no encontrado.');
         }
 
-        $user = Auth::user();
-        
-        // Check if user has already submitted this form
-        if ($user->hasSubmittedForm($form->id)) {
-            return redirect()->route('public.forms.slug.show', ['slug' => $slug])
-                ->with('error', 'Ya has completado este formulario. No puedes volver a llenarlo.');
-        }
+        // For public access, we don't require user authentication
+        $user = null;
 
-        // Get participant
-        $participant = $user->participant;
+        // Separate data into two groups
+        $allData = $request->validated();
         
-        if (!$participant) {
-            // Create participant from form data if user doesn't have one
-            $participantData = [
-                'name' => $request->input('name', $user->name),
-                'email' => $request->input('email', $user->email),
-                'phone' => $request->input('phone', null),
-                'document_type' => 'DNI',
-                'document_number' => $request->input('document_number', '00000000'),
-                'city_id' => $form->city_id,
-            ];
-            
-            $participant = $this->participantService->createOrGetParticipant($participantData);
-            
-            // Link participant to user
-            $user->update(['participant_id' => $participant->id]);
+        // Group 1: Fixed participant fields
+        // Map form fields to participant fields (some form fields have different keys)
+        $participantData = [
+            'name' => $allData['name'] ?? $allData['nombre'] ?? null,
+            'email' => $allData['email'] ?? null,
+            'phone' => $allData['phone'] ?? $allData['telefono'] ?? null,
+            'document_type' => $allData['document_type'] ?? 'DNI',
+            'document_number' => $allData['document_number'] ?? null,
+            'birth_date' => $allData['birth_date'] ?? null,
+            'city_id' => $form->city_id,
+        ];
+        
+        // Group 2: Dynamic fields (only those defined in form JSON, excluding fixed participant fields)
+        $dynamicFields = [];
+        $formFields = $form->getFieldsAttribute();
+        $formFieldKeys = collect($formFields)->pluck('key')->toArray();
+        
+        // Fixed participant fields that should never be stored in form_submissions
+        // These fields always go to participants table, never to form_submissions
+        // Include both standard keys and form-specific keys
+        $fixedParticipantFields = [
+            'name', 'nombre',           // Name fields
+            'email',                    // Email field
+            'phone', 'telefono',        // Phone fields
+            'document_type',            // Document type
+            'document_number',          // Document number
+            'birth_date'                // Birth date
+        ];
+        
+        foreach ($allData as $key => $value) {
+            // Only include fields that are in form JSON AND are not fixed participant fields
+            // Fixed participant fields take priority and are never stored in form_submissions
+            if (in_array($key, $formFieldKeys) && !in_array($key, $fixedParticipantFields)) {
+                $dynamicFields[$key] = $value;
+            }
         }
+        
+        \Log::info('Form submission data separation', [
+            'participant_data' => $participantData,
+            'dynamic_fields' => $dynamicFields,
+            'form_field_keys' => $formFieldKeys
+        ]);
+        
+        // Create or get participant (will associate with existing if document_number exists)
+        $participant = $this->participantService->createOrGetParticipant($participantData);
 
         try {
-            // Submit the form with validated data
-            $submission = $this->formService->submitForm($form, $participant, $request->validated(), $user);
+            // Submit the form with only dynamic fields
+            $submission = $this->formService->submitForm($form, $participant, $dynamicFields, $user);
 
             return redirect()->route('public.forms.slug.show', ['slug' => $slug])
                 ->with('success', 'Formulario enviado exitosamente.');
@@ -68,7 +92,6 @@ class FormSlugSubmitController extends Controller
             \Log::info('Validation exception caught:', [
                 'errors' => $e->errors(),
                 'form_slug' => $slug,
-                'user_id' => $user->id
             ]);
             
             return redirect()->back()
@@ -77,7 +100,6 @@ class FormSlugSubmitController extends Controller
         } catch (\Exception $e) {
             \Log::error('Error al enviar formulario: ' . $e->getMessage(), [
                 'form_slug' => $slug,
-                'user_id' => $user->id,
                 'exception' => $e
             ]);
             

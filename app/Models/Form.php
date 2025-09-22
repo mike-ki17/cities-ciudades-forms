@@ -26,6 +26,7 @@ class Form extends Model
         'slug',
         'description',
         'schema_json',
+        'style_json',
         'is_active',
         'version',
     ];
@@ -37,6 +38,7 @@ class Form extends Model
     {
         return [
             'schema_json' => 'array',
+            'style_json' => 'array',
             'is_active' => 'boolean',
             'version' => 'integer',
             'created_at' => 'datetime',
@@ -137,6 +139,34 @@ class Form extends Model
     public function getFieldsAttribute(): array
     {
         return $this->schema_json['fields'] ?? [];
+    }
+
+    /**
+     * Get the form styles from style_json.
+     */
+    public function getStylesAttribute(): array
+    {
+        $defaults = $this->getDefaultStyles();
+        $custom = $this->style_json ?? [];
+        
+        // Merge custom styles with defaults, giving priority to custom values
+        return array_merge($defaults, $custom);
+    }
+
+    /**
+     * Get default style configuration.
+     */
+    public function getDefaultStyles(): array
+    {
+        return [
+            'header_image_1' => null,
+            'header_image_2' => null,
+            'background_color' => '#ffffff',
+            'background_texture' => null,
+            'primary_color' => '#00ffbd',
+            'border_radius' => '8px',
+            'form_shadow' => true,
+        ];
     }
 
     /**

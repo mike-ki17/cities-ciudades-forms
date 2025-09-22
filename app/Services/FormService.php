@@ -125,20 +125,26 @@ class FormService
 
     /**
      * Submit a form.
+     * $data should contain only dynamic fields (already separated in controller)
      */
     public function submitForm(Form $form, Participant $participant, array $data, $user = null): FormSubmission
     {
         return DB::transaction(function () use ($form, $participant, $data, $user) {
-            // Los datos ya vienen validados del Request, no necesitamos validar nuevamente
-            // $validatedData = $this->validateSubmissionData($form, $data);
-
-            // Create the submission
+            // Create the submission with dynamic fields in data_json
             $submission = FormSubmission::create([
                 'form_id' => $form->id,
                 'participant_id' => $participant->id,
                 'user_id' => $user ? $user->id : null,
-                'data_json' => $data, // Usar los datos ya validados
+                'data_json' => $data, // Only dynamic fields (already separated)
                 'submitted_at' => now(),
+            ]);
+
+            \Log::info('Form submission created', [
+                'submission_id' => $submission->id,
+                'form_id' => $form->id,
+                'participant_id' => $participant->id,
+                'dynamic_fields_count' => count($data),
+                'dynamic_fields' => array_keys($data)
             ]);
 
             return $submission;

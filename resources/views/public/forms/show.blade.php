@@ -2,16 +2,61 @@
 
 @section('title', $form->name)
 
+@php
+    // Obtener estilos del formulario con valores por defecto
+    $styles = $form->styles;
+    $headerImage1 = $styles['header_image_1'] ?? null;
+    $headerImage2 = $styles['header_image_2'] ?? null;
+    $backgroundColor = $styles['background_color'] ?? '#ffffff';
+    $backgroundTexture = $styles['background_texture'] ?? null;
+    $primaryColor = $styles['primary_color'] ?? '#00ffbd';
+    $borderRadius = $styles['border_radius'] ?? '8px';
+    $formShadow = $styles['form_shadow'] ?? true;
+@endphp
+
+@section('body-style')
+    style="
+        background-color: {{ $backgroundColor }};
+        @if(!empty($backgroundTexture))
+            background-image: url('{{ $backgroundTexture }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        @endif
+    "
+@endsection
+
 @section('content')
-<div class="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <div class="card">
+<div class="form-styled max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+     @if($headerImage1 || $headerImage2)
+             <div class="card-header-image" style="display: flex; justify-content: center; align-items: center; gap: 1rem; padding: 1rem 0;">
+                 @if($headerImage1 && $headerImage2)
+                     {{-- Dos imágenes: una al lado de la otra --}}
+                     <img src="{{ $headerImage1 }}" alt="Header Image 1" style="max-height: 400px; max-width: 48%; object-fit: contain; flex: 1;" onerror="this.style.display='none'">
+                     <img src="{{ $headerImage2 }}" alt="Header Image 2" style="max-height: 400px; max-width: 48%; object-fit: contain; flex: 1;" onerror="this.style.display='none'">
+                 @elseif($headerImage1)
+                     {{-- Solo imagen 1: ocupa todo el espacio --}}
+                     <img src="{{ $headerImage1 }}" alt="Header Image 1" style="max-height: 400px; max-width: 100%; object-fit: contain;" onerror="this.style.display='none'">
+                 @elseif($headerImage2)
+                     {{-- Solo imagen 2: ocupa todo el espacio --}}
+                     <img src="{{ $headerImage2 }}" alt="Header Image 2" style="max-height: 400px; max-width: 100%; object-fit: contain;" onerror="this.style.display='none'">
+                 @endif
+             </div>
+         @endif
+    
+    <div class="card" 
+         style="border-radius: {{ $borderRadius }}; {{ $formShadow ? 'box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);' : '' }}">
+        
+        {{-- Header con imágenes si están configuradas --}}
+        
+        
         <div class="card-header">
             <h1 class="text-2xl font-bold text-gray-900">{{ $form->name }}</h1>
             @if($form->description)
                 <p class="mt-2 text-sm text-gray-600">{{ $form->description }}</p>
             @endif
             @if($form->city)
-                <p class="mt-1 text-sm text-primary-600 font-medium">{{ $form->city ? $form->city->name : 'General' }}{{ $form->city && $form->city->country ? ', ' . $form->city->country : '' }}</p>
+                <p class="mt-1 text-sm font-medium" style="color: {{ $primaryColor }};">{{ $form->city ? $form->city->name : 'General' }}{{ $form->city && $form->city->country ? ', ' . $form->city->country : '' }}</p>
             @endif
         </div>
 
@@ -64,7 +109,156 @@
             <form method="POST" action="{{ route('public.forms.slug.submit', ['slug' => $form->slug]) }}" class="space-y-6">
                 @csrf
                 
-                @foreach($form->fields as $field)
+                {{-- Campos fijos del participante --}}
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Datos del Participante</h3>
+                    
+                    {{-- Nombre --}}
+                    <div class="form-group">
+                        <label for="name" class="form-label">
+                            Nombre completo
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" 
+                               id="name" 
+                               name="name" 
+                               value="{{ old('name') }}"
+                               placeholder="Ingresa tu nombre completo"
+                               class="form-input @error('name') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
+                               required>
+                        @error('name')
+                            <div class="mt-1 flex items-center">
+                                <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="form-error">{{ $message }}</p>
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Email --}}
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            Correo electrónico
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" 
+                               id="email" 
+                               name="email" 
+                               value="{{ old('email') }}"
+                               placeholder="tu@email.com"
+                               class="form-input @error('email') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
+                               required>
+                        @error('email')
+                            <div class="mt-1 flex items-center">
+                                <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="form-error">{{ $message }}</p>
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Teléfono --}}
+                    <div class="form-group">
+                        <label for="phone" class="form-label">
+                            Teléfono
+                        </label>
+                        <input type="text" 
+                               id="phone" 
+                               name="phone" 
+                               value="{{ old('phone') }}"
+                               placeholder="+1 (555) 123-4567"
+                               class="form-input @error('phone') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                        @error('phone')
+                            <div class="mt-1 flex items-center">
+                                <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="form-error">{{ $message }}</p>
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Tipo de documento --}}
+                    <div class="form-group">
+                        <label for="document_type" class="form-label">
+                            Tipo de documento
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <select id="document_type" 
+                                name="document_type" 
+                                class="form-input @error('document_type') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
+                                required>
+                            <option value="">Selecciona un tipo</option>
+                            <option value="CC" {{ old('document_type') == 'CC' ? 'selected' : '' }}>Cédula de Ciudadanía</option>
+                            <option value="CE" {{ old('document_type') == 'CE' ? 'selected' : '' }}>Cédula de Extranjería</option>
+                            <option value="DNI" {{ old('document_type') == 'DNI' ? 'selected' : '' }}>DNI</option>
+                            <option value="PASAPORTE" {{ old('document_type') == 'PASAPORTE' ? 'selected' : '' }}>Pasaporte</option>
+                            <option value="NIT" {{ old('document_type') == 'NIT' ? 'selected' : '' }}>NIT</option>
+                            <option value="CEDULA" {{ old('document_type') == 'CEDULA' ? 'selected' : '' }}>Cédula</option>
+                            <option value="OTRO" {{ old('document_type') == 'OTRO' ? 'selected' : '' }}>Otro</option>
+                        </select>
+                        @error('document_type')
+                            <div class="mt-1 flex items-center">
+                                <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="form-error">{{ $message }}</p>
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Número de documento --}}
+                    <div class="form-group">
+                        <label for="document_number" class="form-label">
+                            Número de documento
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" 
+                               id="document_number" 
+                               name="document_number" 
+                               value="{{ old('document_number') }}"
+                               placeholder="Ingresa tu número de documento"
+                               class="form-input @error('document_number') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
+                               required>
+                        @error('document_number')
+                            <div class="mt-1 flex items-center">
+                                <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="form-error">{{ $message }}</p>
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Fecha de nacimiento --}}
+                    <div class="form-group">
+                        <label for="birth_date" class="form-label">
+                            Fecha de nacimiento
+                        </label>
+                        <input type="date" 
+                               id="birth_date" 
+                               name="birth_date" 
+                               value="{{ old('birth_date') }}"
+                               class="form-input @error('birth_date') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                        @error('birth_date')
+                            <div class="mt-1 flex items-center">
+                                <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="form-error">{{ $message }}</p>
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Campos dinámicos del formulario --}}
+                @if(count($form->fields) > 0)
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Información Adicional</h3>
+                        
+                        @foreach($form->fields as $field)
                     <div class="form-group" 
                          @if(isset($field['visible']))
                              data-conditional-field="true"
@@ -236,10 +430,13 @@
                             </div>
                         @endif
                     </div>
-                @endforeach
+                        @endforeach
+                    </div>
+                @endif
 
                 <div class="flex justify-end space-x-3">
-                    <button type="submit" class="btn-primary">
+                    <button type="submit" class="btn-primary" 
+                            style="background-color: {{ $primaryColor }}; border-color: {{ $primaryColor }}; border-radius: {{ $borderRadius }};">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                         </svg>
@@ -456,4 +653,110 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<style>
+/* Estilos personalizados del formulario */
+.form-styled {
+    --primary-color: {{ $primaryColor }};
+    --border-radius: {{ $borderRadius }};
+    --form-shadow: {{ $formShadow ? '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' : 'none' }};
+}
+
+/* Aplicar color principal a elementos interactivos */
+.form-styled .btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    border-radius: var(--border-radius) !important;
+}
+
+.form-styled .btn-primary:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 85%, black) !important;
+    border-color: color-mix(in srgb, var(--primary-color) 85%, black) !important;
+}
+
+.form-styled .btn-primary:focus {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent) !important;
+}
+
+/* Aplicar border radius a inputs y selects */
+.form-styled .form-input {
+    border-radius: var(--border-radius) !important;
+}
+
+.form-styled .form-input:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent) !important;
+}
+
+/* Aplicar color principal a checkboxes y radios */
+.form-styled input[type="checkbox"]:checked,
+.form-styled input[type="radio"]:checked {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Aplicar color principal a elementos de estado */
+.form-styled .text-primary-600 {
+    color: var(--primary-color) !important;
+}
+
+/* Aplicar sombra al formulario si está habilitada */
+.form-styled .card {
+    box-shadow: var(--form-shadow) !important;
+    border-radius: var(--border-radius) !important;
+}
+
+/* Estilos para las imágenes del header */
+.form-styled .card-header-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    flex-wrap: wrap;
+}
+
+.form-styled .card-header-image img {
+    border-radius: var(--border-radius);
+    transition: transform 0.2s ease-in-out;
+}
+
+.form-styled .card-header-image img:hover {
+    transform: scale(1.02);
+}
+
+/* Responsive: En pantallas pequeñas, las imágenes se apilan verticalmente */
+@media (max-width: 768px) {
+    .form-styled .card-header-image {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .form-styled .card-header-image img {
+        max-width: 100% !important;
+        max-height: 200px !important;
+    }
+}
+
+/* Aplicar border radius a las secciones del formulario */
+.form-styled .bg-gray-50,
+.form-styled .bg-white {
+    border-radius: var(--border-radius) !important;
+}
+
+/* Estilos para mensajes de éxito y error */
+.form-styled .bg-green-50,
+.form-styled .bg-red-50 {
+    border-radius: var(--border-radius) !important;
+}
+
+/* Aplicar color principal a enlaces y elementos destacados */
+.form-styled a {
+    color: var(--primary-color) !important;
+}
+
+.form-styled a:hover {
+    color: color-mix(in srgb, var(--primary-color) 85%, black) !important;
+}
+</style>
 @endsection

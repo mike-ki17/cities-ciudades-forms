@@ -26,8 +26,21 @@ class SubmitFormSlugRequest extends FormRequest
             return [];
         }
 
-        // Get validation rules considering conditional fields
-        return $form->getValidationRules($this->all());
+        // Fixed participant fields validation rules
+        $participantRules = [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'document_type' => ['required', 'string', 'max:50'], // Allow any document type up to 50 characters
+            'document_number' => ['required', 'string', 'max:50'],
+            'birth_date' => ['nullable', 'date', 'before:today'],
+        ];
+
+        // Get dynamic form fields validation rules
+        $dynamicRules = $form->getValidationRules($this->all());
+
+        // Merge participant rules with dynamic rules
+        return array_merge($participantRules, $dynamicRules);
     }
 
     /**
@@ -79,6 +92,9 @@ class SubmitFormSlugRequest extends FormRequest
             // Validate conditional fields
             $this->validateConditionalFields($validator, $form);
             
+            // Validate document number uniqueness
+            $this->validateDocumentNumberUniqueness($validator);
+            
             // Validate duplicate submissions
             $this->validateDuplicateSubmission($validator, $form);
             
@@ -119,18 +135,42 @@ class SubmitFormSlugRequest extends FormRequest
     }
 
     /**
+     * Validate document number uniqueness.
+     * Note: We don't prevent duplicate document numbers, but we ensure they are handled properly
+     * in the submission logic by associating with existing participants.
+     */
+    protected function validateDocumentNumberUniqueness($validator): void
+    {
+        $documentType = $this->input('document_type');
+        $documentNumber = $this->input('document_number');
+        
+        if (!$documentType || !$documentNumber) {
+            return;
+        }
+
+        // Check if document number already exists
+        $existingParticipant = \App\Models\Participant::byDocument($documentType, $documentNumber)->first();
+        
+        if ($existingParticipant) {
+            // Document number exists - this is allowed, but we can add a warning if needed
+            // For now, we'll just log it for debugging
+            \Log::info('Document number already exists, will associate with existing participant', [
+                'document_type' => $documentType,
+                'document_number' => $documentNumber,
+                'participant_id' => $existingParticipant->id
+            ]);
+        }
+    }
+
+    /**
      * Validate that the user hasn't already submitted this form.
+     * For public forms, we allow multiple submissions from the same participant.
      */
     protected function validateDuplicateSubmission($validator, Form $form): void
     {
-        $user = $this->user();
-        
-        if ($user && $user->hasSubmittedForm($form->id)) {
-            $validator->errors()->add(
-                'duplicate_submission', 
-                'Ya has completado este formulario. No puedes volver a llenarlo.'
-            );
-        }
+        // For public access, we allow multiple submissions
+        // This can be customized based on business requirements
+        // For example, you could check by email or document number if needed
     }
 
 }

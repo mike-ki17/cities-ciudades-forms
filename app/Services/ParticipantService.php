@@ -18,61 +18,66 @@ class ParticipantService
             'name' => $data['name'] ?? $data['first_name'] ?? 'Usuario',
             'email' => $data['email'] ?? 'anonymous@example.com',
             'phone' => $data['phone'] ?? null,
-            'document_type' => $data['document_type'] ?? 'DNI',
+            'document_type' => $data['document_type'] ?? 'DNI', // Will be saved exactly as provided
             'document_number' => $data['document_number'] ?? '00000000',
-            'city_id' => $data['city_id'] ?? null,
+            'birth_date' => $data['birth_date'] ?? null,
+            'city_id' => $data['city_id'] ?? null, // Only save if provided, otherwise NULL
         ]);
     }
 
     /**
      * Create or get an existing participant.
+     * Priority: document_number (unique) - ONLY search by document_number to prevent duplicates
      */
     public function createOrGetParticipant(array $data): Participant
     {
         return DB::transaction(function () use ($data) {
-            // Check if participant already exists by email (case insensitive)
-            $participant = Participant::byEmailInsensitive($data['email'])->first();
-
-            if ($participant) {
-                // Update participant data if needed
-                $participant->update([
-                    'name' => $data['name'] ?? $data['first_name'] ?? $participant->name,
-                    'phone' => $data['phone'] ?? $participant->phone,
-                    'document_type' => $data['document_type'],
-                    'document_number' => $data['document_number'],
-                    'city_id' => $data['city_id'] ?? $participant->city_id,
-                ]);
-
-                return $participant;
-            }
-
-            // Check if participant exists by document
+            // ONLY PRIORITY: Check if participant already exists by document_number (unique field)
             $participant = Participant::byDocument(
                 $data['document_type'],
                 $data['document_number']
             )->first();
 
             if ($participant) {
-                // Update participant data if needed
+                // Update participant data with new information
                 $participant->update([
-                    'name' => $data['name'] ?? $data['first_name'] ?? 'Usuario',
-                    'email' => $data['email'],
+                    'name' => $data['name'] ?? $participant->name,
+                    'email' => $data['email'] ?? $participant->email,
                     'phone' => $data['phone'] ?? $participant->phone,
-                    'city_id' => $data['city_id'] ?? $participant->city_id,
+                    'birth_date' => $data['birth_date'] ?? $participant->birth_date,
+                    'city_id' => isset($data['city_id']) ? $data['city_id'] : $participant->city_id,
+                ]);
+
+                \Log::info('Participant found by document, updated existing record', [
+                    'participant_id' => $participant->id,
+                    'document_type' => $data['document_type'],
+                    'document_number' => $data['document_number'],
+                    'updated_fields' => ['name', 'email', 'phone', 'birth_date', 'city_id']
                 ]);
 
                 return $participant;
             }
 
-            // Create new participant
-            return Participant::create([
-                'name' => $data['name'] ?? $data['first_name'] ?? 'Usuario',
+            // Create new participant only if document_number doesn't exist
+            $participant = Participant::create([
+                'name' => $data['name'] ?? 'Usuario',
                 'email' => $data['email'],
                 'phone' => $data['phone'] ?? null,
-                'document_type' => $data['document_type'],
+                'document_type' => $data['document_type'], // Save exactly as provided
                 'document_number' => $data['document_number'],
-                'city_id' => $data['city_id'] ?? null,
+                'birth_date' => $data['birth_date'] ?? null,
+                'city_id' => isset($data['city_id']) ? $data['city_id'] : null, // Only save if provided
             ]);
+
+            \Log::info('New participant created', [
+                'participant_id' => $participant->id,
+                'name' => $participant->name,
+                'email' => $participant->email,
+                'document_type' => $participant->document_type,
+                'document_number' => $participant->document_number
+            ]);
+
+            return $participant;
         });
     }
 

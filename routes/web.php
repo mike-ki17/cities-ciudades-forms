@@ -18,13 +18,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Form routes by slug (authentication required)
-Route::middleware(['auth.forms'])->group(function () {
-    Route::get('/form/{slug}', [FormSlugController::class, 'show'])
-        ->name('public.forms.slug.show');
-    Route::post('/form/{slug}', [FormSlugSubmitController::class, 'store'])
-        ->name('public.forms.slug.submit');
-});
+// Form routes by slug (public access - no authentication required)
+Route::get('/form/{slug}', [FormSlugController::class, 'show'])
+    ->name('public.forms.slug.show');
+Route::post('/form/{slug}', [FormSlugSubmitController::class, 'store'])
+    ->name('public.forms.slug.submit');
 
 // Authentication routes
 Route::middleware('guest')->group(function () {

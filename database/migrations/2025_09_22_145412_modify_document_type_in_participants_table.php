@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('participants', function (Blueprint $table) {
+            // Change document_type from ENUM to VARCHAR(50) to allow any document type
+            $table->string('document_type', 50)->nullable(false)->change();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('participants', function (Blueprint $table) {
+            // Revert back to ENUM (if needed)
+            $table->enum('document_type', ['DNI', 'PASAPORTE', 'CEDULA', 'OTRO'])->nullable(false)->change();
+        });
+    }
+};

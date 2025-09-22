@@ -142,6 +142,9 @@
                     </div>
                 </div>
 
+                <!-- Style Configuration Section -->
+                <x-admin.style-editor :styles="old('style_json', [])" :errors="$errors" />
+
                 <!-- Advanced Configuration Section -->
                 <div class="admin-form-section">
                     <div class="admin-form-section-title">
