@@ -167,26 +167,134 @@ class SubmissionRepository
             $query->where('submitted_at', '<=', $filters['date_to']);
         }
 
+        // Estadísticas básicas
         $totalSubmissions = $query->count();
         $uniqueParticipants = $query->distinct('participant_id')->count('participant_id');
-
-        $submissionsByDate = $query->selectRaw('DATE(submitted_at) as date, COUNT(*) as count')
+        
+        // Estadísticas por fecha (últimos 30 días)
+        $dateFrom = $filters['date_from'] ?? now()->subDays(30)->format('Y-m-d');
+        $dateTo = $filters['date_to'] ?? now()->format('Y-m-d');
+        
+        $submissionsByDate = FormSubmission::selectRaw('DATE(submitted_at) as date, COUNT(*) as count')
+            ->whereBetween('submitted_at', [$dateFrom, $dateTo])
+            ->when(isset($filters['form_id']), function ($q) use ($filters) {
+                $q->where('form_id', $filters['form_id']);
+            })
+            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+                $q->whereHas('form', function ($formQuery) use ($filters) {
+                    $formQuery->where('city_id', $filters['city_id']);
+                });
+            })
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
-        $submissionsByForm = $query->with('form')
+        // Estadísticas por formulario
+        $submissionsByForm = FormSubmission::with('form')
+            ->when(isset($filters['form_id']), function ($q) use ($filters) {
+                $q->where('form_id', $filters['form_id']);
+            })
+            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+                $q->whereHas('form', function ($formQuery) use ($filters) {
+                    $formQuery->where('city_id', $filters['city_id']);
+                });
+            })
+            ->when(isset($filters['date_from']), function ($q) use ($filters) {
+                $q->where('submitted_at', '>=', $filters['date_from']);
+            })
+            ->when(isset($filters['date_to']), function ($q) use ($filters) {
+                $q->where('submitted_at', '<=', $filters['date_to']);
+            })
             ->get()
-            ->groupBy('form.title')
+            ->groupBy('form.name')
             ->map(function ($submissions) {
                 return $submissions->count();
             });
 
+        // Estadísticas por ciudad
+        $submissionsByCity = FormSubmission::with('form.city')
+            ->when(isset($filters['form_id']), function ($q) use ($filters) {
+                $q->where('form_id', $filters['form_id']);
+            })
+            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+                $q->whereHas('form', function ($formQuery) use ($filters) {
+                    $formQuery->where('city_id', $filters['city_id']);
+                });
+            })
+            ->when(isset($filters['date_from']), function ($q) use ($filters) {
+                $q->where('submitted_at', '>=', $filters['date_from']);
+            })
+            ->when(isset($filters['date_to']), function ($q) use ($filters) {
+                $q->where('submitted_at', '<=', $filters['date_to']);
+            })
+            ->get()
+            ->groupBy('form.city.name')
+            ->map(function ($submissions) {
+                return $submissions->count();
+            });
+
+        // Estadísticas por hora del día
+        $submissionsByHour = FormSubmission::selectRaw('HOUR(submitted_at) as hour, COUNT(*) as count')
+            ->when(isset($filters['form_id']), function ($q) use ($filters) {
+                $q->where('form_id', $filters['form_id']);
+            })
+            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+                $q->whereHas('form', function ($formQuery) use ($filters) {
+                    $formQuery->where('city_id', $filters['city_id']);
+                });
+            })
+            ->when(isset($filters['date_from']), function ($q) use ($filters) {
+                $q->where('submitted_at', '>=', $filters['date_from']);
+            })
+            ->when(isset($filters['date_to']), function ($q) use ($filters) {
+                $q->where('submitted_at', '<=', $filters['date_to']);
+            })
+            ->groupBy('hour')
+            ->orderBy('hour')
+            ->get();
+
+        // Estadísticas por día de la semana
+        $submissionsByDayOfWeek = FormSubmission::selectRaw('DAYOFWEEK(submitted_at) as day_of_week, COUNT(*) as count')
+            ->when(isset($filters['form_id']), function ($q) use ($filters) {
+                $q->where('form_id', $filters['form_id']);
+            })
+            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+                $q->whereHas('form', function ($formQuery) use ($filters) {
+                    $formQuery->where('city_id', $filters['city_id']);
+                });
+            })
+            ->when(isset($filters['date_from']), function ($q) use ($filters) {
+                $q->where('submitted_at', '>=', $filters['date_from']);
+            })
+            ->when(isset($filters['date_to']), function ($q) use ($filters) {
+                $q->where('submitted_at', '<=', $filters['date_to']);
+            })
+            ->groupBy('day_of_week')
+            ->orderBy('day_of_week')
+            ->get();
+
+        // Promedio de envíos por día
+        $avgSubmissionsPerDay = $totalSubmissions > 0 ? 
+            round($totalSubmissions / max(1, (strtotime($dateTo) - strtotime($dateFrom)) / 86400), 2) : 0;
+
+        // Tasa de conversión (si hay datos de participantes únicos)
+        $conversionRate = $uniqueParticipants > 0 ? 
+            round(($totalSubmissions / $uniqueParticipants) * 100, 2) : 0;
+
         return [
             'total_submissions' => $totalSubmissions,
             'unique_participants' => $uniqueParticipants,
+            'avg_submissions_per_day' => $avgSubmissionsPerDay,
+            'conversion_rate' => $conversionRate,
             'submissions_by_date' => $submissionsByDate,
             'submissions_by_form' => $submissionsByForm,
+            'submissions_by_city' => $submissionsByCity,
+            'submissions_by_hour' => $submissionsByHour,
+            'submissions_by_day_of_week' => $submissionsByDayOfWeek,
+            'date_range' => [
+                'from' => $dateFrom,
+                'to' => $dateTo
+            ]
         ];
     }
 

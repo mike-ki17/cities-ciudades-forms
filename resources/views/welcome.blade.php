@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Cities Smart Films') }}</title>
+    <title>Smartfilms Forms</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -409,7 +409,10 @@
     <!-- Navigation -->
     <nav class="nav-header">
         <div class="nav-content">
-            <div class="logo">Cities Smart Films</div>
+            <div class="logo flex items-center space-x-3">
+                <img src="https://d1qdwr9la23cpt.cloudfront.net/uploads/2025/Isotipo.png" alt="Smartfilms Forms" class="h-8 w-8">
+                <span>Smartfilms Forms</span>
+            </div>
             <div class="nav-links">
                     @auth
                     <span class="nav-link">Hola, {{ Auth::user()->name }}</span>
@@ -450,7 +453,7 @@
                 <img src="{{ asset('build/img/LOGO BOGOTÁ.png') }}" alt="Logo Bogotá" class="main-logo">
                 <img src="{{ asset('build/img/LOGO CCB.png') }}" alt="Logo CCB" class="ccb-logo">
             </div>
-            <h1 class="hero-title">Cities Smart Films</h1>
+            <h1 class="hero-title">Smartfilms Forms</h1>
             <p class="hero-subtitle">
                 Plataforma inteligente para la gestión de formularios municipales. 
                 Accede a los formularios disponibles y administra el sistema de manera eficiente.
@@ -502,7 +505,7 @@
                             <p class="form-description">
                                 {{ $form->description ?? 'Formulario municipal disponible para completar en línea.' }}
                             </p>
-                            <a href="{{ route('public.forms.slug.show', $form->slug) }}" class="form-btn">
+                            <a href="{{ route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]) }}" class="form-btn">
                                 Completar Formulario
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-left: 0.5rem;">
                                     <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>

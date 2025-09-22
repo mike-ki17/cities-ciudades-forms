@@ -78,6 +78,6 @@ class TestFormSeeder extends Seeder
         ]);
 
         $this->command->info("Formulario de prueba creado con slug: {$form->slug}");
-        $this->command->info("URL pública: " . route('public.forms.slug.show', $form->slug));
+        $this->command->info("URL pública: " . route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]));
     }
 }

@@ -181,7 +181,7 @@ class MultipleFormsSeeder extends Seeder
             ]));
 
             $this->command->info("Formulario '{$form->name}' creado con slug: {$form->slug}");
-            $this->command->info("URL pública: " . route('public.forms.slug.show', $form->slug));
+            $this->command->info("URL pública: " . route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]));
         }
 
         $this->command->info("Se crearon " . count($forms) . " formularios activos para la ciudad: {$city->name}");

@@ -21,14 +21,42 @@ class FormController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $forms = Form::with('city')
-            ->orderBy('city_id')
-            ->orderBy('version', 'desc')
-            ->paginate(15);
+        $query = Form::with('city');
 
-        return view('admin.forms.index', compact('forms'));
+        // Filtros de búsqueda
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('id', 'like', "%{$search}%")
+                  ->orWhereHas('city', function ($cityQuery) use ($search) {
+                      $cityQuery->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Filtro por ciudad específica
+        if ($request->filled('city_id')) {
+            $query->where('city_id', $request->get('city_id'));
+        }
+
+        // Filtro por estado (activo/inactivo)
+        if ($request->filled('status')) {
+            $status = $request->get('status') === 'active';
+            $query->where('is_active', $status);
+        }
+
+        $forms = $query->orderBy('city_id')
+            ->orderBy('version', 'desc')
+            ->paginate(15)
+            ->withQueryString(); // Mantener parámetros de búsqueda en la paginación
+
+        // Obtener todas las ciudades para el filtro
+        $cities = City::orderBy('name')->get();
+
+        return view('admin.forms.index', compact('forms', 'cities'));
     }
 
     /**

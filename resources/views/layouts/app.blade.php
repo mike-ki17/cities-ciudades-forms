@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - @yield('title', 'Formularios por Ciudad')</title>
+    <title>Smartfilms Forms - @yield('title', 'Formularios por Ciudad')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -23,8 +23,9 @@
                     <div class="flex">
                         <!-- Logo -->
                         <div class="shrink-0 flex items-center">
-                            <a href="{{ url('/') }}" class="text-xl font-bold text-primary-600">
-                                {{ config('app.name', 'Formularios por Ciudad') }}
+                            <a href="{{ url('/') }}" class="flex items-center space-x-3">
+                                <img src="https://d1qdwr9la23cpt.cloudfront.net/uploads/2025/Isotipo.png" alt="Smartfilms Forms" class="h-8 w-8">
+                                <span class="text-xl font-bold text-primary-600">Smartfilms Forms</span>
                             </a>
                         </div>
 
@@ -168,7 +169,7 @@
         <footer class="bg-white border-t border-gray-200 mt-12">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                 <div class="text-center text-sm text-gray-500">
-                    <p>&copy; {{ date('Y') }} {{ config('app.name', 'Formularios por Ciudad') }}. Todos los derechos reservados.</p>
+                    <p>&copy; {{ date('Y') }} Smartfilms Forms. Todos los derechos reservados.</p>
                 </div>
             </div>
         </footer>

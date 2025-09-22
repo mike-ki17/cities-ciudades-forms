@@ -18,10 +18,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Form routes by slug (public access - no authentication required)
-Route::get('/form/{slug}', [FormSlugController::class, 'show'])
+// Form routes by slug and ID (public access - no authentication required)
+Route::get('/form/{id}/{slug}', [FormSlugController::class, 'show'])
     ->name('public.forms.slug.show');
-Route::post('/form/{slug}', [FormSlugSubmitController::class, 'store'])
+Route::post('/form/{id}/{slug}', [FormSlugSubmitController::class, 'store'])
     ->name('public.forms.slug.submit');
 
 // Authentication routes
@@ -65,7 +65,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Submissions management
     Route::get('/submissions', [SubmissionController::class, 'index'])->name('submissions.index');
-    Route::get('/submissions/{submission}', [SubmissionController::class, 'show'])->name('submissions.show');
     Route::get('/submissions/export/csv', [SubmissionController::class, 'export'])->name('submissions.export');
     Route::get('/submissions/statistics', [SubmissionController::class, 'statistics'])->name('submissions.statistics');
+    Route::get('/submissions/{submission}', [SubmissionController::class, 'show'])->name('submissions.show');
 });

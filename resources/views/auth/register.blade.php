@@ -6,9 +6,15 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
         <div>
+            <div class="flex justify-center mb-6">
+                <img src="https://d1qdwr9la23cpt.cloudfront.net/uploads/2025/Isotipo.png" alt="Smartfilms Forms" class="h-16 w-16">
+            </div>
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Crear cuenta
+                Smartfilms Forms
             </h2>
+            <p class="mt-2 text-center text-lg text-gray-600">
+                Crear cuenta
+            </p>
             <p class="mt-2 text-center text-sm text-gray-600">
                 O
                 <a href="{{ route('login') }}" class="font-medium text-blue-600 hover:text-blue-500">

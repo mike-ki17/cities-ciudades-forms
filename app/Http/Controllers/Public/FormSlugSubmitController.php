@@ -19,13 +19,13 @@ class FormSlugSubmitController extends Controller
     ) {}
 
     /**
-     * Handle form submission by slug.
+     * Handle form submission by ID and slug.
      */
-    public function store(SubmitFormSlugRequest $request, string $slug): RedirectResponse
+    public function store(SubmitFormSlugRequest $request, int $id, string $slug): RedirectResponse
     {
         $form = $this->formService->getFormBySlug($slug);
         
-        if (!$form) {
+        if (!$form || $form->id !== $id) {
             abort(404, 'Formulario no encontrado.');
         }
 
@@ -85,7 +85,7 @@ class FormSlugSubmitController extends Controller
             // Submit the form with only dynamic fields
             $submission = $this->formService->submitForm($form, $participant, $dynamicFields, $user);
 
-            return redirect()->route('public.forms.slug.show', ['slug' => $slug])
+            return redirect()->route('public.forms.slug.show', ['id' => $id, 'slug' => $slug])
                 ->with('success', 'Formulario enviado exitosamente.');
                 
         } catch (ValidationException $e) {

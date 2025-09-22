@@ -138,10 +138,10 @@
                         </label>
                         <div class="flex items-center space-x-2">
                             <input type="text" 
-                                   value="{{ route('public.forms.slug.show', $form->slug) }}" 
+                                   value="{{ route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]) }}" 
                                    readonly 
                                    class="flex-1 admin-input text-sm">
-                            <button onclick="copyToClipboard('{{ route('public.forms.slug.show', $form->slug) }}')" 
+                            <button onclick="copyToClipboard('{{ route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]) }}', this)" 
                                     class="admin-button-outline px-4 py-2 rounded-lg text-sm font-medium">
                                 <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
@@ -359,10 +359,9 @@
 </div>
 
 <script>
-function copyToClipboard(text) {
+function copyToClipboard(text, button) {
     navigator.clipboard.writeText(text).then(function() {
         // Show success message
-        const button = event.target;
         const originalText = button.textContent;
         button.textContent = '¡Copiado!';
         button.classList.add('bg-green-100', 'text-green-800', 'border-green-300');

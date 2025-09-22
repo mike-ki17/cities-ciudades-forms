@@ -102,11 +102,88 @@
             </div>
         </div>
 
+        <!-- Filtros de búsqueda -->
+        <div class="mt-8">
+            <div class="admin-card">
+                <div class="px-6 py-4 border-b" style="border-color: var(--color-border);">
+                    <h3 class="text-lg leading-6 font-medium admin-text">Filtros de Búsqueda</h3>
+                </div>
+                <div class="p-6">
+                    <form method="GET" action="{{ route('admin.forms.index') }}" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <!-- Búsqueda general -->
+                            <div>
+                                <label for="search" class="block text-sm font-medium admin-text-secondary mb-2">
+                                    Buscar por nombre, ID o ciudad
+                                </label>
+                                <input type="text" 
+                                       id="search" 
+                                       name="search" 
+                                       value="{{ request('search') }}"
+                                       placeholder="Ej: Formulario, 1, Madrid..."
+                                       class="admin-input w-full">
+                            </div>
+
+                            <!-- Filtro por ciudad -->
+                            <div>
+                                <label for="city_id" class="block text-sm font-medium admin-text-secondary mb-2">
+                                    Ciudad
+                                </label>
+                                <select id="city_id" name="city_id" class="admin-input w-full">
+                                    <option value="">Todas las ciudades</option>
+                                    @foreach($cities as $city)
+                                        <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
+                                            {{ $city->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Filtro por estado -->
+                            <div>
+                                <label for="status" class="block text-sm font-medium admin-text-secondary mb-2">
+                                    Estado
+                                </label>
+                                <select id="status" name="status" class="admin-input w-full">
+                                    <option value="">Todos los estados</option>
+                                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Activos</option>
+                                    <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactivos</option>
+                                </select>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="flex items-end space-x-2">
+                                <button type="submit" 
+                                        class="admin-button-primary px-4 py-2 rounded-md text-sm font-medium">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                    Buscar
+                                </button>
+                                <a href="{{ route('admin.forms.index') }}" 
+                                   class="admin-button-outline px-4 py-2 rounded-md text-sm font-medium">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                    </svg>
+                                    Limpiar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Forms Table -->
         <div class="mt-8">
             <div class="admin-card">
                 <div class="px-6 py-4 border-b" style="border-color: var(--color-border);">
-                    <h3 class="text-lg leading-6 font-medium admin-text">Lista de Formularios</h3>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg leading-6 font-medium admin-text">Lista de Formularios</h3>
+                        <div class="text-sm admin-text-secondary">
+                            Mostrando {{ $forms->firstItem() ?? 0 }} - {{ $forms->lastItem() ?? 0 }} de {{ $forms->total() }} formularios
+                        </div>
+                    </div>
                 </div>
                 <div class="p-0">
                     @if($forms->count() > 0)
@@ -184,10 +261,10 @@
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center space-x-2">
                                                     <input type="text" 
-                                                           value="{{ route('public.forms.slug.show', $form->slug) }}" 
+                                                           value="{{ route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]) }}" 
                                                            readonly 
                                                            class="w-48 text-xs admin-input rounded px-2 py-1">
-                                                    <button onclick="copyToClipboard('{{ route('public.forms.slug.show', $form->slug) }}')" 
+                                                    <button onclick="copyToClipboard('{{ route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]) }}', this)" 
                                                             class="text-xs px-2 py-1 admin-button-outline rounded">
                                                         Copiar
                                                     </button>
@@ -241,21 +318,49 @@
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <!-- Paginación -->
+                        @if($forms->hasPages())
+                            <div class="px-6 py-4 border-t" style="border-color: var(--color-border);">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-sm admin-text-secondary">
+                                        Mostrando {{ $forms->firstItem() ?? 0 }} - {{ $forms->lastItem() ?? 0 }} de {{ $forms->total() }} resultados
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        {{ $forms->links() }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     @else
                         <div class="text-center py-12">
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <h3 class="mt-2 text-sm font-medium admin-text">No hay formularios</h3>
-                            <p class="mt-1 text-sm admin-text-secondary">Comienza creando tu primer formulario.</p>
-                            <div class="mt-6">
-                                <a href="{{ route('admin.forms.create') }}" class="admin-button-primary px-4 py-2 rounded-md text-sm font-medium">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                    Nuevo Formulario
-                                </a>
-                            </div>
+                            <h3 class="mt-2 text-sm font-medium admin-text">
+                                @if(request()->hasAny(['search', 'city_id', 'status']))
+                                    No se encontraron formularios con los filtros aplicados
+                                @else
+                                    No hay formularios
+                                @endif
+                            </h3>
+                            <p class="mt-1 text-sm admin-text-secondary">
+                                @if(request()->hasAny(['search', 'city_id', 'status']))
+                                    Intenta ajustar los filtros de búsqueda o <a href="{{ route('admin.forms.index') }}" class="admin-link">limpiar los filtros</a>.
+                                @else
+                                    Comienza creando tu primer formulario.
+                                @endif
+                            </p>
+                            @if(!request()->hasAny(['search', 'city_id', 'status']))
+                                <div class="mt-6">
+                                    <a href="{{ route('admin.forms.create') }}" class="admin-button-primary px-4 py-2 rounded-md text-sm font-medium">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                        Nuevo Formulario
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     @endif
                 </div>
@@ -265,10 +370,9 @@
 </div>
 
 <script>
-function copyToClipboard(text) {
+function copyToClipboard(text, button) {
     navigator.clipboard.writeText(text).then(function() {
         // Show success message
-        const button = event.target;
         const originalText = button.textContent;
         button.textContent = '¡Copiado!';
         button.classList.add('bg-green-100', 'text-green-800');

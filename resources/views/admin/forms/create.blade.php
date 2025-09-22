@@ -121,24 +121,59 @@
                         Configuración del Formulario
                     </div>
                     
-                    <div class="admin-field-group">
-                        <label for="schema_json" class="admin-field-label">
-                            <svg class="w-4 h-4 inline-block mr-1" style="color: #bb2558;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            Estructura del Formulario (JSON) *
-                        </label>
-                        <textarea name="schema_json" id="schema_json" rows="12" 
-                                  class="admin-textarea w-full font-mono text-sm" 
-                                  placeholder='{"fields": [{"key": "nombre", "label": "Nombre Completo", "type": "text", "required": true, "placeholder": "Ingresa tu nombre completo"}]}'>{{ old('schema_json', '{"fields": []}') }}</textarea>
-                        <div class="admin-field-help">
-                            <strong>Tipos de campos disponibles:</strong> text, email, number, date, select, textarea, checkbox<br>
-                            <strong>Propiedades requeridas:</strong> key, label, type, required<br>
-                            <strong>Propiedades opcionales:</strong> placeholder, options (para select), help
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- JSON Editor -->
+                        <div class="admin-field-group">
+                            <label for="schema_json" class="admin-field-label">
+                                <svg class="w-4 h-4 inline-block mr-1" style="color: #bb2558;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                Estructura del Formulario (JSON) *
+                            </label>
+                            <textarea name="schema_json" id="schema_json" rows="12" 
+                                      class="admin-textarea w-full font-mono text-sm" 
+                                      placeholder='{"fields": [{"key": "nombre", "label": "Nombre Completo", "type": "text", "required": true, "placeholder": "Ingresa tu nombre completo"}]}'>{{ old('schema_json', '{"fields": []}') }}</textarea>
+                            <div class="admin-field-help">
+                                <strong>Tipos de campos disponibles:</strong> text, email, number, date, select, textarea, checkbox<br>
+                                <strong>Propiedades requeridas:</strong> key, label, type, required<br>
+                                <strong>Propiedades opcionales:</strong> placeholder, options (para select), help
+                            </div>
+                            <div class="mt-2">
+                                <button type="button" id="load-example" class="admin-button-outline text-xs px-3 py-1">
+                                    <svg class="w-3 h-3 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                    </svg>
+                                    Cargar Ejemplo
+                                </button>
+                            </div>
+                            @error('schema_json')
+                                <div class="admin-field-error">{{ $message }}</div>
+                            @enderror
                         </div>
-                        @error('schema_json')
-                            <div class="admin-field-error">{{ $message }}</div>
-                        @enderror
+
+                        <!-- Live Preview -->
+                        <div class="admin-field-group">
+                            <label class="admin-field-label">
+                                <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Previsualización en Tiempo Real
+                            </label>
+                            <div class="admin-card rounded-lg p-4 border-2 border-dashed" style="border-color: var(--color-border);">
+                                <div id="form-preview" class="space-y-4">
+                                    <div class="text-center admin-text-secondary text-sm py-8">
+                                        <svg class="w-8 h-8 mx-auto mb-2 admin-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        <p>Los campos aparecerán aquí mientras escribes el JSON</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="admin-field-help">
+                                Esta previsualización se actualiza automáticamente mientras editas el JSON
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -304,4 +339,285 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+console.log('Script de previsualización cargado');
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM cargado, inicializando previsualización');
+    
+    const schemaTextarea = document.getElementById('schema_json');
+    const previewContainer = document.getElementById('form-preview');
+    
+    console.log('Elementos encontrados:', {
+        textarea: schemaTextarea,
+        preview: previewContainer
+    });
+    
+    if (!schemaTextarea || !previewContainer) {
+        console.error('No se encontraron los elementos necesarios');
+        return;
+    }
+    
+    // Función para renderizar un campo individual
+    function renderField(field) {
+        console.log('Renderizando campo:', field);
+        
+        const fieldDiv = document.createElement('div');
+        fieldDiv.className = 'admin-field-group';
+        
+        // Crear label
+        const label = document.createElement('label');
+        label.className = 'admin-field-label';
+        label.textContent = field.label;
+        if (field.required) {
+            const requiredSpan = document.createElement('span');
+            requiredSpan.className = 'text-red-500 ml-1';
+            requiredSpan.textContent = '*';
+            label.appendChild(requiredSpan);
+        }
+        
+        // Crear input según el tipo
+        let input;
+        switch (field.type) {
+            case 'text':
+            case 'email':
+            case 'number':
+            case 'date':
+                input = document.createElement('input');
+                input.type = field.type;
+                input.className = 'admin-input w-full';
+                if (field.placeholder) {
+                    input.placeholder = field.placeholder;
+                }
+                break;
+                
+            case 'textarea':
+                input = document.createElement('textarea');
+                input.rows = 3;
+                input.className = 'admin-textarea w-full';
+                if (field.placeholder) {
+                    input.placeholder = field.placeholder;
+                }
+                break;
+                
+            case 'select':
+                input = document.createElement('select');
+                input.className = 'admin-select w-full';
+                
+                // Agregar opción por defecto
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Seleccionar...';
+                input.appendChild(defaultOption);
+                
+                // Agregar opciones si existen
+                if (field.options && Array.isArray(field.options)) {
+                    field.options.forEach(option => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = option.value || option;
+                        optionElement.textContent = option.label || option;
+                        input.appendChild(optionElement);
+                    });
+                }
+                break;
+                
+            case 'checkbox':
+                const checkboxContainer = document.createElement('div');
+                checkboxContainer.className = 'flex items-center space-x-3 p-3 admin-card rounded-lg';
+                
+                input = document.createElement('input');
+                input.type = 'checkbox';
+                input.className = 'w-4 h-4 admin-input rounded focus:ring-2 focus:ring-acid-green';
+                
+                const checkboxLabel = document.createElement('label');
+                checkboxLabel.className = 'admin-text font-medium cursor-pointer';
+                checkboxLabel.textContent = field.label;
+                
+                checkboxContainer.appendChild(input);
+                checkboxContainer.appendChild(checkboxLabel);
+                
+                fieldDiv.appendChild(checkboxContainer);
+                return fieldDiv;
+                
+            default:
+                input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'admin-input w-full';
+                if (field.placeholder) {
+                    input.placeholder = field.placeholder;
+                }
+        }
+        
+        // Agregar elementos al contenedor
+        fieldDiv.appendChild(label);
+        if (field.type !== 'checkbox') {
+            fieldDiv.appendChild(input);
+        }
+        
+        // Agregar texto de ayuda si existe
+        if (field.help) {
+            const helpText = document.createElement('div');
+            helpText.className = 'admin-field-help';
+            helpText.textContent = field.help;
+            fieldDiv.appendChild(helpText);
+        }
+        
+        return fieldDiv;
+    }
+    
+    // Función para actualizar la previsualización
+    function updatePreview() {
+        console.log('Actualizando previsualización');
+        
+        try {
+            const jsonText = schemaTextarea.value.trim();
+            console.log('JSON text:', jsonText);
+            
+            if (!jsonText) {
+                previewContainer.innerHTML = `
+                    <div class="text-center admin-text-secondary text-sm py-8">
+                        <svg class="w-8 h-8 mx-auto mb-2 admin-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p>Los campos aparecerán aquí mientras escribes el JSON</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const schema = JSON.parse(jsonText);
+            console.log('Schema parseado:', schema);
+            
+            if (!schema.fields || !Array.isArray(schema.fields)) {
+                previewContainer.innerHTML = `
+                    <div class="text-center admin-alert-error text-sm py-8">
+                        <svg class="w-8 h-8 mx-auto mb-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p>Error: El JSON debe contener un array "fields"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            if (schema.fields.length === 0) {
+                previewContainer.innerHTML = `
+                    <div class="text-center admin-text-secondary text-sm py-8">
+                        <svg class="w-8 h-8 mx-auto mb-2 admin-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p>No hay campos definidos. Agrega campos al array "fields"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Limpiar contenedor
+            previewContainer.innerHTML = '';
+            
+            // Renderizar cada campo
+            schema.fields.forEach(field => {
+                if (field.key && field.label && field.type) {
+                    const fieldElement = renderField(field);
+                    previewContainer.appendChild(fieldElement);
+                }
+            });
+            
+            console.log('Previsualización actualizada con', schema.fields.length, 'campos');
+            
+        } catch (error) {
+            console.error('Error en previsualización:', error);
+            previewContainer.innerHTML = `
+                <div class="text-center admin-alert-error text-sm py-8">
+                    <svg class="w-8 h-8 mx-auto mb-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p>Error en el JSON: ${error.message}</p>
+                </div>
+            `;
+        }
+    }
+    
+    // Event listeners
+    schemaTextarea.addEventListener('input', updatePreview);
+    schemaTextarea.addEventListener('paste', function() {
+        // Pequeño delay para que se procese el paste
+        setTimeout(updatePreview, 10);
+    });
+    
+    // Botón para cargar ejemplo
+    const loadExampleBtn = document.getElementById('load-example');
+    if (loadExampleBtn) {
+        loadExampleBtn.addEventListener('click', function() {
+            console.log('Cargando ejemplo');
+            const exampleJson = {
+                "fields": [
+                    {
+                        "key": "nombre",
+                        "label": "Nombre Completo",
+                        "type": "text",
+                        "required": true,
+                        "placeholder": "Ingresa tu nombre completo",
+                        "help": "Este campo es obligatorio"
+                    },
+                    {
+                        "key": "email",
+                        "label": "Correo Electrónico",
+                        "type": "email",
+                        "required": true,
+                        "placeholder": "ejemplo@correo.com"
+                    },
+                    {
+                        "key": "telefono",
+                        "label": "Teléfono",
+                        "type": "text",
+                        "required": false,
+                        "placeholder": "Número de teléfono"
+                    },
+                    {
+                        "key": "fecha_nacimiento",
+                        "label": "Fecha de Nacimiento",
+                        "type": "date",
+                        "required": false
+                    },
+                    {
+                        "key": "genero",
+                        "label": "Género",
+                        "type": "select",
+                        "required": false,
+                        "options": [
+                            {"value": "masculino", "label": "Masculino"},
+                            {"value": "femenino", "label": "Femenino"},
+                            {"value": "otro", "label": "Otro"}
+                        ]
+                    },
+                    {
+                        "key": "comentarios",
+                        "label": "Comentarios Adicionales",
+                        "type": "textarea",
+                        "required": false,
+                        "placeholder": "Escribe aquí cualquier comentario adicional..."
+                    },
+                    {
+                        "key": "acepta_terminos",
+                        "label": "Acepto los términos y condiciones",
+                        "type": "checkbox",
+                        "required": true
+                    }
+                ]
+            };
+            
+            schemaTextarea.value = JSON.stringify(exampleJson, null, 2);
+            updatePreview();
+        });
+    }
+    
+    // Actualizar previsualización inicial
+    console.log('Ejecutando previsualización inicial');
+    updatePreview();
+});
+</script>
+@endpush
 @endsection

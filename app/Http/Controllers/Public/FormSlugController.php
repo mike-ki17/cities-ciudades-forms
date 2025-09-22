@@ -14,13 +14,13 @@ class FormSlugController extends Controller
     ) {}
 
     /**
-     * Display the form using its slug.
+     * Display the form using its ID and slug.
      */
-    public function show(Request $request, string $slug): View
+    public function show(Request $request, int $id, string $slug): View
     {
         $form = $this->formService->getFormBySlug($slug);
         
-        if (!$form) {
+        if (!$form || $form->id !== $id) {
             abort(404, 'Formulario no encontrado.');
         }
 

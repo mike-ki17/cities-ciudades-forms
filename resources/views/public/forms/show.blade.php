@@ -12,6 +12,17 @@
     $primaryColor = $styles['primary_color'] ?? '#00ffbd';
     $borderRadius = $styles['border_radius'] ?? '8px';
     $formShadow = $styles['form_shadow'] ?? true;
+    
+    // Configuración de tamaño de imágenes
+    $image1Width = $styles['image_1_width'] ?? 200;
+    $image1Height = $styles['image_1_height'] ?? 100;
+    $image1ObjectFit = $styles['image_1_object_fit'] ?? 'contain';
+    $image2Width = $styles['image_2_width'] ?? 150;
+    $image2Height = $styles['image_2_height'] ?? 80;
+    $image2ObjectFit = $styles['image_2_object_fit'] ?? 'contain';
+    $imageSpacing = $styles['image_spacing'] ?? 16;
+    $mobileBehavior = $styles['mobile_image_behavior'] ?? 'stack';
+    $mobileScale = $styles['mobile_scale'] ?? 80;
 @endphp
 
 @section('body-style')
@@ -29,17 +40,19 @@
 @section('content')
 <div class="form-styled max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
      @if($headerImage1 || $headerImage2)
-             <div class="card-header-image" style="display: flex; justify-content: center; align-items: center; gap: 1rem; padding: 1rem 0;">
-                 @if($headerImage1 && $headerImage2)
-                     {{-- Dos imágenes: una al lado de la otra --}}
-                     <img src="{{ $headerImage1 }}" alt="Header Image 1" style="max-height: 400px; max-width: 48%; object-fit: contain; flex: 1;" onerror="this.style.display='none'">
-                     <img src="{{ $headerImage2 }}" alt="Header Image 2" style="max-height: 400px; max-width: 48%; object-fit: contain; flex: 1;" onerror="this.style.display='none'">
-                 @elseif($headerImage1)
-                     {{-- Solo imagen 1: ocupa todo el espacio --}}
-                     <img src="{{ $headerImage1 }}" alt="Header Image 1" style="max-height: 400px; max-width: 100%; object-fit: contain;" onerror="this.style.display='none'">
-                 @elseif($headerImage2)
-                     {{-- Solo imagen 2: ocupa todo el espacio --}}
-                     <img src="{{ $headerImage2 }}" alt="Header Image 2" style="max-height: 400px; max-width: 100%; object-fit: contain;" onerror="this.style.display='none'">
+             <div class="card-header-image" style="display: flex; justify-content: center; align-items: center; gap: {{ $imageSpacing }}px; padding: 1rem 0;">
+                 @if($headerImage1)
+                     <img src="{{ $headerImage1 }}" alt="Header Image 1" 
+                          style="width: {{ $image1Width }}px; height: {{ $image1Height }}px; object-fit: {{ $image1ObjectFit }}; border-radius: {{ $borderRadius }}; transition: all 0.3s ease;"
+                          class="header-image-1"
+                          onerror="this.style.display='none'">
+                 @endif
+                 
+                 @if($headerImage2 && $mobileBehavior !== 'hide_secondary')
+                     <img src="{{ $headerImage2 }}" alt="Header Image 2" 
+                          style="width: {{ $image2Width }}px; height: {{ $image2Height }}px; object-fit: {{ $image2ObjectFit }}; border-radius: {{ $borderRadius }}; transition: all 0.3s ease;"
+                          class="header-image-2"
+                          onerror="this.style.display='none'">
                  @endif
              </div>
          @endif
@@ -106,7 +119,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('public.forms.slug.submit', ['slug' => $form->slug]) }}" class="space-y-6">
+            <form method="POST" action="{{ route('public.forms.slug.submit', ['id' => $form->id, 'slug' => $form->slug]) }}" class="space-y-6">
                 @csrf
                 
                 {{-- Campos fijos del participante --}}
@@ -713,7 +726,7 @@ document.addEventListener('DOMContentLoaded', function() {
     align-items: center;
     gap: 1rem;
     padding: 1rem 0;
-    flex-wrap: wrap;
+
 }
 
 .form-styled .card-header-image img {
@@ -753,6 +766,48 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Aplicar color principal a enlaces y elementos destacados */
 .form-styled a {
     color: var(--primary-color) !important;
+}
+
+/* Estilos responsivos para imágenes del header */
+@media (max-width: 768px) {
+    .card-header-image {
+        flex-direction: column !important;
+        gap: {{ $imageSpacing / 2 }}px !important;
+    }
+    
+    @if($mobileBehavior === 'resize')
+        .header-image-1 {
+            width: {{ $image1Width * $mobileScale / 100 }}px !important;
+            height: {{ $image1Height * $mobileScale / 100 }}px !important;
+        }
+        
+        .header-image-2 {
+            width: {{ $image2Width * $mobileScale / 100 }}px !important;
+            height: {{ $image2Height * $mobileScale / 100 }}px !important;
+        }
+    @elseif($mobileBehavior === 'hide_secondary')
+        .header-image-2 {
+            display: none !important;
+        }
+    @endif
+}
+
+@media (max-width: 480px) {
+    .card-header-image {
+        padding: 0.5rem 0 !important;
+    }
+    
+    @if($mobileBehavior === 'resize')
+        .header-image-1 {
+            width: {{ $image1Width * $mobileScale / 100 * 0.8 }}px !important;
+            height: {{ $image1Height * $mobileScale / 100 * 0.8 }}px !important;
+        }
+        
+        .header-image-2 {
+            width: {{ $image2Width * $mobileScale / 100 * 0.8 }}px !important;
+            height: {{ $image2Height * $mobileScale / 100 * 0.8 }}px !important;
+        }
+    @endif
 }
 
 .form-styled a:hover {

@@ -49,6 +49,179 @@
             </div>
         </div>
 
+        <!-- Image Sizing Configuration Section -->
+        <div class="admin-field-group">
+            <h4 class="admin-field-label mb-4">
+                <svg class="w-4 h-4 inline-block mr-1" style="color: #bb2558;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                </svg>
+                Configuración de Tamaño de Imágenes
+            </h4>
+            
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <!-- Image 1 Sizing -->
+                <div class="admin-card rounded-lg p-4">
+                    <h5 class="admin-field-label mb-3">
+                        <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Imagen Principal
+                    </h5>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Width -->
+                        <div class="admin-field-group">
+                            <label for="style_image_1_width" class="admin-field-label text-sm">
+                                Ancho (px)
+                            </label>
+                            <input type="number" name="style_json[image_1_width]" id="style_image_1_width" 
+                                   value="{{ old('style_json.image_1_width', $styles['image_1_width'] ?? 200) }}"
+                                   class="admin-input w-full" min="50" max="500" step="10">
+                        </div>
+                        
+                        <!-- Height -->
+                        <div class="admin-field-group">
+                            <label for="style_image_1_height" class="admin-field-label text-sm">
+                                Alto (px)
+                            </label>
+                            <input type="number" name="style_json[image_1_height]" id="style_image_1_height" 
+                                   value="{{ old('style_json.image_1_height', $styles['image_1_height'] ?? 100) }}"
+                                   class="admin-input w-full" min="30" max="300" step="10">
+                        </div>
+                    </div>
+                    
+                    <!-- Aspect Ratio Lock -->
+                    <div class="mt-3">
+                        <div class="flex items-center space-x-3 p-3 admin-card rounded-lg">
+                            <input type="checkbox" name="style_json[image_1_lock_aspect]" value="1" 
+                                   {{ old('style_json.image_1_lock_aspect', $styles['image_1_lock_aspect'] ?? true) ? 'checked' : '' }}
+                                   id="style_image_1_lock_aspect"
+                                   class="w-4 h-4 admin-input rounded focus:ring-2 focus:ring-acid-green">
+                            <label for="style_image_1_lock_aspect" class="admin-text font-medium cursor-pointer">
+                                Mantener proporción
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Object Fit -->
+                    <div class="mt-3">
+                        <label for="style_image_1_object_fit" class="admin-field-label text-sm">
+                            Ajuste de imagen
+                        </label>
+                        <select name="style_json[image_1_object_fit]" id="style_image_1_object_fit" class="admin-select w-full">
+                            <option value="contain" {{ old('style_json.image_1_object_fit', $styles['image_1_object_fit'] ?? 'contain') == 'contain' ? 'selected' : '' }}>Contener (sin recortar)</option>
+                            <option value="cover" {{ old('style_json.image_1_object_fit', $styles['image_1_object_fit'] ?? 'contain') == 'cover' ? 'selected' : '' }}>Cubrir (puede recortar)</option>
+                            <option value="fill" {{ old('style_json.image_1_object_fit', $styles['image_1_object_fit'] ?? 'contain') == 'fill' ? 'selected' : '' }}>Llenar (distorsionar)</option>
+                            <option value="scale-down" {{ old('style_json.image_1_object_fit', $styles['image_1_object_fit'] ?? 'contain') == 'scale-down' ? 'selected' : '' }}>Reducir si es necesario</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Image 2 Sizing -->
+                <div class="admin-card rounded-lg p-4">
+                    <h5 class="admin-field-label mb-3">
+                        <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Imagen Secundaria
+                    </h5>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Width -->
+                        <div class="admin-field-group">
+                            <label for="style_image_2_width" class="admin-field-label text-sm">
+                                Ancho (px)
+                            </label>
+                            <input type="number" name="style_json[image_2_width]" id="style_image_2_width" 
+                                   value="{{ old('style_json.image_2_width', $styles['image_2_width'] ?? 150) }}"
+                                   class="admin-input w-full" min="50" max="400" step="10">
+                        </div>
+                        
+                        <!-- Height -->
+                        <div class="admin-field-group">
+                            <label for="style_image_2_height" class="admin-field-label text-sm">
+                                Alto (px)
+                            </label>
+                            <input type="number" name="style_json[image_2_height]" id="style_image_2_height" 
+                                   value="{{ old('style_json.image_2_height', $styles['image_2_height'] ?? 80) }}"
+                                   class="admin-input w-full" min="30" max="250" step="10">
+                        </div>
+                    </div>
+                    
+                    <!-- Aspect Ratio Lock -->
+                    <div class="mt-3">
+                        <div class="flex items-center space-x-3 p-3 admin-card rounded-lg">
+                            <input type="checkbox" name="style_json[image_2_lock_aspect]" value="1" 
+                                   {{ old('style_json.image_2_lock_aspect', $styles['image_2_lock_aspect'] ?? true) ? 'checked' : '' }}
+                                   id="style_image_2_lock_aspect"
+                                   class="w-4 h-4 admin-input rounded focus:ring-2 focus:ring-acid-green">
+                            <label for="style_image_2_lock_aspect" class="admin-text font-medium cursor-pointer">
+                                Mantener proporción
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Object Fit -->
+                    <div class="mt-3">
+                        <label for="style_image_2_object_fit" class="admin-field-label text-sm">
+                            Ajuste de imagen
+                        </label>
+                        <select name="style_json[image_2_object_fit]" id="style_image_2_object_fit" class="admin-select w-full">
+                            <option value="contain" {{ old('style_json.image_2_object_fit', $styles['image_2_object_fit'] ?? 'contain') == 'contain' ? 'selected' : '' }}>Contener (sin recortar)</option>
+                            <option value="cover" {{ old('style_json.image_2_object_fit', $styles['image_2_object_fit'] ?? 'contain') == 'cover' ? 'selected' : '' }}>Cubrir (puede recortar)</option>
+                            <option value="fill" {{ old('style_json.image_2_object_fit', $styles['image_2_object_fit'] ?? 'contain') == 'fill' ? 'selected' : '' }}>Llenar (distorsionar)</option>
+                            <option value="scale-down" {{ old('style_json.image_2_object_fit', $styles['image_2_object_fit'] ?? 'contain') == 'scale-down' ? 'selected' : '' }}>Reducir si es necesario</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Responsive Options -->
+            <div class="mt-6">
+                <h5 class="admin-field-label mb-3">
+                    <svg class="w-4 h-4 inline-block mr-1" style="color: #bb2558;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    Opciones Responsivas
+                </h5>
+                
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <!-- Mobile Behavior -->
+                    <div class="admin-field-group">
+                        <label for="style_mobile_image_behavior" class="admin-field-label text-sm">
+                            Comportamiento en móvil
+                        </label>
+                        <select name="style_json[mobile_image_behavior]" id="style_mobile_image_behavior" class="admin-select w-full">
+                            <option value="stack" {{ old('style_json.mobile_image_behavior', $styles['mobile_image_behavior'] ?? 'stack') == 'stack' ? 'selected' : '' }}>Apilar verticalmente</option>
+                            <option value="hide_secondary" {{ old('style_json.mobile_image_behavior', $styles['mobile_image_behavior'] ?? 'stack') == 'hide_secondary' ? 'selected' : '' }}>Ocultar imagen secundaria</option>
+                            <option value="resize" {{ old('style_json.mobile_image_behavior', $styles['mobile_image_behavior'] ?? 'stack') == 'resize' ? 'selected' : '' }}>Redimensionar ambas</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Mobile Scale Factor -->
+                    <div class="admin-field-group">
+                        <label for="style_mobile_scale" class="admin-field-label text-sm">
+                            Escala en móvil (%)
+                        </label>
+                        <input type="number" name="style_json[mobile_scale]" id="style_mobile_scale" 
+                               value="{{ old('style_json.mobile_scale', $styles['mobile_scale'] ?? 80) }}"
+                               class="admin-input w-full" min="30" max="100" step="5">
+                        <div class="admin-field-help text-xs">Porcentaje del tamaño original en dispositivos móviles</div>
+                    </div>
+                    
+                    <!-- Image Spacing -->
+                    <div class="admin-field-group">
+                        <label for="style_image_spacing" class="admin-field-label text-sm">
+                            Espaciado entre imágenes (px)
+                        </label>
+                        <input type="number" name="style_json[image_spacing]" id="style_image_spacing" 
+                               value="{{ old('style_json.image_spacing', $styles['image_spacing'] ?? 16) }}"
+                               class="admin-input w-full" min="0" max="50" step="2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Background Section -->
         <div class="admin-field-group">
             <h4 class="admin-field-label mb-4">
@@ -175,7 +348,7 @@
             </h4>
             
             <div class="admin-card rounded-lg p-6">
-                <div id="style-preview" class="border-2 border-dashed border-gray-300 rounded-lg p-6 min-h-[200px] flex items-center justify-center">
+                <div id="style-preview" class="border-2 border-dashed border-gray-300 rounded-lg p-6 min-h-[200px] flex items-center justify-center flex-col" >
                     <div class="text-center">
                         <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -224,6 +397,57 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('change', updatePreview);
     });
 
+    // Aspect ratio lock functionality
+    function setupAspectRatioLock(imageNumber) {
+        const widthInput = document.getElementById(`style_image_${imageNumber}_width`);
+        const heightInput = document.getElementById(`style_image_${imageNumber}_height`);
+        const lockCheckbox = document.getElementById(`style_image_${imageNumber}_lock_aspect`);
+        
+        let isUpdating = false;
+        let originalRatio = 0;
+        
+        // Calculate original ratio when lock is enabled
+        function calculateRatio() {
+            if (widthInput.value && heightInput.value) {
+                originalRatio = widthInput.value / heightInput.value;
+            }
+        }
+        
+        // Update height when width changes (if locked)
+        widthInput.addEventListener('input', function() {
+            if (lockCheckbox.checked && !isUpdating && originalRatio > 0) {
+                isUpdating = true;
+                heightInput.value = Math.round(this.value / originalRatio);
+                isUpdating = false;
+                updatePreview();
+            }
+        });
+        
+        // Update width when height changes (if locked)
+        heightInput.addEventListener('input', function() {
+            if (lockCheckbox.checked && !isUpdating && originalRatio > 0) {
+                isUpdating = true;
+                widthInput.value = Math.round(this.value * originalRatio);
+                isUpdating = false;
+                updatePreview();
+            }
+        });
+        
+        // Handle lock checkbox changes
+        lockCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                calculateRatio();
+            }
+        });
+        
+        // Initial ratio calculation
+        calculateRatio();
+    }
+    
+    // Setup aspect ratio locks for both images
+    setupAspectRatioLock(1);
+    setupAspectRatioLock(2);
+
     function updatePreview() {
         const preview = document.getElementById('style-preview');
         const backgroundColor = document.getElementById('style_background_color').value;
@@ -233,26 +457,92 @@ document.addEventListener('DOMContentLoaded', function() {
         const headerImage1 = document.getElementById('style_header_image_1').value;
         const headerImage2 = document.getElementById('style_header_image_2').value;
         const backgroundTexture = document.getElementById('style_background_texture').value;
+        
+        // Get image sizing values
+        const image1Width = document.getElementById('style_image_1_width').value || 200;
+        const image1Height = document.getElementById('style_image_1_height').value || 100;
+        const image1ObjectFit = document.getElementById('style_image_1_object_fit').value || 'contain';
+        const image2Width = document.getElementById('style_image_2_width').value || 150;
+        const image2Height = document.getElementById('style_image_2_height').value || 80;
+        const image2ObjectFit = document.getElementById('style_image_2_object_fit').value || 'contain';
+        const imageSpacing = document.getElementById('style_image_spacing').value || 16;
+        const mobileBehavior = document.getElementById('style_mobile_image_behavior').value || 'stack';
+        const mobileScale = document.getElementById('style_mobile_scale').value || 80;
 
         // Build preview HTML
         let previewHTML = '';
-        
-        // Header images
+        preview.style.backgroundColor = backgroundColor;
+
+        // Header images with dynamic sizing
         if (headerImage1 || headerImage2) {
-            previewHTML += '<div class="mb-4 text-center">';
+            const spacing = `${imageSpacing}px`;
+            previewHTML += `
+                <div class="mb-4 flex justify-center items-center" style="gap: ${spacing};">
+            `;
+            
             if (headerImage1) {
-                previewHTML += `<img src="${headerImage1}" alt="Header 1" class="mx-auto max-h-16 rounded mb-2" onerror="this.style.display='none'">`;
+                const mobileWidth = Math.round(image1Width * mobileScale / 100);
+                const mobileHeight = Math.round(image1Height * mobileScale / 100);
+                
+                previewHTML += `
+                    <img src="${headerImage1}" alt="Header 1" 
+                         style="width: ${image1Width}px; height: ${image1Height}px; object-fit: ${image1ObjectFit}; border-radius: ${borderRadius};"
+                         class="rounded transition-all duration-300"
+                         onerror="this.style.display='none'"
+                         onload="this.style.opacity='1'">
+                `;
             }
-            if (headerImage2) {
-                previewHTML += `<img src="${headerImage2}" alt="Header 2" class="mx-auto max-h-12 rounded" onerror="this.style.display='none'">`;
+            
+            if (headerImage2 && mobileBehavior !== 'hide_secondary') {
+                const mobileWidth = Math.round(image2Width * mobileScale / 100);
+                const mobileHeight = Math.round(image2Height * mobileScale / 100);
+                
+                previewHTML += `
+                    <img src="${headerImage2}" alt="Header 2" 
+                         style="width: ${image2Width}px; height: ${image2Height}px; object-fit: ${image2ObjectFit}; border-radius: ${borderRadius};"
+                         class="rounded transition-all duration-300"
+                         onerror="this.style.display='none'"
+                         onload="this.style.opacity='1'">
+                `;
             }
+            
             previewHTML += '</div>';
+            
+            // Add responsive behavior info
+            if (mobileBehavior === 'stack') {
+                previewHTML += `
+                    <div class="text-center text-xs admin-text-secondary mb-2">
+                        <svg class="w-3 h-3 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        En móvil: Se apilarán verticalmente
+                    </div>
+                `;
+            } else if (mobileBehavior === 'hide_secondary') {
+                previewHTML += `
+                    <div class="text-center text-xs admin-text-secondary mb-2">
+                        <svg class="w-3 h-3 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                        </svg>
+                        En móvil: Solo se mostrará la imagen principal
+                    </div>
+                `;
+            } else if (mobileBehavior === 'resize') {
+                previewHTML += `
+                    <div class="text-center text-xs admin-text-secondary mb-2">
+                        <svg class="w-3 h-3 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                        </svg>
+                        En móvil: Redimensionadas al ${mobileScale}%
+                    </div>
+                `;
+            }
         }
 
         // Form preview
         previewHTML += `
-            <div class="max-w-md mx-auto p-4 rounded-lg border" 
-                 style="background-color: ${backgroundColor}; border-radius: ${borderRadius}; ${formShadow ? 'box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);' : ''}">
+            <div class=" p-4 rounded-lg border" 
+                style="width:70%; background-color: #ffffff; border-radius: ${borderRadius}; ${formShadow ? 'box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);' : ''}">
                 <h3 class="text-lg font-semibold mb-3" style="color: ${primaryColor};">Vista Previa del Formulario</h3>
                 <div class="space-y-3">
                     <input type="text" placeholder="Campo de ejemplo" class="w-full p-2 border rounded" style="border-radius: ${borderRadius};">

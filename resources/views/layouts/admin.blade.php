@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - Admin - @yield('title', 'Panel de Administración')</title>
+    <title>Smartfilms Forms - Admin - @yield('title', 'Panel de Administración')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -292,8 +292,9 @@
         <div class="hidden md:flex md:w-64 md:flex-col">
             <div class="flex flex-col flex-grow pt-5 admin-sidebar overflow-y-auto">
                 <div class="flex items-center flex-shrink-0 px-4">
-                    <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold admin-link">
-                        {{ config('app.name', 'Formularios por Ciudad') }}
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3">
+                        <img src="https://d1qdwr9la23cpt.cloudfront.net/uploads/2025/Isotipo.png" alt="Smartfilms Forms" class="h-8 w-8">
+                        <span class="text-xl font-bold admin-link">Smartfilms Forms</span>
                     </a>
                 </div>
                 <div class="mt-5 flex-grow flex flex-col">
@@ -514,5 +515,7 @@
             });
         });
     </script>
+    
+    @stack('scripts')
 </body>
 </html>
