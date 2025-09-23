@@ -111,6 +111,50 @@
                     </div>
                 </div>
 
+                <!-- Field Selection Section -->
+                <div class="admin-form-section">
+                    <div class="admin-form-section-title">
+                        <svg class="w-5 h-5 inline-block mr-2" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                        </svg>
+                        Selección de Campos
+                    </div>
+                    
+                    <div class="admin-field-group">
+                        <label class="admin-field-label">
+                            <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                            Campos Disponibles
+                        </label>
+                        <div class="admin-card rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <p class="admin-text-secondary text-sm">
+                                    Selecciona los campos que quieres agregar al formulario. Se añadirán automáticamente al JSON.
+                                </p>
+                                <button type="button" id="load-fields" class="admin-button-outline text-xs px-3 py-1">
+                                    <svg class="w-3 h-3 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                    </svg>
+                                    Cargar Campos
+                                </button>
+                            </div>
+                            
+                            <div id="fields-container" class="space-y-3">
+                                <div class="text-center admin-text-secondary text-sm py-4">
+                                    <svg class="w-6 h-6 mx-auto mb-2 admin-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                    </svg>
+                                    <p>Haz clic en "Cargar Campos" para ver los campos disponibles</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="admin-field-help">
+                            Los campos seleccionados se agregarán automáticamente al JSON del formulario con sus opciones correspondientes.
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Form Configuration Section -->
                 <div class="admin-form-section">
                     <div class="admin-form-section-title">
@@ -349,15 +393,250 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const schemaTextarea = document.getElementById('schema_json');
     const previewContainer = document.getElementById('form-preview');
+    const fieldsContainer = document.getElementById('fields-container');
+    const loadFieldsBtn = document.getElementById('load-fields');
     
     console.log('Elementos encontrados:', {
         textarea: schemaTextarea,
-        preview: previewContainer
+        preview: previewContainer,
+        fieldsContainer: fieldsContainer,
+        loadFieldsBtn: loadFieldsBtn
     });
     
     if (!schemaTextarea || !previewContainer) {
         console.error('No se encontraron los elementos necesarios');
         return;
+    }
+
+    // Variables globales
+    let availableFields = [];
+    let selectedFields = new Set();
+
+    // Función para cargar campos disponibles
+    async function loadAvailableFields() {
+        try {
+            console.log('Cargando campos disponibles...');
+            const url = '/test-fields'; // Temporal para probar
+            console.log('URL:', url);
+            
+            // Mostrar indicador de carga
+            fieldsContainer.innerHTML = `
+                <div class="text-center admin-text-secondary text-sm py-4">
+                    <svg class="w-6 h-6 mx-auto mb-2 admin-text-muted animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    <p>Cargando campos disponibles...</p>
+                </div>
+            `;
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                credentials: 'same-origin' // Incluir cookies de sesión
+            });
+            
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('No autorizado. Por favor, inicia sesión nuevamente.');
+                } else if (response.status === 403) {
+                    throw new Error('No tienes permisos para acceder a esta funcionalidad.');
+                } else if (response.status === 404) {
+                    throw new Error('Endpoint no encontrado. Verifica que la ruta esté configurada correctamente.');
+                } else {
+                    throw new Error(`Error del servidor: ${response.status}`);
+                }
+            }
+            
+            const data = await response.json();
+            console.log('Response data:', data);
+            
+            if (data.success) {
+                availableFields = data.fields;
+                renderFieldsList();
+                console.log('Campos cargados:', availableFields);
+            } else {
+                console.error('Error al cargar campos:', data);
+                fieldsContainer.innerHTML = `
+                    <div class="text-center admin-alert-error text-sm py-4">
+                        <svg class="w-6 h-6 mx-auto mb-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p>Error: ${data.message || 'Respuesta del servidor no exitosa'}</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Error al cargar campos:', error);
+            fieldsContainer.innerHTML = `
+                <div class="text-center admin-alert-error text-sm py-4">
+                    <svg class="w-6 h-6 mx-auto mb-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p>Error al cargar los campos disponibles</p>
+                    <p class="text-xs mt-2">${error.message}</p>
+                </div>
+            `;
+        }
+    }
+
+    // Función para renderizar la lista de campos
+    function renderFieldsList() {
+        if (availableFields.length === 0) {
+            fieldsContainer.innerHTML = `
+                <div class="text-center admin-text-secondary text-sm py-4">
+                    <svg class="w-6 h-6 mx-auto mb-2 admin-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p>No hay campos disponibles. Crea algunos campos primero.</p>
+                </div>
+            `;
+            return;
+        }
+
+        fieldsContainer.innerHTML = '';
+        
+        availableFields.forEach(field => {
+            const fieldElement = createFieldElement(field);
+            fieldsContainer.appendChild(fieldElement);
+        });
+    }
+
+    // Función para crear un elemento de campo
+    function createFieldElement(field) {
+        const fieldDiv = document.createElement('div');
+        fieldDiv.className = 'admin-card rounded-lg p-4 border border-gray-600 hover:border-acid-green transition-colors';
+        fieldDiv.dataset.fieldId = field.id;
+
+        const isSelected = selectedFields.has(field.id);
+        
+        fieldDiv.innerHTML = `
+            <div class="flex items-start space-x-3">
+                <input type="checkbox" 
+                       id="field-${field.id}" 
+                       class="field-checkbox mt-1 h-4 w-4 text-acid-green focus:ring-acid-green border-gray-600 rounded bg-gray-700"
+                       ${isSelected ? 'checked' : ''}>
+                <div class="flex-1">
+                    <label for="field-${field.id}" class="cursor-pointer">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="admin-text font-medium">${field.name}</h4>
+                                <p class="admin-text-secondary text-sm">${field.description || 'Sin descripción'}</p>
+                                <div class="flex items-center mt-2 space-x-2">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-700 text-gray-300">
+                                        ${field.code}
+                                    </span>
+                                    <span class="admin-text-secondary text-xs">
+                                        ${field.options.length} opciones
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="button" class="view-options-btn text-acid-green hover:text-acid-green-light text-sm">
+                                    Ver opciones
+                                </button>
+                            </div>
+                        </div>
+                    </label>
+                    <div class="options-preview mt-2 hidden">
+                        <div class="admin-text-secondary text-xs mb-1">Opciones:</div>
+                        <div class="flex flex-wrap gap-1">
+                            ${field.options.map(option => `
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-600 text-gray-300">
+                                    ${option.label}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Event listeners
+        const checkbox = fieldDiv.querySelector('.field-checkbox');
+        const viewOptionsBtn = fieldDiv.querySelector('.view-options-btn');
+        const optionsPreview = fieldDiv.querySelector('.options-preview');
+
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                selectedFields.add(field.id);
+            } else {
+                selectedFields.delete(field.id);
+            }
+            updateFormJSON();
+        });
+
+        viewOptionsBtn.addEventListener('click', function() {
+            optionsPreview.classList.toggle('hidden');
+            this.textContent = optionsPreview.classList.contains('hidden') ? 'Ver opciones' : 'Ocultar opciones';
+        });
+
+        return fieldDiv;
+    }
+
+    // Función para actualizar el JSON del formulario
+    function updateFormJSON() {
+        try {
+            let currentSchema = { fields: [] };
+            
+            // Intentar parsear el JSON actual
+            const currentJson = schemaTextarea.value.trim();
+            if (currentJson) {
+                currentSchema = JSON.parse(currentJson);
+                if (!currentSchema.fields) {
+                    currentSchema.fields = [];
+                }
+            }
+
+            // Filtrar campos que no están en la selección actual
+            currentSchema.fields = currentSchema.fields.filter(field => {
+                // Mantener campos que no fueron agregados por el selector
+                return !field._addedBySelector;
+            });
+
+            // Agregar campos seleccionados
+            selectedFields.forEach(fieldId => {
+                const field = availableFields.find(f => f.id === fieldId);
+                if (field) {
+                    const fieldConfig = {
+                        key: field.code,
+                        label: field.name,
+                        type: 'select', // Por defecto, los campos de la base de datos son select
+                        required: false,
+                        _addedBySelector: true,
+                        options: field.options.map(option => ({
+                            value: option.value,
+                            label: option.label
+                        }))
+                    };
+
+                    // Si no tiene opciones, cambiar a tipo text
+                    if (field.options.length === 0) {
+                        fieldConfig.type = 'text';
+                        delete fieldConfig.options;
+                    }
+
+                    currentSchema.fields.push(fieldConfig);
+                }
+            });
+
+            // Actualizar el textarea
+            schemaTextarea.value = JSON.stringify(currentSchema, null, 2);
+            
+            // Actualizar la previsualización
+            updatePreview();
+            
+            console.log('JSON actualizado con campos seleccionados:', selectedFields);
+        } catch (error) {
+            console.error('Error al actualizar JSON:', error);
+        }
     }
     
     // Función para renderizar un campo individual
@@ -546,6 +825,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Pequeño delay para que se procese el paste
         setTimeout(updatePreview, 10);
     });
+
+    // Event listener para cargar campos
+    if (loadFieldsBtn) {
+        loadFieldsBtn.addEventListener('click', loadAvailableFields);
+    }
     
     // Botón para cargar ejemplo
     const loadExampleBtn = document.getElementById('load-example');

@@ -11,12 +11,51 @@ use App\Http\Controllers\Public\FormSlugSubmitController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FormController;
+use App\Http\Controllers\Admin\FieldController;
 use App\Http\Controllers\Admin\SubmissionController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Temporary test route for fields (remove after testing)
+Route::get('/test-fields', function () {
+    try {
+        $fields = \App\Models\FormCategory::with(['formOptions' => function ($query) {
+            $query->where('is_active', true)->orderBy('order');
+        }])
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get();
+
+        $formattedFields = $fields->map(function ($field) {
+            return [
+                'id' => $field->id,
+                'code' => $field->code,
+                'name' => $field->name,
+                'description' => $field->description,
+                'options' => $field->formOptions->map(function ($option) {
+                    return [
+                        'value' => $option->value,
+                        'label' => $option->label,
+                        'description' => $option->description,
+                    ];
+                })->toArray(),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'fields' => $formattedFields,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage(),
+        ], 500);
+    }
 });
 
 // Form routes by slug (public access without authentication)
@@ -66,6 +105,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('forms', FormController::class);
     Route::post('/forms/{form}/activate', [FormController::class, 'activate'])->name('forms.activate');
     Route::post('/forms/{form}/deactivate', [FormController::class, 'deactivate'])->name('forms.deactivate');
+    Route::get('/forms/available-fields', [FormController::class, 'getAvailableFields'])->name('forms.available-fields');
+    
+    // Fields management (Form Categories and Options)
+    Route::resource('fields', FieldController::class);
+    Route::post('/fields/{field}/toggle-status', [FieldController::class, 'toggleStatus'])->name('fields.toggle-status');
+    
+    // Field options management
+    Route::get('/fields/{field}/options', [FieldController::class, 'options'])->name('fields.options');
+    Route::get('/fields/{field}/options/create', [FieldController::class, 'createOption'])->name('fields.options.create');
+    Route::post('/fields/{field}/options', [FieldController::class, 'storeOption'])->name('fields.options.store');
+    Route::get('/fields/{field}/options/{option}/edit', [FieldController::class, 'editOption'])->name('fields.options.edit');
+    Route::put('/fields/{field}/options/{option}', [FieldController::class, 'updateOption'])->name('fields.options.update');
+    Route::delete('/fields/{field}/options/{option}', [FieldController::class, 'destroyOption'])->name('fields.options.destroy');
+    Route::post('/fields/{field}/options/{option}/toggle-status', [FieldController::class, 'toggleOptionStatus'])->name('fields.options.toggle-status');
+    Route::put('/fields/{field}/options/order', [FieldController::class, 'updateOptionOrder'])->name('fields.options.order');
     
     // Submissions management
     Route::get('/submissions', [SubmissionController::class, 'index'])->name('submissions.index');

@@ -7,6 +7,7 @@ use App\Http\Requests\Form\StoreFormRequest;
 use App\Http\Requests\Form\UpdateFormRequest;
 use App\Models\Event;
 use App\Models\Form;
+use App\Models\FormCategory;
 use App\Services\FormService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -164,5 +165,39 @@ class FormController extends Controller
 
         return redirect()->back()
             ->with('success', 'Formulario desactivado exitosamente.');
+    }
+
+    /**
+     * Get available fields for form creation.
+     */
+    public function getAvailableFields(Request $request)
+    {
+        $fields = FormCategory::with(['formOptions' => function ($query) {
+            $query->where('is_active', true)->orderBy('order');
+        }])
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get();
+
+        $formattedFields = $fields->map(function ($field) {
+            return [
+                'id' => $field->id,
+                'code' => $field->code,
+                'name' => $field->name,
+                'description' => $field->description,
+                'options' => $field->formOptions->map(function ($option) {
+                    return [
+                        'value' => $option->value,
+                        'label' => $option->label,
+                        'description' => $option->description,
+                    ];
+                })->toArray(),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'fields' => $formattedFields,
+        ]);
     }
 }
