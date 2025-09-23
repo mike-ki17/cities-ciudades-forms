@@ -267,17 +267,20 @@
                 </div>
 
                 {{-- Campos dinámicos del formulario --}}
-                @if(count($form->fields) > 0)
+                @php
+                    $relationalFields = $form->getRelationalFields();
+                @endphp
+                @if($relationalFields->count() > 0)
                     <div class="bg-white border border-gray-200 rounded-lg p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Información Adicional</h3>
                         
-                        @foreach($form->fields as $field)
+                        @foreach($relationalFields as $field)
                     <div class="form-group" 
-                         @if(isset($field['visible']))
+                         @if(isset($field['visible']) && is_array($field['visible']) && isset($field['visible']['model']))
                              data-conditional-field="true"
                              data-conditional-model="{{ $field['visible']['model'] }}"
-                             data-conditional-value="{{ $field['visible']['value'] }}"
-                             data-conditional-condition="{{ $field['visible']['condition'] }}"
+                             data-conditional-value="{{ $field['visible']['value'] ?? '' }}"
+                             data-conditional-condition="{{ $field['visible']['condition'] ?? 'equal' }}"
                              style="display: none;"
                          @endif>
                         <label for="{{ $field['key'] }}" class="form-label">
@@ -292,7 +295,7 @@
                                 <input type="text" 
                                        id="{{ $field['key'] }}" 
                                        name="{{ $field['key'] }}" 
-                                       value="{{ old($field['key']) }}"
+                                       value="{{ old($field['key'], $field['default_value'] ?? '') }}"
                                        placeholder="{{ $field['placeholder'] ?? '' }}"
                                        @if(isset($field['validations']['max_elements']))
                                            maxlength="{{ $field['validations']['max_elements'] }}"
@@ -306,7 +309,7 @@
                                 <input type="email" 
                                        id="{{ $field['key'] }}" 
                                        name="{{ $field['key'] }}" 
-                                       value="{{ old($field['key']) }}"
+                                       value="{{ old($field['key'], $field['default_value'] ?? '') }}"
                                        placeholder="{{ $field['placeholder'] ?? '' }}"
                                        @if(isset($field['validations']['max_elements']))
                                            maxlength="{{ $field['validations']['max_elements'] }}"
@@ -320,9 +323,9 @@
                                 <input type="number" 
                                        id="{{ $field['key'] }}" 
                                        name="{{ $field['key'] }}" 
-                                       value="{{ old($field['key']) }}"
-                                       min="{{ $field['validations']['min'] ?? '' }}"
-                                       max="{{ $field['validations']['max'] ?? '' }}"
+                                       value="{{ old($field['key'], $field['default_value'] ?? '') }}"
+                                       min="{{ $field['validations']['min_value'] ?? '' }}"
+                                       max="{{ $field['validations']['max_value'] ?? '' }}"
                                        @if(isset($field['validations']['max_elements']))
                                            data-max-elements="{{ $field['validations']['max_elements'] }}"
                                        @elseif(isset($field['validations']['max_digits']) && str_contains(strtolower($field['key']), 'document'))
@@ -336,7 +339,7 @@
                                 <input type="date" 
                                        id="{{ $field['key'] }}" 
                                        name="{{ $field['key'] }}" 
-                                       value="{{ old($field['key']) }}"
+                                       value="{{ old($field['key'], $field['default_value'] ?? '') }}"
                                        class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                        {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                 @break
@@ -351,13 +354,13 @@
                                         @if(is_array($option))
                                             {{-- Formato: [{"value": "valor", "label": "etiqueta"}] --}}
                                             <option value="{{ $option['value'] }}" 
-                                                    {{ old($field['key']) == $option['value'] ? 'selected' : '' }}>
+                                                    {{ old($field['key'], $field['default_value'] ?? '') == $option['value'] ? 'selected' : '' }}>
                                                 {{ $option['label'] }}
                                             </option>
                                         @else
                                             {{-- Formato: ["valor1", "valor2"] --}}
                                             <option value="{{ $option }}" 
-                                                    {{ old($field['key']) == $option ? 'selected' : '' }}>
+                                                    {{ old($field['key'], $field['default_value'] ?? '') == $option ? 'selected' : '' }}>
                                                 {{ $option }}
                                             </option>
                                         @endif
@@ -375,7 +378,7 @@
                                               data-max-elements="{{ $field['validations']['max_elements'] }}"
                                           @endif
                                           class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
-                                          {{ ($field['required'] ?? false) ? 'required' : '' }}>{{ old($field['key']) }}</textarea>
+                                          {{ ($field['required'] ?? false) ? 'required' : '' }}>{{ old($field['key'], $field['default_value'] ?? '') }}</textarea>
                                 @break
 
                             @case('checkbox')
@@ -411,7 +414,7 @@
                                                id="{{ $field['key'] }}" 
                                                name="{{ $field['key'] }}" 
                                                value="1"
-                                               {{ old($field['key']) ? 'checked' : '' }}
+                                               {{ old($field['key'], $field['default_value'] ?? false) ? 'checked' : '' }}
                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded @error($field['key']) border-red-500 @enderror"
                                                {{ ($field['required'] ?? false) ? 'required' : '' }}>
                                         <label for="{{ $field['key'] }}" class="ml-2 block text-sm text-gray-900">
@@ -431,8 +434,8 @@
                             </div>
                         @enderror
 
-                        @if(isset($field['help']))
-                            <p class="mt-1 text-sm text-gray-500">{{ $field['help'] }}</p>
+                        @if(isset($field['description']) && !empty($field['description']))
+                            <p class="mt-1 text-sm text-gray-500">{{ $field['description'] }}</p>
                         @endif
                         
                         @if(isset($field['validations']['max_elements']))

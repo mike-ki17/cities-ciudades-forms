@@ -49,8 +49,16 @@ class FormSlugSubmitController extends Controller
         
         // Group 2: Dynamic fields (only those defined in form JSON, excluding fixed participant fields)
         $dynamicFields = [];
-        $formFields = $form->getFieldsAttribute();
-        $formFieldKeys = collect($formFields)->pluck('key')->toArray();
+        
+        // Try to get fields from relational structure first, fallback to legacy JSON
+        try {
+            $formFields = $form->getRelationalFields();
+            $formFieldKeys = $formFields->pluck('key')->toArray();
+        } catch (\Exception $e) {
+            // Fallback to legacy JSON structure
+            $formFields = $form->getFieldsAttribute();
+            $formFieldKeys = collect($formFields)->pluck('key')->toArray();
+        }
         
         // Fixed participant fields that should never be stored in form_submissions
         // These fields always go to participants table, never to form_submissions
@@ -61,7 +69,7 @@ class FormSlugSubmitController extends Controller
             'phone', 'telefono',        // Phone fields
             'document_type',            // Document type
             'document_number',          // Document number
-            'birth_date'                // Birth date
+            'birth_date', 'fecha_nacimiento'  // Birth date fields
         ];
         
         foreach ($allData as $key => $value) {

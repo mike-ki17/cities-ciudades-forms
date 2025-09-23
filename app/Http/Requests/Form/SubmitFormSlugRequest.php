@@ -37,7 +37,14 @@ class SubmitFormSlugRequest extends FormRequest
         ];
 
         // Get dynamic form fields validation rules
-        $dynamicRules = $form->getValidationRules($this->all());
+        // Try to use relational validation first, fallback to legacy JSON validation
+        try {
+            $formService = app(\App\Services\FormService::class);
+            $dynamicRules = $formService->generateValidationRulesFromRelational($form, $this->all());
+        } catch (\Exception $e) {
+            // Fallback to legacy JSON validation
+            $dynamicRules = $form->getValidationRules($this->all());
+        }
 
         // Merge participant rules with dynamic rules
         return array_merge($participantRules, $dynamicRules);
@@ -114,22 +121,46 @@ class SubmitFormSlugRequest extends FormRequest
      */
     protected function validateConditionalFields($validator, Form $form): void
     {
-        $fields = $form->getFieldsAttribute();
         $formData = $this->all();
 
-        foreach ($fields as $field) {
-            $fieldKey = $field['key'] ?? null;
+        // Try to use relational fields first, fallback to legacy JSON
+        try {
+            $fields = $form->getRelationalFields();
+            $formService = app(\App\Services\FormService::class);
             
-            if (!$fieldKey) {
-                continue;
-            }
+            foreach ($fields as $field) {
+                $fieldKey = $field['key'] ?? null;
+                
+                if (!$fieldKey) {
+                    continue;
+                }
 
-            // Check if field is conditionally visible
-            $isVisible = $form->isFieldVisible($field, $formData);
+                // Check if field is conditionally visible using relational method
+                $isVisible = $formService->isFieldVisibleRelational($field, $formData);
+                
+                // If field is not visible but has a value, clear it
+                if (!$isVisible && isset($formData[$fieldKey])) {
+                    $this->merge([$fieldKey => null]);
+                }
+            }
+        } catch (\Exception $e) {
+            // Fallback to legacy JSON validation
+            $fields = $form->getFieldsAttribute();
             
-            // If field is not visible but has a value, clear it
-            if (!$isVisible && isset($formData[$fieldKey])) {
-                $this->merge([$fieldKey => null]);
+            foreach ($fields as $field) {
+                $fieldKey = $field['key'] ?? null;
+                
+                if (!$fieldKey) {
+                    continue;
+                }
+
+                // Check if field is conditionally visible
+                $isVisible = $form->isFieldVisible($field, $formData);
+                
+                // If field is not visible but has a value, clear it
+                if (!$isVisible && isset($formData[$fieldKey])) {
+                    $this->merge([$fieldKey => null]);
+                }
             }
         }
     }

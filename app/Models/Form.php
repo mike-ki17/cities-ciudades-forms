@@ -80,6 +80,21 @@ class Form extends Model
     }
 
     /**
+     * Get the form categories for the form.
+     */
+    public function formCategories(): HasMany
+    {
+        return $this->hasManyThrough(
+            FormCategory::class,
+            FormFieldOrder::class,
+            'form_id',
+            'id',
+            'id',
+            'form_category_id'
+        )->distinct();
+    }
+
+    /**
      * Scope a query to only include active forms.
      */
     public function scopeActive($query)
@@ -150,11 +165,70 @@ class Form extends Model
     }
 
     /**
-     * Get the form fields from schema_json.
+     * Get the form fields from schema_json (legacy method).
      */
     public function getFieldsAttribute(): array
     {
         return $this->schema_json['fields'] ?? [];
+    }
+
+    /**
+     * Get the form fields from relational structure.
+     */
+    public function getRelationalFields(): \Illuminate\Support\Collection
+    {
+        return $this->formFieldOrders()
+            ->with(['fieldJson', 'formCategory'])
+            ->ordered()
+            ->get()
+            ->map(function ($fieldOrder) {
+                $field = $fieldOrder->fieldJson;
+                $category = $fieldOrder->formCategory;
+                
+                return [
+                    'id' => $field->id,
+                    'key' => $field->key,
+                    'label' => $field->label,
+                    'type' => $field->type,
+                    'required' => $field->required,
+                    'placeholder' => $field->placeholder,
+                    'validations' => $field->validations ?? [],
+                    'visible' => $field->visible,
+                    'default_value' => $field->default_value,
+                    'description' => $field->description,
+                    'order' => $fieldOrder->order,
+                    'category' => $category ? [
+                        'id' => $category->id,
+                        'code' => $category->code,
+                        'name' => $category->name,
+                    ] : null,
+                    'options' => $this->getFieldOptions($field->key, $category),
+                    'extra_data' => $fieldOrder->extra_data,
+                ];
+            });
+    }
+
+    /**
+     * Get options for a specific field from the relational structure.
+     */
+    private function getFieldOptions(string $fieldKey, ?FormCategory $category): array
+    {
+        if (!$category) {
+            return [];
+        }
+
+        return $category->formOptions()
+            ->active()
+            ->ordered()
+            ->get()
+            ->map(function ($option) {
+                return [
+                    'value' => $option->value,
+                    'label' => $option->label,
+                    'description' => $option->description,
+                ];
+            })
+            ->toArray();
     }
 
     /**
@@ -533,5 +607,90 @@ class Form extends Model
                 : $validations['file_types'];
             $fieldRules[] = 'mimes:' . $types;
         }
+    }
+
+    /**
+     * Convert relational fields to JSON format for editing.
+     * This method creates a JSON structure compatible with the form creation interface.
+     */
+    public function getRelationalFieldsAsJson(): array
+    {
+        try {
+            $relationalFields = $this->getRelationalFields();
+            
+            if ($relationalFields->isEmpty()) {
+                // If no relational fields, return empty structure
+                return ['fields' => []];
+            }
+
+            $fields = [];
+            
+            foreach ($relationalFields as $field) {
+                $fieldData = [
+                    'key' => $field['key'],
+                    'label' => $field['label'],
+                    'type' => $field['type'],
+                    'required' => $field['required'] ?? false,
+                    'order' => $field['order'] ?? 1,
+                ];
+
+                // Add optional properties if they exist
+                if (!empty($field['placeholder'])) {
+                    $fieldData['placeholder'] = $field['placeholder'];
+                }
+
+                if (!empty($field['description'])) {
+                    $fieldData['description'] = $field['description'];
+                }
+
+                if (!empty($field['default_value'])) {
+                    $fieldData['default_value'] = $field['default_value'];
+                }
+
+                if (!empty($field['validations'])) {
+                    $fieldData['validations'] = $field['validations'];
+                }
+
+                if (!empty($field['visible'])) {
+                    $fieldData['visible'] = $field['visible'];
+                }
+
+                // Add options for select and checkbox fields
+                if (!empty($field['options']) && in_array($field['type'], ['select', 'checkbox'])) {
+                    $fieldData['options'] = $field['options'];
+                }
+
+                $fields[] = $fieldData;
+            }
+
+            return ['fields' => $fields];
+            
+        } catch (\Exception $e) {
+            // If there's an error getting relational fields, return empty structure
+            \Log::warning('Error converting relational fields to JSON', [
+                'form_id' => $this->id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return ['fields' => []];
+        }
+    }
+
+    /**
+     * Get the appropriate schema JSON for editing.
+     * Returns relational fields as JSON if available, otherwise returns legacy schema_json.
+     */
+    public function getSchemaJsonForEditing(): array
+    {
+        // First try to get relational fields as JSON
+        $relationalJson = $this->getRelationalFieldsAsJson();
+        
+        // If we have relational fields, use them
+        if (!empty($relationalJson['fields'])) {
+            return $relationalJson;
+        }
+        
+        // Fallback to legacy schema_json
+        return $this->schema_json ?? ['fields' => []];
     }
 }

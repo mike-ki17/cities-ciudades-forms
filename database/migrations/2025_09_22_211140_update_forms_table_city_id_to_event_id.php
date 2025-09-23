@@ -13,28 +13,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('forms', function (Blueprint $table) {
-            // First, add the new event_id column (nullable initially)
-            $table->unsignedBigInteger('event_id')->nullable()->after('id');
-        });
-
-        // Copy data from event_id to event_id (since event_id was referencing events table)
-        DB::statement('UPDATE forms SET event_id = event_id WHERE event_id IS NOT NULL');
-
-        Schema::table('forms', function (Blueprint $table) {
-            // Make event_id not nullable
-            $table->unsignedBigInteger('event_id')->nullable(false)->change();
-            
-            // Drop the existing foreign key constraint
+            // Drop the existing foreign key constraint (it references cities table)
             $table->dropForeign(['event_id']);
             
-            // Drop the event_id column
-            $table->dropColumn('event_id');
-            
-            // Add foreign key constraint for event_id
+            // Add foreign key constraint for event_id (now references events table)
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
-            
-            // Add index for better performance
-            $table->index(['event_id', 'is_active']);
         });
     }
 
@@ -44,20 +27,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('forms', function (Blueprint $table) {
-            // Drop the new foreign key constraint
+            // Drop the foreign key constraint
             $table->dropForeign(['event_id']);
             
-            // Drop the event_id column
-            $table->dropColumn('event_id');
-            
-            // Add back the event_id column
-            $table->unsignedBigInteger('event_id')->nullable();
-            
-            // Recreate the old foreign key constraint
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
-            
-            // Add back the old index
-            $table->index(['event_id', 'is_active']);
+            // Recreate the old foreign key constraint (references cities table)
+            $table->foreign('event_id')->references('id')->on('cities')->onDelete('cascade');
         });
     }
 };

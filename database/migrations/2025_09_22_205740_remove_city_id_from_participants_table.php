@@ -15,6 +15,9 @@ return new class extends Migration
             // Drop foreign key constraint first
             $table->dropForeign(['event_id']);
             
+            // Drop the index first
+            $table->dropIndex(['event_id']);
+            
             // Drop the event_id column
             $table->dropColumn('event_id');
         });

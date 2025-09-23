@@ -59,6 +59,14 @@ class FormFieldOrder extends Model
     }
 
     /**
+     * Get the field JSON that owns the field order.
+     */
+    public function fieldJson(): BelongsTo
+    {
+        return $this->belongsTo(FieldJson::class, 'field_json_id');
+    }
+
+    /**
      * Scope a query to order by order field.
      */
     public function scopeOrdered($query)

@@ -74,7 +74,15 @@ class FormController extends Controller
      */
     public function store(StoreFormRequest $request): RedirectResponse
     {
-        $form = $this->formService->createForm($request->validated());
+        $validated = $request->validated();
+        
+        // Extract fields data from schema_json
+        $fieldsData = $validated['schema_json']['fields'] ?? [];
+        
+        // Remove schema_json from form data since we'll use relational structure
+        $formData = collect($validated)->except('schema_json')->toArray();
+        
+        $form = $this->formService->createFormWithRelationalData($formData, $fieldsData);
 
         return redirect()->route('admin.forms.index')
             ->with('success', 'Formulario creado exitosamente.');
@@ -95,8 +103,15 @@ class FormController extends Controller
      */
     public function edit(Form $form): View
     {
+        // Load relational data for forms that use the new structure
+        $form->load(['formFieldOrders.fieldJson', 'formFieldOrders.formCategory.formOptions']);
+        
         $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();
-        return view('admin.forms.edit', compact('form', 'events'));
+        
+        // Get the appropriate schema JSON for editing
+        $schemaJson = $form->getSchemaJsonForEditing();
+        
+        return view('admin.forms.edit', compact('form', 'events', 'schemaJson'));
     }
 
     /**
@@ -104,7 +119,15 @@ class FormController extends Controller
      */
     public function update(UpdateFormRequest $request, Form $form): RedirectResponse
     {
-        $this->formService->updateForm($form, $request->validated());
+        $validated = $request->validated();
+        
+        // Extract fields data from schema_json
+        $fieldsData = $validated['schema_json']['fields'] ?? [];
+        
+        // Remove schema_json from form data since we'll use relational structure
+        $formData = collect($validated)->except('schema_json')->toArray();
+        
+        $this->formService->updateFormWithRelationalData($form, $formData, $fieldsData);
 
         return redirect()->route('admin.forms.index')
             ->with('success', 'Formulario actualizado exitosamente.');

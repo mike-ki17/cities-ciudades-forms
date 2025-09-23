@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('forms', function (Blueprint $table) {
-            // Add foreign key constraint for event_id
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
-            
-            // Add new index for better performance
-            $table->index(['event_id', 'is_active']);
-        });
+        // This migration is no longer needed as the foreign key constraint
+        // is already handled by the previous migration
+        // The index already exists from the original table creation
     }
 
     /**
@@ -25,15 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('forms', function (Blueprint $table) {
-            // Drop the new foreign key constraint
-            $table->dropForeign(['event_id']);
-            
-            // Drop the new index
-            $table->dropIndex(['event_id', 'is_active']);
-            
-            // Add back the old index
-            $table->index(['is_active']);
-        });
+        // This migration is no longer needed
     }
 };

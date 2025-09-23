@@ -131,7 +131,7 @@
                         </label>
                         <textarea name="schema_json" id="schema_json" rows="12" 
                                   class="admin-textarea w-full font-mono text-sm" 
-                                  placeholder='{"fields": [{"key": "nombre", "label": "Nombre Completo", "type": "text", "required": true, "placeholder": "Ingresa tu nombre completo"}]}'>{{ old('schema_json', json_encode($form->schema_json, JSON_PRETTY_PRINT)) }}</textarea>
+                                  placeholder='{"fields": [{"key": "nombre", "label": "Nombre Completo", "type": "text", "required": true, "placeholder": "Ingresa tu nombre completo"}]}'>{{ old('schema_json', json_encode($schemaJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) }}</textarea>
                         <div class="admin-field-help">
                             <strong>Tipos de campos disponibles:</strong> text, email, number, date, select, textarea, checkbox<br>
                             <strong>Propiedades requeridas:</strong> key, label, type, required<br>
