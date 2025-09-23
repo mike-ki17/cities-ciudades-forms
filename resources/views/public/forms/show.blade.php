@@ -75,19 +75,20 @@
 
         <div class="card-body">
             @if($hasSubmitted && $latestSubmission)
-                <div class="bg-green-50 border border-green-200 rounded-md p-4 mb-6">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-6">
                     <div class="flex">
                         <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-green-800">
-                                ¡Formulario enviado exitosamente!
+                            <h3 class="text-sm font-medium text-yellow-800">
+                                Formulario ya enviado
                             </h3>
-                            <div class="mt-2 text-sm text-green-700">
-                                <p>Tu formulario fue enviado el {{ $latestSubmission->submitted_at->format('d/m/Y H:i') }}.</p>
+                            <div class="mt-2 text-sm text-yellow-700">
+                                <p>Ya has llenado este formulario anteriormente el {{ $latestSubmission->submitted_at->format('d/m/Y H:i') }}.</p>
+                                <p class="mt-1 font-medium">No puedes enviarlo nuevamente.</p>
                             </div>
                         </div>
                     </div>
@@ -119,7 +120,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('public.forms.slug.submit', ['id' => $form->id, 'slug' => $form->slug]) }}" class="space-y-6">
+            <form method="POST" action="{{ route('public.forms.slug.submit', ['id' => $form->id, 'slug' => $form->slug]) }}" class="space-y-6" @if($hasSubmitted) style="opacity: 0.6; pointer-events: none;" @endif>
                 @csrf
                 
                 {{-- Campos fijos del participante --}}
@@ -268,18 +269,25 @@
 
                 {{-- Campos dinámicos del formulario --}}
                 @php
-                    $relationalFields = $form->getRelationalFields();
+                    // Intentar obtener campos relacionales primero, si no hay, usar campos JSON
+                    try {
+                        $relationalFields = $form->getRelationalFields();
+                        $dynamicFields = $relationalFields->count() > 0 ? $relationalFields : collect($form->getFieldsAttribute());
+                    } catch (\Exception $e) {
+                        // Si hay error con campos relacionales, usar campos JSON
+                        $dynamicFields = collect($form->getFieldsAttribute());
+                    }
                 @endphp
-                @if($relationalFields->count() > 0)
+                @if($dynamicFields->count() > 0)
                     <div class="bg-white border border-gray-200 rounded-lg p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Información Adicional</h3>
                         
-                        @foreach($relationalFields as $field)
+                        @foreach($dynamicFields as $field)
                     <div class="form-group" 
                          @if(isset($field['visible']) && is_array($field['visible']) && isset($field['visible']['model']))
                              data-conditional-field="true"
                              data-conditional-model="{{ $field['visible']['model'] }}"
-                             data-conditional-value="{{ $field['visible']['value'] ?? '' }}"
+                             data-conditional-value="{{ is_array($field['visible']['value'] ?? '') ? json_encode($field['visible']['value']) : ($field['visible']['value'] ?? '') }}"
                              data-conditional-condition="{{ $field['visible']['condition'] ?? 'equal' }}"
                              style="display: none;"
                          @endif>
@@ -451,13 +459,24 @@
                 @endif
 
                 <div class="flex justify-end space-x-3">
-                    <button type="submit" class="btn-primary" 
-                            style="background-color: {{ $primaryColor }}; border-color: {{ $primaryColor }}; border-radius: {{ $borderRadius }};">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                        </svg>
-                        Enviar Formulario
-                    </button>
+                    @if($hasSubmitted)
+                        <button type="button" class="btn-primary opacity-50 cursor-not-allowed" 
+                                style="background-color: {{ $primaryColor }}; border-color: {{ $primaryColor }}; border-radius: {{ $borderRadius }};" 
+                                disabled>
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Formulario ya enviado
+                        </button>
+                    @else
+                        <button type="submit" class="btn-primary" 
+                                style="background-color: {{ $primaryColor }}; border-color: {{ $primaryColor }}; border-radius: {{ $borderRadius }};">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            Enviar Formulario
+                        </button>
+                    @endif
                 </div>
             </form>
         </div>

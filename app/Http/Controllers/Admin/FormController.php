@@ -77,6 +77,18 @@ class FormController extends Controller
     {
         $validated = $request->validated();
         
+        // Handle schema_json conversion if it's still a string
+        if (isset($validated['schema_json']) && is_string($validated['schema_json'])) {
+            $schemaArray = json_decode($validated['schema_json'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $validated['schema_json'] = $schemaArray;
+            } else {
+                return redirect()->back()
+                    ->with('error', 'Error en el formato JSON del formulario: ' . json_last_error_msg())
+                    ->withInput();
+            }
+        }
+        
         // Extract fields data from schema_json
         $fieldsData = $validated['schema_json']['fields'] ?? [];
         
@@ -121,6 +133,18 @@ class FormController extends Controller
     public function update(UpdateFormRequest $request, Form $form): RedirectResponse
     {
         $validated = $request->validated();
+        
+        // Handle schema_json conversion if it's still a string
+        if (isset($validated['schema_json']) && is_string($validated['schema_json'])) {
+            $schemaArray = json_decode($validated['schema_json'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $validated['schema_json'] = $schemaArray;
+            } else {
+                return redirect()->back()
+                    ->with('error', 'Error en el formato JSON del formulario: ' . json_last_error_msg())
+                    ->withInput();
+            }
+        }
         
         // Extract fields data from schema_json
         $fieldsData = $validated['schema_json']['fields'] ?? [];

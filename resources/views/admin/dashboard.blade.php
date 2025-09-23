@@ -113,16 +113,28 @@
                                     <div class="flex-shrink-0">
                                         <div class="h-8 w-8 rounded-full" style="background: #00ffbd; color: #000000;" class="flex items-center justify-center">
                                             <span class="text-sm font-medium">
-                                                {{ substr($submission->participant->first_name, 0, 1) }}
+                                                @if($submission->participant)
+                                                    {{ substr($submission->participant->first_name, 0, 1) }}
+                                                @else
+                                                    ?
+                                                @endif
                                             </span>
                                         </div>
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-medium admin-text truncate">
-                                            {{ $submission->participant->full_name }}
+                                            @if($submission->participant)
+                                                {{ $submission->participant->full_name }}
+                                            @else
+                                                <span class="text-red-500">Participante no encontrado</span>
+                                            @endif
                                         </p>
                                         <p class="text-sm admin-text-secondary truncate">
-                                            {{ $submission->form->name }}
+                                            @if($submission->form)
+                                                {{ $submission->form->name }}
+                                            @else
+                                                <span class="text-red-500">Formulario no encontrado</span>
+                                            @endif
                                         </p>
                                     </div>
                                     <div class="flex-shrink-0 text-sm admin-text-secondary">

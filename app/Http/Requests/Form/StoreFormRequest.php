@@ -216,12 +216,81 @@ class StoreFormRequest extends FormRequest
         if (isset($validations['max_elements']) && (!is_numeric($validations['max_elements']) || $validations['max_elements'] < 1)) {
             $validator->errors()->add($fieldPrefix . '.validations.max_elements', 'El número máximo de elementos debe ser un número positivo mayor a 0.');
         }
+
+        // Validate format patterns
+        if (isset($validations['pattern']) && !$this->isValidRegex($validations['pattern'])) {
+            $validator->errors()->add($fieldPrefix . '.validations.pattern', 'El patrón de validación no es una expresión regular válida.');
+        }
+
+        // Validate custom formats
+        if (isset($validations['format'])) {
+            $validFormats = ['dni', 'phone', 'email', 'url', 'postal_code', 'currency', 'percentage'];
+            if (!in_array($validations['format'], $validFormats)) {
+                $validator->errors()->add($fieldPrefix . '.validations.format', 'El formato debe ser uno de: ' . implode(', ', $validFormats));
+            }
+        }
+
+        // Validate file uploads
+        if (isset($validations['file_types'])) {
+            if (!is_array($validations['file_types'])) {
+                $validator->errors()->add($fieldPrefix . '.validations.file_types', 'Los tipos de archivo deben ser un array.');
+            }
+        }
+
+        if (isset($validations['max_file_size']) && (!is_numeric($validations['max_file_size']) || $validations['max_file_size'] <= 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.max_file_size', 'El tamaño máximo de archivo debe ser un número positivo.');
+        }
+
+        // Validate conditional requirements
+        if (isset($validations['required_if'])) {
+            if (!is_array($validations['required_if']) || !isset($validations['required_if']['field']) || !isset($validations['required_if']['value'])) {
+                $validator->errors()->add($fieldPrefix . '.validations.required_if', 'La validación required_if debe tener los campos "field" y "value".');
+            }
+        }
+
+        // Validate uniqueness constraints
+        if (isset($validations['unique']) && !is_bool($validations['unique'])) {
+            $validator->errors()->add($fieldPrefix . '.validations.unique', 'La validación unique debe ser verdadero o falso.');
+        }
+
+        // Validate character restrictions
+        if (isset($validations['allowed_chars']) && !is_string($validations['allowed_chars'])) {
+            $validator->errors()->add($fieldPrefix . '.validations.allowed_chars', 'Los caracteres permitidos deben ser una cadena.');
+        }
+
+        if (isset($validations['forbidden_chars']) && !is_string($validations['forbidden_chars'])) {
+            $validator->errors()->add($fieldPrefix . '.validations.forbidden_chars', 'Los caracteres prohibidos deben ser una cadena.');
+        }
+
+        // Validate word count
+        if (isset($validations['min_words']) && (!is_numeric($validations['min_words']) || $validations['min_words'] < 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.min_words', 'El número mínimo de palabras debe ser un número positivo.');
+        }
+
+        if (isset($validations['max_words']) && (!is_numeric($validations['max_words']) || $validations['max_words'] < 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.max_words', 'El número máximo de palabras debe ser un número positivo.');
+        }
+
+        // Validate decimal places
+        if (isset($validations['decimal_places']) && (!is_numeric($validations['decimal_places']) || $validations['decimal_places'] < 0)) {
+            $validator->errors()->add($fieldPrefix . '.validations.decimal_places', 'El número de decimales debe ser un número positivo.');
+        }
+
+        // Validate step for numeric inputs
+        if (isset($validations['step']) && !is_numeric($validations['step'])) {
+            $validator->errors()->add($fieldPrefix . '.validations.step', 'El paso debe ser un número.');
+        }
     }
 
     protected function isValidDate(string $date): bool
     {
         $d = \DateTime::createFromFormat('Y-m-d', $date);
         return $d && $d->format('Y-m-d') === $date;
+    }
+
+    protected function isValidRegex(string $pattern): bool
+    {
+        return @preg_match($pattern, '') !== false;
     }
 
     /**

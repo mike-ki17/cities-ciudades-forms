@@ -41,6 +41,13 @@ class FormSubmitController extends Controller
             abort(403, 'Debe estar autenticado para enviar formularios.');
         }
 
+        // Check if participant has already submitted this form
+        if ($this->formService->hasParticipantSubmitted($form, $participant)) {
+            return redirect()->back()
+                ->with('error', 'Ya has llenado este formulario anteriormente. No puedes enviarlo nuevamente.')
+                ->withInput();
+        }
+
         try {
             // Submit the form with validated data
             $submission = $this->formService->submitForm($form, $participant, $request->validated());

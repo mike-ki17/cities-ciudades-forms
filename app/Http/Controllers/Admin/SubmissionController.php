@@ -38,6 +38,11 @@ class SubmissionController extends Controller
     {
         $submission->load(['form', 'participant', 'form.event']);
         
+        // Verificar que el participante existe
+        if (!$submission->participant) {
+            abort(404, 'Participante no encontrado para esta submission.');
+        }
+        
         return view('admin.submissions.show', compact('submission'));
     }
 

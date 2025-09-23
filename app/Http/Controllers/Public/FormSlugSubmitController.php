@@ -53,7 +53,13 @@ class FormSlugSubmitController extends Controller
         // Try to get fields from relational structure first, fallback to legacy JSON
         try {
             $formFields = $form->getRelationalFields();
-            $formFieldKeys = $formFields->pluck('key')->toArray();
+            if ($formFields->count() > 0) {
+                $formFieldKeys = $formFields->pluck('key')->toArray();
+            } else {
+                // If relational fields is empty, use JSON fields
+                $formFields = $form->getFieldsAttribute();
+                $formFieldKeys = collect($formFields)->pluck('key')->toArray();
+            }
         } catch (\Exception $e) {
             // Fallback to legacy JSON structure
             $formFields = $form->getFieldsAttribute();
@@ -89,9 +95,19 @@ class FormSlugSubmitController extends Controller
         // Create or get participant (will associate with existing if document_number exists)
         $participant = $this->participantService->createOrGetParticipant($participantData);
 
+        // Check if participant has already submitted this form
+        if ($this->formService->hasParticipantSubmitted($form, $participant)) {
+            return redirect()->back()
+                ->with('error', 'Ya has llenado este formulario anteriormente. No puedes enviarlo nuevamente.')
+                ->withInput();
+        }
+
         try {
             // Submit the form with only dynamic fields
             $submission = $this->formService->submitForm($form, $participant, $dynamicFields, $user);
+
+            // Store participant ID in session for future form access
+            $request->session()->put('participant_id', $participant->id);
 
             return redirect()->route('public.forms.slug.show', ['slug' => $slug])
                 ->with('success', 'Formulario enviado exitosamente.');

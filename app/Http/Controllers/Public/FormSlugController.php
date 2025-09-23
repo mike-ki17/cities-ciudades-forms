@@ -30,6 +30,18 @@ class FormSlugController extends Controller
         $hasSubmitted = false;
         $latestSubmission = null;
 
+        // Check if there's a participant in session (from previous form submission)
+        $participantId = $request->session()->get('participant_id');
+        if ($participantId) {
+            $participant = \App\Models\Participant::find($participantId);
+            if ($participant) {
+                $hasSubmitted = $this->formService->hasParticipantSubmitted($form, $participant);
+                if ($hasSubmitted) {
+                    $latestSubmission = $this->formService->getLatestParticipantSubmission($form, $participant);
+                }
+            }
+        }
+
         return view('public.forms.show', compact('form', 'participant', 'hasSubmitted', 'latestSubmission', 'user'));
     }
 }

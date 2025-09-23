@@ -165,6 +165,69 @@
                         Configuración del Formulario
                     </div>
                     
+                    <!-- Validation Help Section -->
+                    <div class="admin-field-group mb-6">
+                        <div class="admin-card rounded-lg p-4 border-l-4" style="border-left-color: #00ffbd;">
+                            <div class="flex items-start space-x-3">
+                                <svg class="w-5 h-5 mt-0.5" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div class="flex-1">
+                                    <h4 class="admin-text font-medium mb-2">Validaciones Disponibles</h4>
+                                    <p class="admin-text-secondary text-sm mb-3">
+                                        Puedes agregar validaciones avanzadas a cada campo del formulario. Las validaciones se aplican automáticamente cuando los usuarios envían el formulario.
+                                    </p>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-xs">
+                                        <div class="flex items-center space-x-1">
+                                            <code class="admin-alert-success px-1 py-0.5 rounded text-xs">min_length</code>
+                                            <span class="admin-text-secondary">Longitud mínima</span>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <code class="admin-alert-success px-1 py-0.5 rounded text-xs">max_length</code>
+                                            <span class="admin-text-secondary">Longitud máxima</span>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <code class="admin-alert-success px-1 py-0.5 rounded text-xs">pattern</code>
+                                            <span class="admin-text-secondary">Expresión regular</span>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <code class="admin-alert-success px-1 py-0.5 rounded text-xs">format</code>
+                                            <span class="admin-text-secondary">Formato predefinido</span>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <code class="admin-alert-success px-1 py-0.5 rounded text-xs">min_value</code>
+                                            <span class="admin-text-secondary">Valor mínimo</span>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <code class="admin-alert-success px-1 py-0.5 rounded text-xs">max_value</code>
+                                            <span class="admin-text-secondary">Valor máximo</span>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <code class="admin-alert-success px-1 py-0.5 rounded text-xs">min_date</code>
+                                            <span class="admin-text-secondary">Fecha mínima</span>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <code class="admin-alert-success px-1 py-0.5 rounded text-xs">max_date</code>
+                                            <span class="admin-text-secondary">Fecha máxima</span>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <code class="admin-alert-success px-1 py-0.5 rounded text-xs">required_if</code>
+                                            <span class="admin-text-secondary">Requerido condicional</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button type="button" id="show-validation-examples" class="admin-button-outline text-xs px-3 py-1">
+                                            <svg class="w-3 h-3 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            Ver Ejemplos Completos
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- JSON Editor -->
                         <div class="admin-field-group">
@@ -180,7 +243,8 @@
                             <div class="admin-field-help">
                                 <strong>Tipos de campos disponibles:</strong> text, email, number, date, select, textarea, checkbox<br>
                                 <strong>Propiedades requeridas:</strong> key, label, type, required<br>
-                                <strong>Propiedades opcionales:</strong> placeholder, options (para select), help
+                                <strong>Propiedades opcionales:</strong> placeholder, options (para select), help, validations<br>
+                                <strong>Validaciones disponibles:</strong> min_length, max_length, pattern, format, min_value, max_value, min_date, max_date, required_if, unique, allowed_chars, forbidden_chars, min_words, max_words, decimal_places, step
                             </div>
                             <div class="mt-2">
                                 <button type="button" id="load-example" class="admin-button-outline text-xs px-3 py-1">
@@ -358,24 +422,118 @@
       "label": "Nombre Completo",
       "type": "text",
       "required": true,
-      "placeholder": "Ingrese su nombre"
+      "placeholder": "Ingrese su nombre",
+      "validations": {
+        "min_length": 2,
+        "max_length": 100
+      }
     },
     {
       "key": "email",
       "label": "Correo Electrónico",
       "type": "email",
       "required": true,
-      "placeholder": "ejemplo@correo.com"
+      "placeholder": "ejemplo@correo.com",
+      "validations": {
+        "format": "email",
+        "unique": true
+      }
     },
     {
       "key": "edad",
       "label": "Edad",
       "type": "number",
       "required": false,
-      "placeholder": "Ingrese su edad"
+      "validations": {
+        "min_value": 18,
+        "max_value": 100
+      }
     }
   ]
 }</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Validation Examples Section -->
+        <div class="mt-8">
+            <div class="admin-form-section">
+                <div class="admin-form-section-title">
+                    <svg class="w-5 h-5 inline-block mr-2" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Ejemplos de Validaciones Avanzadas
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="admin-field-group">
+                        <h4 class="admin-field-label mb-3">
+                            <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Validaciones de Texto y Formato
+                        </h4>
+                        <div class="admin-card rounded-lg p-4">
+                            <div class="space-y-3 text-xs">
+                                <div>
+                                    <code class="admin-alert-success px-2 py-1 rounded text-xs">DNI</code>
+                                    <pre class="mt-1 text-xs admin-text-secondary">"validations": {
+  "format": "dni",
+  "pattern": "^[0-9]{8}[A-Z]$"
+}</pre>
+                                </div>
+                                <div>
+                                    <code class="admin-alert-success px-2 py-1 rounded text-xs">Teléfono</code>
+                                    <pre class="mt-1 text-xs admin-text-secondary">"validations": {
+  "format": "phone",
+  "pattern": "^[+]?[0-9]{9,15}$"
+}</pre>
+                                </div>
+                                <div>
+                                    <code class="admin-alert-success px-2 py-1 rounded text-xs">Longitud</code>
+                                    <pre class="mt-1 text-xs admin-text-secondary">"validations": {
+  "min_length": 2,
+  "max_length": 100
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-field-group">
+                        <h4 class="admin-field-label mb-3">
+                            <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                            Validaciones Numéricas y de Fecha
+                        </h4>
+                        <div class="admin-card rounded-lg p-4">
+                            <div class="space-y-3 text-xs">
+                                <div>
+                                    <code class="admin-alert-success px-2 py-1 rounded text-xs">Rango Numérico</code>
+                                    <pre class="mt-1 text-xs admin-text-secondary">"validations": {
+  "min_value": 18,
+  "max_value": 100,
+  "step": 1
+}</pre>
+                                </div>
+                                <div>
+                                    <code class="admin-alert-success px-2 py-1 rounded text-xs">Edad por Fecha</code>
+                                    <pre class="mt-1 text-xs admin-text-secondary">"validations": {
+  "min_age": 18,
+  "max_age": 65
+}</pre>
+                                </div>
+                                <div>
+                                    <code class="admin-alert-success px-2 py-1 rounded text-xs">Rango de Fechas</code>
+                                    <pre class="mt-1 text-xs admin-text-secondary">"validations": {
+  "min_date": "2024-01-01",
+  "max_date": "2024-12-31"
+}</pre>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -895,6 +1053,160 @@ document.addEventListener('DOMContentLoaded', function() {
             
             schemaTextarea.value = JSON.stringify(exampleJson, null, 2);
             updatePreview();
+        });
+    }
+    
+    // Botón para mostrar ejemplos de validaciones
+    const showValidationExamplesBtn = document.getElementById('show-validation-examples');
+    if (showValidationExamplesBtn) {
+        showValidationExamplesBtn.addEventListener('click', function() {
+            const validationExamples = {
+                "fields": [
+                    {
+                        "key": "nombre",
+                        "label": "Nombre Completo",
+                        "type": "text",
+                        "required": true,
+                        "placeholder": "Ingrese su nombre completo",
+                        "validations": {
+                            "min_length": 2,
+                            "max_length": 100,
+                            "allowed_chars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+                        }
+                    },
+                    {
+                        "key": "email",
+                        "label": "Correo Electrónico",
+                        "type": "email",
+                        "required": true,
+                        "placeholder": "ejemplo@correo.com",
+                        "validations": {
+                            "format": "email",
+                            "unique": true
+                        }
+                    },
+                    {
+                        "key": "dni",
+                        "label": "DNI",
+                        "type": "text",
+                        "required": true,
+                        "placeholder": "12345678A",
+                        "validations": {
+                            "format": "dni",
+                            "pattern": "^[0-9]{8}[A-Z]$"
+                        }
+                    },
+                    {
+                        "key": "telefono",
+                        "label": "Teléfono",
+                        "type": "text",
+                        "required": false,
+                        "placeholder": "+34 123 456 789",
+                        "validations": {
+                            "format": "phone",
+                            "pattern": "^[+]?[0-9]{9,15}$"
+                        }
+                    },
+                    {
+                        "key": "fecha_nacimiento",
+                        "label": "Fecha de Nacimiento",
+                        "type": "date",
+                        "required": true,
+                        "validations": {
+                            "min_age": 18,
+                            "max_age": 65
+                        }
+                    },
+                    {
+                        "key": "edad",
+                        "label": "Edad",
+                        "type": "number",
+                        "required": false,
+                        "validations": {
+                            "min_value": 18,
+                            "max_value": 100,
+                            "step": 1
+                        }
+                    },
+                    {
+                        "key": "precio",
+                        "label": "Precio",
+                        "type": "number",
+                        "required": false,
+                        "validations": {
+                            "format": "currency",
+                            "decimal_places": 2,
+                            "min_value": 0.01,
+                            "max_value": 9999.99
+                        }
+                    },
+                    {
+                        "key": "genero",
+                        "label": "Género",
+                        "type": "select",
+                        "required": false,
+                        "options": [
+                            {"value": "masculino", "label": "Masculino"},
+                            {"value": "femenino", "label": "Femenino"},
+                            {"value": "otro", "label": "Otro"}
+                        ]
+                    },
+                    {
+                        "key": "intereses",
+                        "label": "Intereses",
+                        "type": "select",
+                        "required": false,
+                        "validations": {
+                            "min_selections": 1,
+                            "max_selections": 3
+                        },
+                        "options": [
+                            {"value": "deportes", "label": "Deportes"},
+                            {"value": "musica", "label": "Música"},
+                            {"value": "arte", "label": "Arte"},
+                            {"value": "tecnologia", "label": "Tecnología"}
+                        ]
+                    },
+                    {
+                        "key": "comentarios",
+                        "label": "Comentarios Adicionales",
+                        "type": "textarea",
+                        "required": false,
+                        "placeholder": "Escribe aquí cualquier comentario adicional...",
+                        "validations": {
+                            "max_words": 200,
+                            "min_words": 5
+                        }
+                    },
+                    {
+                        "key": "telefono_emergencia",
+                        "label": "Teléfono de Emergencia",
+                        "type": "text",
+                        "required": false,
+                        "validations": {
+                            "required_if": {
+                                "field": "tiene_emergencia",
+                                "value": "si"
+                            }
+                        }
+                    },
+                    {
+                        "key": "acepta_terminos",
+                        "label": "Acepto los términos y condiciones",
+                        "type": "checkbox",
+                        "required": true
+                    }
+                ]
+            };
+            
+            schemaTextarea.value = JSON.stringify(validationExamples, null, 2);
+            updatePreview();
+            
+            // Scroll to the preview section
+            document.getElementById('form-preview').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
         });
     }
     

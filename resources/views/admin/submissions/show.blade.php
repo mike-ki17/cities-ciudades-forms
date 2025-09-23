@@ -46,7 +46,11 @@
                             <svg class="w-4 h-4 inline-block mr-1" style="color: #bb2558;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            {{ $submission->form->name }}
+                            @if($submission->form)
+                                {{ $submission->form->name }}
+                            @else
+                                <span class="text-red-500">Formulario no encontrado</span>
+                            @endif
                         </p>
                         <p class="mt-1 text-sm admin-text-muted">
                             <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,7 +93,13 @@
                                 </svg>
                                 Formulario
                             </label>
-                            <div class="admin-text font-medium text-lg">{{ $submission->form->name }}</div>
+                            <div class="admin-text font-medium text-lg">
+                                @if($submission->form)
+                                    {{ $submission->form->name }}
+                                @else
+                                    <span class="text-red-500">Formulario no encontrado</span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="admin-field-group">
@@ -101,13 +111,13 @@
                                 Ciudad
                             </label>
                             <div class="mt-1">
-                                @if($submission->form->event)
+                                @if($submission->form && $submission->form->event)
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium admin-alert-success">
                                         <svg class="w-4 h-4 mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         </svg>
-                                        {{ $submission->form->event ? $submission->form->event->name : 'General' }}
+                                        {{ $submission->form->event->name }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium admin-alert-error">
@@ -127,7 +137,13 @@
                                 </svg>
                                 Versión
                             </label>
-                            <div class="admin-text font-medium">v{{ $submission->form->version }}</div>
+                            <div class="admin-text font-medium">
+                                @if($submission->form)
+                                    v{{ $submission->form->version }}
+                                @else
+                                    <span class="text-red-500">N/A</span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="admin-field-group">
@@ -140,7 +156,7 @@
                             <div class="admin-text font-medium">{{ $submission->submitted_at->format('d/m/Y H:i:s') }}</div>
                         </div>
 
-                        @if($submission->form->description)
+                        @if($submission->form && $submission->form->description)
                             <div class="sm:col-span-2 admin-field-group">
                                 <label class="admin-field-label">
                                     <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -171,7 +187,13 @@
                                 </svg>
                                 Nombre Completo
                             </label>
-                            <div class="admin-text font-medium text-lg">{{ $submission->participant->first_name }} {{ $submission->participant->last_name }}</div>
+                            <div class="admin-text font-medium text-lg">
+                                @if($submission->participant)
+                                    {{ $submission->participant->first_name }} {{ $submission->participant->last_name }}
+                                @else
+                                    <span class="text-red-500">Participante no encontrado</span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="admin-field-group">
@@ -181,7 +203,13 @@
                                 </svg>
                                 Email
                             </label>
-                            <div class="admin-text font-medium">{{ $submission->participant->email }}</div>
+                            <div class="admin-text font-medium">
+                                @if($submission->participant)
+                                    {{ $submission->participant->email }}
+                                @else
+                                    <span class="text-red-500">No disponible</span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="admin-field-group">
@@ -191,7 +219,13 @@
                                 </svg>
                                 Teléfono
                             </label>
-                            <div class="admin-text font-medium">{{ $submission->participant->phone ?: 'No proporcionado' }}</div>
+                            <div class="admin-text font-medium">
+                                @if($submission->participant)
+                                    {{ $submission->participant->phone ?: 'No proporcionado' }}
+                                @else
+                                    <span class="text-red-500">No disponible</span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="admin-field-group">
@@ -202,12 +236,15 @@
                                 Documento
                             </label>
                             <div class="admin-text font-medium">
-                                {{ $submission->participant->document_type }}: {{ $submission->participant->document_number }}
+                                @if($submission->participant)
+                                    {{ $submission->participant->document_type }}: {{ $submission->participant->document_number }}
+                                @else
+                                    <span class="text-red-500">No disponible</span>
+                                @endif
                             </div>
                         </div>
 
-
-                        @if($submission->participant->birth_date)
+                        @if($submission->participant && $submission->participant->birth_date)
                             <div class="admin-field-group">
                                 <label class="admin-field-label">
                                     <svg class="w-4 h-4 inline-block mr-1" style="color: #bb2558;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,9 +271,15 @@
                         <div class="space-y-6">
                             @foreach($submission->data_json as $key => $value)
                                 @php
-                                    $field = collect($submission->form->schema_json['fields'] ?? [])->firstWhere('key', $key);
-                                    $label = $field['label'] ?? $key;
-                                    $type = $field['type'] ?? 'text';
+                                    $field = null;
+                                    $label = $key;
+                                    $type = 'text';
+                                    
+                                    if ($submission->form && isset($submission->form->schema_json['fields'])) {
+                                        $field = collect($submission->form->schema_json['fields'])->firstWhere('key', $key);
+                                        $label = $field['label'] ?? $key;
+                                        $type = $field['type'] ?? 'text';
+                                    }
                                 @endphp
                                 <div class="admin-card rounded-lg p-6 border-l-4" style="border-left-color: #00ffbd;">
                                     <div class="flex items-start justify-between mb-4">
@@ -383,22 +426,24 @@
                             Volver a Lista
                         </a>
                         
-                        <a href="{{ route('admin.submissions.index', ['form_id' => $submission->form->id]) }}" 
-                           class="w-full admin-button-primary px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            Ver Otros del Mismo Formulario
-                        </a>
+                        @if($submission->form)
+                            <a href="{{ route('admin.submissions.index', ['form_id' => $submission->form->id]) }}" 
+                               class="w-full admin-button-primary px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Ver Otros del Mismo Formulario
+                            </a>
 
-                        <a href="{{ route('admin.forms.show', $submission->form) }}" 
-                           class="w-full admin-button-outline px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                            </svg>
-                            Ver Formulario
-                        </a>
+                            <a href="{{ route('admin.forms.show', $submission->form) }}" 
+                               class="w-full admin-button-outline px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Ver Formulario
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -406,3 +451,4 @@
     </div>
 </div>
 @endsection
+

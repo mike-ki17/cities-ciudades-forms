@@ -270,17 +270,37 @@
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium admin-text">
-                                                        {{ $submission->participant->first_name }} {{ $submission->participant->last_name }}
+                                                        @if($submission->participant)
+                                                            {{ $submission->participant->first_name }} {{ $submission->participant->last_name }}
+                                                        @else
+                                                            <span class="text-red-500">Participante no encontrado</span>
+                                                        @endif
                                                     </div>
                                                     <div class="text-sm admin-text-secondary">
-                                                        {{ $submission->participant->email }}
+                                                        @if($submission->participant)
+                                                            {{ $submission->participant->email }}
+                                                        @else
+                                                            <span class="text-red-500">No disponible</span>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm admin-text font-medium">{{ $submission->form->name }}</div>
-                                            <div class="text-sm admin-text-secondary">v{{ $submission->form->version }}</div>
+                                            <div class="text-sm admin-text font-medium">
+                                                @if($submission->form)
+                                                    {{ $submission->form->name }}
+                                                @else
+                                                    <span class="text-red-500">Formulario no encontrado</span>
+                                                @endif
+                                            </div>
+                                            <div class="text-sm admin-text-secondary">
+                                                @if($submission->form)
+                                                    v{{ $submission->form->version }}
+                                                @else
+                                                    <span class="text-red-500">N/A</span>
+                                                @endif
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium admin-alert-success">
@@ -288,7 +308,11 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 </svg>
-                                                {{ $submission->form->event ? $submission->form->event->full_name : 'General' }}
+                                                @if($submission->form && $submission->form->event)
+                                                    {{ $submission->form->event->full_name }}
+                                                @else
+                                                    General
+                                                @endif
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">

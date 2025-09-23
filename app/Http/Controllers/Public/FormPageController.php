@@ -34,7 +34,7 @@ class FormPageController extends Controller
             $hasSubmitted = $this->formService->hasParticipantSubmitted($form, $participant);
             
             if ($hasSubmitted) {
-                $latestSubmission = $this->formService->getLatestSubmission($form, $participant);
+                $latestSubmission = $this->formService->getLatestParticipantSubmission($form, $participant);
             }
         }
 
