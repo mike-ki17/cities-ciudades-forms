@@ -95,7 +95,13 @@ class FormController extends Controller
         // Remove schema_json from form data since we'll use relational structure
         $formData = collect($validated)->except('schema_json')->toArray();
         
-        $form = $this->formService->createFormWithRelationalData($formData, $fieldsData);
+        try {
+            $form = $this->formService->createFormWithRelationalData($formData, $fieldsData);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Error al crear el formulario: ' . $e->getMessage())
+                ->withInput();
+        }
 
         return redirect()->route('admin.forms.index')
             ->with('success', 'Formulario creado exitosamente.');

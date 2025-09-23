@@ -39,11 +39,27 @@ class FieldJson extends Model
         return [
             'required' => 'boolean',
             'validations' => 'array',
-            'visible' => 'array',
             'is_active' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get the visible attribute, ensuring null values are preserved.
+     */
+    public function getVisibleAttribute($value)
+    {
+        if (is_null($value) || $value === '') {
+            return null;
+        }
+        
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            return $decoded === null ? null : $decoded;
+        }
+        
+        return $value;
     }
 
     /**

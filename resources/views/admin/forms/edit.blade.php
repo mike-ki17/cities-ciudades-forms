@@ -175,13 +175,62 @@
                                 </svg>
                                 Estructura del Formulario (JSON) *
                             </label>
-                            <textarea name="schema_json" id="schema_json" rows="12" 
-                                      class="admin-textarea w-full font-mono text-sm" 
-                                      placeholder='{"fields": [{"key": "nombre", "label": "Nombre Completo", "type": "text", "required": true, "placeholder": "Ingresa tu nombre completo"}]}'>{{ old('schema_json', json_encode($schemaJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) }}</textarea>
+                            <div class="relative">
+                                <textarea name="schema_json" id="schema_json" rows="12" 
+                                          class="admin-textarea w-full font-mono text-sm" 
+                                          placeholder='{"fields": [{"key": "nombre", "label": "Nombre Completo", "type": "text", "required": true, "placeholder": "Ingresa tu nombre completo"}]}'>{{ old('schema_json', json_encode($schemaJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) }}</textarea>
+                                <!-- JSON Error Indicator -->
+                                <div id="json-error-indicator" class="absolute top-2 right-2 hidden">
+                                    <div class="flex items-center space-x-2 bg-red-600 text-white px-2 py-1 rounded text-xs">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span>Error JSON</span>
+                                    </div>
+                                </div>
+                                <!-- JSON Success Indicator -->
+                                <div id="json-success-indicator" class="absolute top-2 right-2 hidden">
+                                    <div class="flex items-center space-x-2 bg-green-600 text-white px-2 py-1 rounded text-xs">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span>JSON Válido</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- JSON Error Details -->
+                            <div id="json-error-details" class="hidden mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                <div class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-red-800">Error en el JSON:</h4>
+                                        <p id="json-error-message" class="text-sm text-red-700 mt-1"></p>
+                                        <div id="json-error-suggestions" class="text-xs text-red-600 mt-2"></div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="admin-field-help">
                                 <strong>Tipos de campos disponibles:</strong> text, email, number, date, select, textarea, checkbox<br>
                                 <strong>Propiedades requeridas:</strong> key, label, type, required<br>
-                                <strong>Propiedades opcionales:</strong> placeholder, options (para select), help
+                                <strong>Propiedades opcionales:</strong> placeholder, options (para select), help, validations<br>
+                                <strong>Validaciones disponibles:</strong> min_length, max_length, pattern, format, min_value, max_value, min_date, max_date, required_if, unique, allowed_chars, forbidden_chars, min_words, max_words, decimal_places, step
+                            </div>
+                            <div class="mt-2 flex space-x-2">
+                                <button type="button" id="format-json" class="admin-button-outline text-xs px-3 py-1">
+                                    <svg class="w-3 h-3 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    Formatear JSON
+                                </button>
+                                <button type="button" id="validate-json" class="admin-button-outline text-xs px-3 py-1">
+                                    <svg class="w-3 h-3 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Validar JSON
+                                </button>
                             </div>
                             @error('schema_json')
                                 <div class="admin-field-error">{{ $message }}</div>
@@ -771,77 +820,257 @@ document.addEventListener('DOMContentLoaded', function() {
         return fieldDiv;
     }
     
+    // Función para validar JSON en tiempo real
+    function validateJSON() {
+        const jsonText = schemaTextarea.value.trim();
+        const errorIndicator = document.getElementById('json-error-indicator');
+        const successIndicator = document.getElementById('json-success-indicator');
+        const errorDetails = document.getElementById('json-error-details');
+        const errorMessage = document.getElementById('json-error-message');
+        const errorSuggestions = document.getElementById('json-error-suggestions');
+        
+        // Ocultar indicadores
+        errorIndicator.classList.add('hidden');
+        successIndicator.classList.add('hidden');
+        errorDetails.classList.add('hidden');
+        
+        if (!jsonText) {
+            return { valid: false, error: 'El JSON no puede estar vacío' };
+        }
+        
+        try {
+            const schema = JSON.parse(jsonText);
+            
+            // Validar estructura básica
+            if (!schema.fields || !Array.isArray(schema.fields)) {
+                showJSONError('El JSON debe contener un array "fields"', [
+                    'Asegúrate de que tu JSON tenga la estructura: {"fields": []}',
+                    'El campo "fields" debe ser un array, no un objeto'
+                ]);
+                return { valid: false, error: 'Estructura inválida' };
+            }
+            
+            // Validar cada campo
+            const fieldErrors = [];
+            schema.fields.forEach((field, index) => {
+                const fieldPrefix = `Campo ${index + 1}`;
+                
+                if (!field.key || field.key.trim() === '') {
+                    fieldErrors.push(`${fieldPrefix}: Falta la propiedad "key"`);
+                }
+                
+                if (!field.label || field.label.trim() === '') {
+                    fieldErrors.push(`${fieldPrefix}: Falta la propiedad "label"`);
+                }
+                
+                if (!field.type || field.type.trim() === '') {
+                    fieldErrors.push(`${fieldPrefix}: Falta la propiedad "type"`);
+                } else {
+                    const validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date'];
+                    if (!validTypes.includes(field.type)) {
+                        fieldErrors.push(`${fieldPrefix}: Tipo "${field.type}" no válido. Tipos válidos: ${validTypes.join(', ')}`);
+                    }
+                }
+                
+                // Validar campos select
+                if (field.type === 'select') {
+                    if (!field.options || !Array.isArray(field.options) || field.options.length === 0) {
+                        fieldErrors.push(`${fieldPrefix}: Los campos de tipo "select" deben tener opciones`);
+                    }
+                }
+                
+                // Validar validaciones si existen
+                if (field.validations) {
+                    const validationErrors = validateFieldValidations(field.validations, fieldPrefix);
+                    fieldErrors.push(...validationErrors);
+                }
+            });
+            
+            if (fieldErrors.length > 0) {
+                showJSONError('Errores en la estructura de campos:', fieldErrors);
+                return { valid: false, error: 'Campos inválidos' };
+            }
+            
+            // JSON válido
+            showJSONSuccess();
+            return { valid: true, schema: schema };
+            
+        } catch (error) {
+            let errorMsg = error.message;
+            let suggestions = [];
+            
+            // Proporcionar sugerencias específicas según el tipo de error
+            if (errorMsg.includes('Unexpected token')) {
+                suggestions = [
+                    'Verifica que todas las comillas estén cerradas correctamente',
+                    'Asegúrate de que no haya comas extra al final de objetos o arrays',
+                    'Revisa que los nombres de propiedades estén entre comillas dobles'
+                ];
+            } else if (errorMsg.includes('Unexpected end of JSON input')) {
+                suggestions = [
+                    'El JSON parece estar incompleto',
+                    'Verifica que todos los corchetes y llaves estén cerrados',
+                    'Asegúrate de que no haya texto después del último carácter del JSON'
+                ];
+            } else if (errorMsg.includes('Expected property name')) {
+                suggestions = [
+                    'Los nombres de propiedades deben estar entre comillas dobles',
+                    'Verifica que no haya comas antes de los nombres de propiedades'
+                ];
+            }
+            
+            showJSONError(errorMsg, suggestions);
+            return { valid: false, error: errorMsg };
+        }
+    }
+    
+    // Función para validar validaciones de campos
+    function validateFieldValidations(validations, fieldPrefix) {
+        const errors = [];
+        
+        // Validar fechas
+        if (validations.min_date && !isValidDate(validations.min_date)) {
+            errors.push(`${fieldPrefix}: Fecha mínima inválida. Formato: YYYY-MM-DD`);
+        }
+        if (validations.max_date && !isValidDate(validations.max_date)) {
+            errors.push(`${fieldPrefix}: Fecha máxima inválida. Formato: YYYY-MM-DD`);
+        }
+        
+        // Validar valores numéricos
+        if (validations.min_length && (!isNumeric(validations.min_length) || validations.min_length < 0)) {
+            errors.push(`${fieldPrefix}: min_length debe ser un número positivo`);
+        }
+        if (validations.max_length && (!isNumeric(validations.max_length) || validations.max_length < 0)) {
+            errors.push(`${fieldPrefix}: max_length debe ser un número positivo`);
+        }
+        if (validations.min_value && !isNumeric(validations.min_value)) {
+            errors.push(`${fieldPrefix}: min_value debe ser un número`);
+        }
+        if (validations.max_value && !isNumeric(validations.max_value)) {
+            errors.push(`${fieldPrefix}: max_value debe ser un número`);
+        }
+        
+        // Validar edades
+        if (validations.min_age && (!isNumeric(validations.min_age) || validations.min_age < 0)) {
+            errors.push(`${fieldPrefix}: min_age debe ser un número positivo`);
+        }
+        if (validations.max_age && (!isNumeric(validations.max_age) || validations.max_age < 0)) {
+            errors.push(`${fieldPrefix}: max_age debe ser un número positivo`);
+        }
+        
+        return errors;
+    }
+    
+    // Funciones auxiliares
+    function isValidDate(dateString) {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dateString)) return false;
+        const date = new Date(dateString);
+        return date instanceof Date && !isNaN(date);
+    }
+    
+    function isNumeric(value) {
+        return !isNaN(parseFloat(value)) && isFinite(value);
+    }
+    
+    // Función para mostrar error JSON
+    function showJSONError(message, suggestions = []) {
+        const errorIndicator = document.getElementById('json-error-indicator');
+        const successIndicator = document.getElementById('json-success-indicator');
+        const errorDetails = document.getElementById('json-error-details');
+        const errorMessage = document.getElementById('json-error-message');
+        const errorSuggestions = document.getElementById('json-error-suggestions');
+        
+        errorIndicator.classList.remove('hidden');
+        successIndicator.classList.add('hidden');
+        errorDetails.classList.remove('hidden');
+        
+        errorMessage.textContent = message;
+        
+        if (suggestions.length > 0) {
+            errorSuggestions.innerHTML = '<strong>Sugerencias:</strong><ul class="list-disc list-inside mt-1">' +
+                suggestions.map(s => `<li>${s}</li>`).join('') + '</ul>';
+        } else {
+            errorSuggestions.innerHTML = '';
+        }
+        
+        // Cambiar estilo del textarea
+        schemaTextarea.classList.add('border-red-500', 'focus:border-red-500');
+        schemaTextarea.classList.remove('border-gray-600', 'focus:border-acid-green');
+    }
+    
+    // Función para mostrar éxito JSON
+    function showJSONSuccess() {
+        const errorIndicator = document.getElementById('json-error-indicator');
+        const successIndicator = document.getElementById('json-success-indicator');
+        const errorDetails = document.getElementById('json-error-details');
+        
+        errorIndicator.classList.add('hidden');
+        successIndicator.classList.remove('hidden');
+        errorDetails.classList.add('hidden');
+        
+        // Restaurar estilo del textarea
+        schemaTextarea.classList.remove('border-red-500', 'focus:border-red-500');
+        schemaTextarea.classList.add('border-gray-600', 'focus:border-acid-green');
+    }
+    
+    // Función para formatear JSON
+    function formatJSON() {
+        const validation = validateJSON();
+        if (validation.valid) {
+            schemaTextarea.value = JSON.stringify(validation.schema, null, 2);
+            updatePreview();
+        } else {
+            alert('No se puede formatear JSON inválido. Corrige los errores primero.');
+        }
+    }
+    
     // Función para actualizar la previsualización
     function updatePreview() {
         console.log('Actualizando previsualización');
         
-        try {
-            const jsonText = schemaTextarea.value.trim();
-            console.log('JSON text:', jsonText);
-            
-            if (!jsonText) {
-                previewContainer.innerHTML = `
-                    <div class="text-center admin-text-secondary text-sm py-8">
-                        <svg class="w-8 h-8 mx-auto mb-2 admin-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <p>Los campos aparecerán aquí mientras escribes el JSON</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            const schema = JSON.parse(jsonText);
-            console.log('Schema parseado:', schema);
-            
-            if (!schema.fields || !Array.isArray(schema.fields)) {
-                previewContainer.innerHTML = `
-                    <div class="text-center admin-alert-error text-sm py-8">
-                        <svg class="w-8 h-8 mx-auto mb-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <p>Error: El JSON debe contener un array "fields"</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            if (schema.fields.length === 0) {
-                previewContainer.innerHTML = `
-                    <div class="text-center admin-text-secondary text-sm py-8">
-                        <svg class="w-8 h-8 mx-auto mb-2 admin-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <p>No hay campos definidos. Agrega campos al array "fields"</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Limpiar contenedor
-            previewContainer.innerHTML = '';
-            
-            // Renderizar cada campo
-            schema.fields.forEach(field => {
-                if (field.key && field.label && field.type) {
-                    const fieldElement = renderField(field);
-                    previewContainer.appendChild(fieldElement);
-                }
-            });
-            
-            console.log('Previsualización actualizada con', schema.fields.length, 'campos');
-            
-        } catch (error) {
-            console.error('Error en previsualización:', error);
+        const validation = validateJSON();
+        
+        if (!validation.valid) {
             previewContainer.innerHTML = `
                 <div class="text-center admin-alert-error text-sm py-8">
                     <svg class="w-8 h-8 mx-auto mb-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <p>Error en el JSON: ${error.message}</p>
+                    <p>Error en el JSON: ${validation.error}</p>
+                    <p class="text-xs mt-2">Corrige los errores para ver la previsualización</p>
                 </div>
             `;
+            return;
         }
+        
+        const schema = validation.schema;
+        console.log('Schema parseado:', schema);
+        
+        if (schema.fields.length === 0) {
+            previewContainer.innerHTML = `
+                <div class="text-center admin-text-secondary text-sm py-8">
+                    <svg class="w-8 h-8 mx-auto mb-2 admin-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p>No hay campos definidos. Agrega campos al array "fields"</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Limpiar contenedor
+        previewContainer.innerHTML = '';
+        
+        // Renderizar cada campo
+        schema.fields.forEach(field => {
+            if (field.key && field.label && field.type) {
+                const fieldElement = renderField(field);
+                previewContainer.appendChild(fieldElement);
+            }
+        });
+        
+        console.log('Previsualización actualizada con', schema.fields.length, 'campos');
     }
     
     // Event listeners
@@ -854,6 +1083,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener para cargar campos
     if (loadFieldsBtn) {
         loadFieldsBtn.addEventListener('click', loadAvailableFields);
+    }
+    
+    // Event listener para formatear JSON
+    const formatJsonBtn = document.getElementById('format-json');
+    if (formatJsonBtn) {
+        formatJsonBtn.addEventListener('click', formatJSON);
+    }
+    
+    // Event listener para validar JSON
+    const validateJsonBtn = document.getElementById('validate-json');
+    if (validateJsonBtn) {
+        validateJsonBtn.addEventListener('click', function() {
+            const validation = validateJSON();
+            if (validation.valid) {
+                alert('✅ JSON válido! El formulario se puede guardar correctamente.');
+            } else {
+                alert('❌ JSON inválido: ' + validation.error);
+            }
+        });
     }
     
     // Actualizar previsualización inicial

@@ -178,12 +178,36 @@ class Form extends Model
     public function getRelationalFields(): \Illuminate\Support\Collection
     {
         return $this->formFieldOrders()
-            ->with(['fieldJson', 'formCategory'])
+            ->with(['fieldJson', 'formCategory.formOptions'])
             ->ordered()
             ->get()
             ->map(function ($fieldOrder) {
                 $field = $fieldOrder->fieldJson;
                 $category = $fieldOrder->formCategory;
+                
+                // Get options directly from the loaded relationship
+                $options = [];
+                if ($category && $category->relationLoaded('formOptions')) {
+                    $options = $category->formOptions
+                        ->where('is_active', true)
+                        ->sortBy('order')
+                        ->map(function ($option) {
+                            return [
+                                'value' => $option->value,
+                                'label' => $option->label,
+                                'description' => $option->description,
+                            ];
+                        })
+                        ->values()
+                        ->toArray();
+                }
+                
+                // Handle visible field correctly - get raw value and decode if needed
+                $visibleValue = $field->getRawOriginal('visible');
+                $visible = null;
+                if (!is_null($visibleValue) && $visibleValue !== '') {
+                    $visible = is_string($visibleValue) ? json_decode($visibleValue, true) : $visibleValue;
+                }
                 
                 return [
                     'id' => $field->id,
@@ -193,7 +217,7 @@ class Form extends Model
                     'required' => $field->required,
                     'placeholder' => $field->placeholder,
                     'validations' => $field->validations ?? [],
-                    'visible' => $field->visible,
+                    'visible' => $visible,
                     'default_value' => $field->default_value,
                     'description' => $field->description,
                     'order' => $fieldOrder->order,
@@ -202,7 +226,7 @@ class Form extends Model
                         'code' => $category->code,
                         'name' => $category->name,
                     ] : null,
-                    'options' => $this->getFieldOptions($field->key, $category),
+                    'options' => $options,
                     'extra_data' => $fieldOrder->extra_data,
                 ];
             });

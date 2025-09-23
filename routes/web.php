@@ -121,6 +121,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/fields/{field}/options/{option}/toggle-status', [FieldController::class, 'toggleOptionStatus'])->name('fields.options.toggle-status');
     Route::put('/fields/{field}/options/order', [FieldController::class, 'updateOptionOrder'])->name('fields.options.order');
     
+    // JSON Fields management
+    Route::resource('fields-json', \App\Http\Controllers\Admin\FieldJsonController::class);
+    Route::post('/fields-json/{field}/toggle-status', [\App\Http\Controllers\Admin\FieldJsonController::class, 'toggleStatus'])->name('fields-json.toggle-status');
+    Route::post('/fields-json/upload-csv', [\App\Http\Controllers\Admin\FieldJsonController::class, 'uploadCsvOptions'])->name('fields-json.upload-csv');
+    
     // Submissions management
     Route::get('/submissions', [SubmissionController::class, 'index'])->name('submissions.index');
     Route::get('/submissions/export/csv', [SubmissionController::class, 'export'])->name('submissions.export');

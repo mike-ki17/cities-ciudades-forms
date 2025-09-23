@@ -1,35 +1,35 @@
 @extends('layouts.admin')
 
-@section('title', 'Gestión de Campos')
+@section('title', 'Gestión de Campos JSON')
 
-@section('page-title', 'Gestión de Campos')
-@section('page-description', 'Administra los campos individuales y sus opciones para los formularios')
+@section('page-title', 'Gestión de Campos JSON')
+@section('page-description', 'Administra los campos individuales creados con estructura JSON')
 
 @section('page-actions')
-    <a href="{{ route('admin.fields.create') }}" class="admin-button-primary px-4 py-2 rounded-md text-sm font-medium">
+    <a href="{{ route('admin.fields-json.create') }}" class="admin-button-primary px-4 py-2 rounded-md text-sm font-medium">
         <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
-        Nuevo Campo
+        Nuevo Campo JSON
     </a>
-    <a href="{{ route('admin.fields-json.index') }}" class="admin-button-outline px-4 py-2 rounded-md text-sm font-medium">
+    <a href="{{ route('admin.fields.index') }}" class="admin-button-outline px-4 py-2 rounded-md text-sm font-medium">
         <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
         </svg>
-        Campos JSON
+        Campos Tradicionales
     </a>
 @endsection
 
 @section('content')
     <div class="admin-card rounded-lg shadow">
         <div class="px-6 py-4 border-b border-gray-600">
-            <h3 class="text-lg font-medium admin-text">Lista de Campos</h3>
+            <h3 class="text-lg font-medium admin-text">Lista de Campos JSON</h3>
             <p class="mt-1 text-sm admin-text-secondary">
-                Gestiona los campos individuales que pueden ser utilizados en los formularios
+                Gestiona los campos individuales creados con estructura JSON que pueden ser utilizados en los formularios
             </p>
         </div>
 
-        @if($categories->count() > 0)
+        @if($fields->count() > 0)
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-600">
                     <thead class="admin-table-header">
@@ -38,10 +38,10 @@
                                 Campo
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium admin-text-secondary uppercase tracking-wider">
-                                Código
+                                Clave
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium admin-text-secondary uppercase tracking-wider">
-                                Opciones
+                                Tipo
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium admin-text-secondary uppercase tracking-wider">
                                 Estado
@@ -55,35 +55,41 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-600">
-                        @foreach($categories as $category)
+                        @foreach($fields as $field)
                             <tr class="admin-table-row">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div>
                                         <div class="text-sm font-medium admin-text">
-                                            {{ $category->name }}
+                                            {{ $field->label }}
                                         </div>
-                                        @if($category->description)
+                                        @if($field->description)
                                             <div class="text-sm admin-text-secondary">
-                                                {{ Str::limit($category->description, 50) }}
+                                                {{ Str::limit($field->description, 50) }}
                                             </div>
                                         @endif
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-700 text-gray-300">
-                                        {{ $category->code }}
+                                        {{ $field->key }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm admin-text">
-                                    <div class="flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                        </svg>
-                                        {{ $category->form_options_count }} opciones
-                                    </div>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                        @if($field->type === 'text') bg-blue-900 text-blue-300
+                                        @elseif($field->type === 'email') bg-green-900 text-green-300
+                                        @elseif($field->type === 'number') bg-yellow-900 text-yellow-300
+                                        @elseif($field->type === 'select') bg-purple-900 text-purple-300
+                                        @elseif($field->type === 'textarea') bg-indigo-900 text-indigo-300
+                                        @elseif($field->type === 'checkbox') bg-pink-900 text-pink-300
+                                        @elseif($field->type === 'date') bg-red-900 text-red-300
+                                        @else bg-gray-700 text-gray-300
+                                        @endif">
+                                        {{ ucfirst($field->type) }}
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($category->is_active)
+                                    @if($field->is_active)
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-300">
                                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
@@ -100,21 +106,22 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm admin-text-secondary">
-                                    {{ $category->created_at->format('d/m/Y') }}
+                                    {{ $field->created_at->format('d/m/Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <!-- Ver opciones -->
-                                        <a href="{{ route('admin.fields.options', $category) }}" 
+                                        <!-- Ver detalles -->
+                                        <a href="{{ route('admin.fields-json.show', $field) }}" 
                                            class="admin-link hover:admin-text" 
-                                           title="Ver opciones">
+                                           title="Ver detalles">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                             </svg>
                                         </a>
 
                                         <!-- Editar -->
-                                        <a href="{{ route('admin.fields.edit', $category) }}" 
+                                        <a href="{{ route('admin.fields-json.edit', $field) }}" 
                                            class="admin-link hover:admin-text" 
                                            title="Editar campo">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,12 +130,12 @@
                                         </a>
 
                                         <!-- Toggle Status -->
-                                        <form method="POST" action="{{ route('admin.fields.toggle-status', $category) }}" class="inline">
+                                        <form method="POST" action="{{ route('admin.fields-json.toggle-status', $field) }}" class="inline">
                                             @csrf
                                             <button type="submit" 
                                                     class="admin-link hover:admin-text" 
-                                                    title="{{ $category->is_active ? 'Desactivar' : 'Activar' }} campo">
-                                                @if($category->is_active)
+                                                    title="{{ $field->is_active ? 'Desactivar' : 'Activar' }} campo">
+                                                @if($field->is_active)
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
                                                     </svg>
@@ -141,8 +148,8 @@
                                         </form>
 
                                         <!-- Eliminar -->
-                                        @if($category->form_options_count == 0)
-                                            <form method="POST" action="{{ route('admin.fields.destroy', $category) }}" class="inline">
+                                        @if($field->formFieldOrders()->count() == 0)
+                                            <form method="POST" action="{{ route('admin.fields-json.destroy', $field) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" 
@@ -165,23 +172,23 @@
 
             <!-- Pagination -->
             <div class="px-6 py-4 border-t border-gray-600">
-                {{ $categories->links() }}
+                {{ $fields->links() }}
             </div>
         @else
             <div class="px-6 py-12 text-center">
                 <svg class="mx-auto h-12 w-12 admin-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <h3 class="mt-2 text-sm font-medium admin-text">No hay campos</h3>
+                <h3 class="mt-2 text-sm font-medium admin-text">No hay campos JSON</h3>
                 <p class="mt-1 text-sm admin-text-secondary">
-                    Comienza creando tu primer campo para los formularios.
+                    Comienza creando tu primer campo con estructura JSON.
                 </p>
                 <div class="mt-6">
-                    <a href="{{ route('admin.fields.create') }}" class="admin-button-primary px-4 py-2 rounded-md text-sm font-medium">
+                    <a href="{{ route('admin.fields-json.create') }}" class="admin-button-primary px-4 py-2 rounded-md text-sm font-medium">
                         <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
-                        Nuevo Campo
+                        Nuevo Campo JSON
                     </a>
                 </div>
             </div>
