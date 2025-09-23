@@ -15,9 +15,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             EventSeeder::class,
+            AdminUserSeeder::class,
             FormSeeder::class,
             ConditionalFormSeeder::class,
-            AdminUserSeeder::class,
         ]);
     }
 }

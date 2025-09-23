@@ -228,7 +228,9 @@ class SubmissionRepository
                 $q->where('submitted_at', '<=', $filters['date_to']);
             })
             ->get()
-            ->groupBy('form.event.name')
+            ->groupBy(function ($submission) {
+                return $submission->form->event ? $submission->form->event->name : 'Sin Evento';
+            })
             ->map(function ($submissions) {
                 return $submissions->count();
             });

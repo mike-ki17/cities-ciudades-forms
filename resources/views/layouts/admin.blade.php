@@ -309,6 +309,15 @@
                             Dashboard
                         </a>
 
+                        <!-- Events -->
+                        <a href="{{ route('admin.events.index') }}" 
+                           class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.events.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                            <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 0V5a2 2 0 012-2h4a2 2 0 012 2v2m-6 0h6m-6 0l-2 2m8-2l2 2m-2-2v10a2 2 0 01-2 2H8a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H8a2 2 0 01-2-2V9z" />
+                            </svg>
+                            Eventos
+                        </a>
+
                         <!-- Forms -->
                         <a href="{{ route('admin.forms.index') }}" 
                            class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.forms.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">

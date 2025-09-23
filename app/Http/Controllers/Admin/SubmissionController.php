@@ -96,7 +96,26 @@ class SubmissionController extends Controller
     {
         $filters = $request->only(['form_id', 'event_id', 'date_from', 'date_to']);
         
-        $statistics = $this->submissionRepository->getStatistics($filters);
+        try {
+            $statistics = $this->submissionRepository->getStatistics($filters);
+        } catch (\Exception $e) {
+            // Si hay un error, crear estadísticas vacías
+            $statistics = [
+                'total_submissions' => 0,
+                'unique_participants' => 0,
+                'avg_submissions_per_day' => 0,
+                'conversion_rate' => 0,
+                'submissions_by_date' => collect(),
+                'submissions_by_form' => collect(),
+                'submissions_by_city' => collect(),
+                'submissions_by_hour' => collect(),
+                'submissions_by_day_of_week' => collect(),
+                'date_range' => [
+                    'from' => $filters['date_from'] ?? now()->subDays(30)->format('Y-m-d'),
+                    'to' => $filters['date_to'] ?? now()->format('Y-m-d')
+                ]
+            ];
+        }
         
         $forms = Form::with('event')->orderBy('name')->get();
         $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();

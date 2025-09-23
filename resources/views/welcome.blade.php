@@ -427,7 +427,7 @@
                     </form>
                     @else
                     <a href="{{ route('login') }}" class="nav-link">Iniciar Sesión</a>
-                    <a href="{{ route('register') }}" class="nav-btn">Registrarse</a>
+                    {{-- <a href="{{ route('register') }}" class="nav-btn">Registrarse</a> --}}
                 @endauth
             </div>
         </div>
@@ -476,19 +476,19 @@
                         </svg>
                         Iniciar Sesión
                     </a>
-                    <a href="{{ route('register') }}" class="btn btn-secondary">
+                    {{-- <a href="{{ route('register') }}" class="btn btn-secondary">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
                         </svg>
                         Registrarse
-                    </a>
+                    </a> --}}
                     @endauth
             </div>
         </div>
     </section>
 
     <!-- Forms Section -->
-    <section class="forms-section">
+    {{-- <section class="forms-section">
         <div class="container">
             <h2 class="section-title">Formularios Disponibles</h2>
                     
@@ -521,10 +521,10 @@
                         </div>
                     @endif
                 </div>
-    </section>
+    </section> --}}
 
     <!-- Admin Section -->
-    @guest
+    {{-- @guest
         <section class="admin-section">
             <div class="container">
                 <div class="admin-card">
@@ -542,6 +542,6 @@
                 </div>
         </div>
         </section>
-    @endguest
+    @endguest --}}
     </body>
 </html>
