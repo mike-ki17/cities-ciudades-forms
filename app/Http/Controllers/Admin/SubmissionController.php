@@ -21,7 +21,7 @@ class SubmissionController extends Controller
      */
     public function index(Request $request): View
     {
-        $filters = $request->only(['form_id', 'city_id', 'date_from', 'date_to', 'search']);
+        $filters = $request->only(['form_id', 'event_id', 'date_from', 'date_to', 'search']);
         
         $submissions = $this->submissionRepository->getWithFilters($filters);
         
@@ -46,7 +46,7 @@ class SubmissionController extends Controller
      */
     public function export(Request $request)
     {
-        $filters = $request->only(['form_id', 'city_id', 'date_from', 'date_to']);
+        $filters = $request->only(['form_id', 'event_id', 'date_from', 'date_to']);
         
         $submissions = $this->submissionRepository->getWithFilters($filters, 1000);
         
@@ -94,7 +94,7 @@ class SubmissionController extends Controller
      */
     public function statistics(Request $request): View
     {
-        $filters = $request->only(['form_id', 'city_id', 'date_from', 'date_to']);
+        $filters = $request->only(['form_id', 'event_id', 'date_from', 'date_to']);
         
         $statistics = $this->submissionRepository->getStatistics($filters);
         

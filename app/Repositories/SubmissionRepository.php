@@ -13,7 +13,7 @@ class SubmissionRepository
      */
     public function getAllPaginated(int $perPage = 15): LengthAwarePaginator
     {
-        return FormSubmission::with(['form', 'participant', 'form.city'])
+        return FormSubmission::with(['form', 'participant', 'form.event'])
             ->orderBy('submitted_at', 'desc')
             ->paginate($perPage);
     }
@@ -23,15 +23,15 @@ class SubmissionRepository
      */
     public function getWithFilters(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        $query = FormSubmission::with(['form', 'participant', 'form.city']);
+        $query = FormSubmission::with(['form', 'participant', 'form.event']);
 
         if (isset($filters['form_id'])) {
             $query->where('form_id', $filters['form_id']);
         }
 
-        if (isset($filters['city_id'])) {
+        if (isset($filters['event_id'])) {
             $query->whereHas('form', function ($q) use ($filters) {
-                $q->where('city_id', $filters['city_id']);
+                $q->where('event_id', $filters['event_id']);
             });
         }
 
@@ -69,7 +69,7 @@ class SubmissionRepository
     public function getForForm(int $formId, int $perPage = 15): LengthAwarePaginator
     {
         return FormSubmission::where('form_id', $formId)
-            ->with(['participant', 'form.city'])
+            ->with(['participant', 'form.event'])
             ->orderBy('submitted_at', 'desc')
             ->paginate($perPage);
     }
@@ -80,7 +80,7 @@ class SubmissionRepository
     public function getForCity(int $cityId, int $perPage = 15): LengthAwarePaginator
     {
         return FormSubmission::whereHas('form', function ($query) use ($cityId) {
-                $query->where('city_id', $cityId);
+                $query->where('event_id', $cityId);
             })
             ->with(['form', 'participant'])
             ->orderBy('submitted_at', 'desc')
@@ -93,7 +93,7 @@ class SubmissionRepository
     public function getForParticipant(int $participantId, int $perPage = 15): LengthAwarePaginator
     {
         return FormSubmission::where('participant_id', $participantId)
-            ->with(['form', 'form.city'])
+            ->with(['form', 'form.event'])
             ->orderBy('submitted_at', 'desc')
             ->paginate($perPage);
     }
@@ -104,7 +104,7 @@ class SubmissionRepository
     public function getByDateRange(string $startDate, string $endDate, int $perPage = 15): LengthAwarePaginator
     {
         return FormSubmission::whereBetween('submitted_at', [$startDate, $endDate])
-            ->with(['form', 'participant', 'form.city'])
+            ->with(['form', 'participant', 'form.event'])
             ->orderBy('submitted_at', 'desc')
             ->paginate($perPage);
     }
@@ -114,7 +114,7 @@ class SubmissionRepository
      */
     public function findById(int $id): ?FormSubmission
     {
-        return FormSubmission::with(['form', 'participant', 'form.city'])->find($id);
+        return FormSubmission::with(['form', 'participant', 'form.event'])->find($id);
     }
 
     /**
@@ -153,9 +153,9 @@ class SubmissionRepository
             $query->where('form_id', $filters['form_id']);
         }
 
-        if (isset($filters['city_id'])) {
+        if (isset($filters['event_id'])) {
             $query->whereHas('form', function ($q) use ($filters) {
-                $q->where('city_id', $filters['city_id']);
+                $q->where('event_id', $filters['event_id']);
             });
         }
 
@@ -180,9 +180,9 @@ class SubmissionRepository
             ->when(isset($filters['form_id']), function ($q) use ($filters) {
                 $q->where('form_id', $filters['form_id']);
             })
-            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+            ->when(isset($filters['event_id']), function ($q) use ($filters) {
                 $q->whereHas('form', function ($formQuery) use ($filters) {
-                    $formQuery->where('city_id', $filters['city_id']);
+                    $formQuery->where('event_id', $filters['event_id']);
                 });
             })
             ->groupBy('date')
@@ -194,9 +194,9 @@ class SubmissionRepository
             ->when(isset($filters['form_id']), function ($q) use ($filters) {
                 $q->where('form_id', $filters['form_id']);
             })
-            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+            ->when(isset($filters['event_id']), function ($q) use ($filters) {
                 $q->whereHas('form', function ($formQuery) use ($filters) {
-                    $formQuery->where('city_id', $filters['city_id']);
+                    $formQuery->where('event_id', $filters['event_id']);
                 });
             })
             ->when(isset($filters['date_from']), function ($q) use ($filters) {
@@ -212,13 +212,13 @@ class SubmissionRepository
             });
 
         // Estadísticas por ciudad
-        $submissionsByCity = FormSubmission::with('form.city')
+        $submissionsByCity = FormSubmission::with('form.event')
             ->when(isset($filters['form_id']), function ($q) use ($filters) {
                 $q->where('form_id', $filters['form_id']);
             })
-            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+            ->when(isset($filters['event_id']), function ($q) use ($filters) {
                 $q->whereHas('form', function ($formQuery) use ($filters) {
-                    $formQuery->where('city_id', $filters['city_id']);
+                    $formQuery->where('event_id', $filters['event_id']);
                 });
             })
             ->when(isset($filters['date_from']), function ($q) use ($filters) {
@@ -228,7 +228,7 @@ class SubmissionRepository
                 $q->where('submitted_at', '<=', $filters['date_to']);
             })
             ->get()
-            ->groupBy('form.city.name')
+            ->groupBy('form.event.name')
             ->map(function ($submissions) {
                 return $submissions->count();
             });
@@ -238,9 +238,9 @@ class SubmissionRepository
             ->when(isset($filters['form_id']), function ($q) use ($filters) {
                 $q->where('form_id', $filters['form_id']);
             })
-            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+            ->when(isset($filters['event_id']), function ($q) use ($filters) {
                 $q->whereHas('form', function ($formQuery) use ($filters) {
-                    $formQuery->where('city_id', $filters['city_id']);
+                    $formQuery->where('event_id', $filters['event_id']);
                 });
             })
             ->when(isset($filters['date_from']), function ($q) use ($filters) {
@@ -258,9 +258,9 @@ class SubmissionRepository
             ->when(isset($filters['form_id']), function ($q) use ($filters) {
                 $q->where('form_id', $filters['form_id']);
             })
-            ->when(isset($filters['city_id']), function ($q) use ($filters) {
+            ->when(isset($filters['event_id']), function ($q) use ($filters) {
                 $q->whereHas('form', function ($formQuery) use ($filters) {
-                    $formQuery->where('city_id', $filters['city_id']);
+                    $formQuery->where('event_id', $filters['event_id']);
                 });
             })
             ->when(isset($filters['date_from']), function ($q) use ($filters) {
@@ -303,7 +303,7 @@ class SubmissionRepository
      */
     public function getRecent(int $limit = 10): Collection
     {
-        return FormSubmission::with(['form', 'participant', 'form.city'])
+        return FormSubmission::with(['form', 'participant', 'form.event'])
             ->orderBy('submitted_at', 'desc')
             ->limit($limit)
             ->get();
@@ -324,7 +324,7 @@ class SubmissionRepository
                         ->orWhere('description', 'like', "%{$query}%");
                 });
             })
-            ->with(['form', 'participant', 'form.city'])
+            ->with(['form', 'participant', 'form.event'])
             ->orderBy('submitted_at', 'desc')
             ->paginate($perPage);
     }

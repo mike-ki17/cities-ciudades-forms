@@ -177,11 +177,11 @@ class MultipleFormsSeeder extends Seeder
 
         foreach ($forms as $formData) {
             $form = Form::create(array_merge($formData, [
-                'city_id' => $event->id,
+                'event_id' => $event->id,
             ]));
 
             $this->command->info("Formulario '{$form->name}' creado con slug: {$form->slug}");
-            $this->command->info("URL pública: " . route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]));
+            $this->command->info("URL pública: " . route('public.forms.slug.show', ['slug' => $form->slug]));
         }
 
         $this->command->info("Se crearon " . count($forms) . " formularios activos para el evento: {$event->full_name}");

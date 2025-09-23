@@ -103,17 +103,17 @@ try {
                 document_type ENUM('DNI', 'CE', 'PASSPORT', 'OTRO') NOT NULL,
                 document_number VARCHAR(50) NOT NULL,
                 birth_date DATE DEFAULT NULL,
-                city_id BIGINT UNSIGNED DEFAULT NULL,
+                event_id BIGINT UNSIGNED DEFAULT NULL,
                 created_at TIMESTAMP NULL DEFAULT NULL,
                 updated_at TIMESTAMP NULL DEFAULT NULL,
                 deleted_at TIMESTAMP NULL DEFAULT NULL,
                 PRIMARY KEY (id),
                 UNIQUE KEY participant_email_unique (email),
                 UNIQUE KEY participant_document_unique (document_type, document_number),
-                KEY participant_city_id_foreign (city_id),
+                KEY participant_event_id_foreign (event_id),
                 KEY participant_deleted_at_index (deleted_at),
                 KEY participant_email_index (email),
-                CONSTRAINT participant_city_id_foreign FOREIGN KEY (city_id) REFERENCES city (id) ON DELETE SET NULL
+                CONSTRAINT participant_event_id_foreign FOREIGN KEY (event_id) REFERENCES city (id) ON DELETE SET NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
         ");
         echo "✓ Tabla participant creada\n";
@@ -172,7 +172,7 @@ try {
         $pdo->exec("
             CREATE TABLE form (
                 id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                city_id BIGINT UNSIGNED DEFAULT NULL,
+                event_id BIGINT UNSIGNED DEFAULT NULL,
                 name VARCHAR(255) NOT NULL,
                 description TEXT DEFAULT NULL,
                 schema_json JSON NOT NULL,
@@ -182,11 +182,11 @@ try {
                 updated_at TIMESTAMP NULL DEFAULT NULL,
                 deleted_at TIMESTAMP NULL DEFAULT NULL,
                 PRIMARY KEY (id),
-                KEY form_city_id_foreign (city_id),
+                KEY form_event_id_foreign (event_id),
                 KEY form_deleted_at_index (deleted_at),
                 KEY form_active_index (is_active),
                 KEY form_version_index (version),
-                CONSTRAINT form_city_id_foreign FOREIGN KEY (city_id) REFERENCES city (id) ON DELETE SET NULL
+                CONSTRAINT form_event_id_foreign FOREIGN KEY (event_id) REFERENCES city (id) ON DELETE SET NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
         ");
         echo "✓ Tabla form creada\n";
@@ -224,7 +224,7 @@ try {
         
         // Insert sample form
         $pdo->exec("
-            INSERT INTO form (id, city_id, name, description, schema_json, is_active, version, created_at, updated_at) VALUES 
+            INSERT INTO form (id, event_id, name, description, schema_json, is_active, version, created_at, updated_at) VALUES 
             (1, 1, 'Formulario de Inscripción', 'Formulario para inscripción de participantes', '{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"title\":\"Nombre completo\"},\"email\":{\"type\":\"string\",\"title\":\"Correo electrónico\",\"format\":\"email\"},\"phone\":{\"type\":\"string\",\"title\":\"Teléfono\"},\"age\":{\"type\":\"number\",\"title\":\"Edad\"}},\"required\":[\"name\",\"email\"]}', 1, 1, NOW(), NOW())
         ");
         echo "✓ Formulario de ejemplo insertado\n";
@@ -239,3 +239,4 @@ try {
     echo "Verifica que MySQL esté ejecutándose y que la base de datos 'cities_db' exista.\n";
     exit(1);
 }
+

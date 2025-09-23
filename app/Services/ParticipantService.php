@@ -21,7 +21,6 @@ class ParticipantService
             'document_type' => $data['document_type'] ?? 'DNI', // Will be saved exactly as provided
             'document_number' => $data['document_number'] ?? '00000000',
             'birth_date' => $data['birth_date'] ?? null,
-            'city_id' => $data['city_id'] ?? null, // Only save if provided, otherwise NULL
         ]);
     }
 
@@ -45,14 +44,13 @@ class ParticipantService
                     'email' => $data['email'] ?? $participant->email,
                     'phone' => $data['phone'] ?? $participant->phone,
                     'birth_date' => $data['birth_date'] ?? $participant->birth_date,
-                    'city_id' => isset($data['city_id']) ? $data['city_id'] : $participant->city_id,
                 ]);
 
                 \Log::info('Participant found by document, updated existing record', [
                     'participant_id' => $participant->id,
                     'document_type' => $data['document_type'],
                     'document_number' => $data['document_number'],
-                    'updated_fields' => ['name', 'email', 'phone', 'birth_date', 'city_id']
+                    'updated_fields' => ['name', 'email', 'phone', 'birth_date']
                 ]);
 
                 return $participant;
@@ -66,7 +64,6 @@ class ParticipantService
                 'document_type' => $data['document_type'], // Save exactly as provided
                 'document_number' => $data['document_number'],
                 'birth_date' => $data['birth_date'] ?? null,
-                'city_id' => isset($data['city_id']) ? $data['city_id'] : null, // Only save if provided
             ]);
 
             \Log::info('New participant created', [
@@ -137,11 +134,15 @@ class ParticipantService
     }
 
     /**
-     * Get participants for a city.
+     * Get participants for an event.
      */
-    public function getParticipantsForCity(int $cityId): \Illuminate\Database\Eloquent\Collection
+    public function getParticipantsForEvent(int $eventId): \Illuminate\Database\Eloquent\Collection
     {
-        return Participant::forCity($cityId)->get();
+        // Since participants no longer have direct event relationship,
+        // we need to get them through form submissions or attendance
+        return Participant::whereHas('formSubmissions.form', function($query) use ($eventId) {
+            $query->where('event_id', $eventId);
+        })->get();
     }
 
     /**
@@ -192,7 +193,7 @@ class ParticipantService
      */
     public function getParticipantSubmissions(Participant $participant, array $filters = []): \Illuminate\Database\Eloquent\Collection
     {
-        $query = $participant->formSubmissions()->with(['form', 'form.city']);
+        $query = $participant->formSubmissions()->with(['form', 'form.event']);
 
         if (isset($filters['form_id'])) {
             $query->where('form_id', $filters['form_id']);

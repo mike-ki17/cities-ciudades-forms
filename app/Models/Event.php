@@ -41,15 +41,29 @@ class Event extends Model
      */
     public function forms(): HasMany
     {
-        return $this->hasMany(Form::class, 'city_id');
+        return $this->hasMany(Form::class, 'event_id');
     }
 
     /**
-     * Get the participants for the event.
+     * Get the participants for the event through cycles and attendances.
+     * This is a complex relationship that requires custom queries.
      */
-    public function participants(): HasMany
+    public function getParticipantsCountAttribute()
     {
-        return $this->hasMany(Participant::class, 'city_id');
+        return \Illuminate\Support\Facades\DB::table('participants')
+            ->join('attendances', 'participants.id', '=', 'attendances.participant_id')
+            ->join('cycles', 'attendances.cycle_id', '=', 'cycles.id')
+            ->where('cycles.events_id', $this->id)
+            ->distinct('participants.id')
+            ->count();
+    }
+
+    /**
+     * Get the cycles for the event.
+     */
+    public function cycles(): HasMany
+    {
+        return $this->hasMany(Cycle::class, 'events_id');
     }
 
     /**

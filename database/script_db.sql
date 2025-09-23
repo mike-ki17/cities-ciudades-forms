@@ -30,7 +30,7 @@ CREATE TABLE city (
 -- =========================================================
 CREATE TABLE cycle (
   id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  city_id       BIGINT UNSIGNED NOT NULL,
+  event_id       BIGINT UNSIGNED NOT NULL,
   name          VARCHAR(160) NOT NULL,
   start_date    DATE         NOT NULL,
   end_date      DATE         NOT NULL,
@@ -42,13 +42,13 @@ CREATE TABLE cycle (
 
   PRIMARY KEY (id),
   CONSTRAINT fk_cycle_city
-    FOREIGN KEY (city_id) REFERENCES city(id)
+    FOREIGN KEY (event_id) REFERENCES city(id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
   CONSTRAINT chk_cycle_dates CHECK (start_date <= end_date)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_cycle_city ON cycle(city_id);
+CREATE INDEX idx_cycle_city ON cycle(event_id);
 CREATE INDEX idx_cycle_status ON cycle(status);
 
 -- =========================================================
@@ -79,7 +79,7 @@ CREATE INDEX idx_session_cycle_start ON session(cycle_id, starts_at);
 -- =========================================================
 CREATE TABLE participant (
   id                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  city_id           BIGINT UNSIGNED NULL,
+  event_id           BIGINT UNSIGNED NULL,
   name              VARCHAR(180) NOT NULL,
   email             VARCHAR(255) NULL,
   phone             VARCHAR(30)  NULL, -- almacenar en formato E.164 si es posible
@@ -92,7 +92,7 @@ CREATE TABLE participant (
 
   PRIMARY KEY (id),
   CONSTRAINT fk_participant_city
-    FOREIGN KEY (city_id) REFERENCES city(id)
+    FOREIGN KEY (event_id) REFERENCES city(id)
     ON UPDATE CASCADE
     ON DELETE SET NULL,
 
@@ -103,7 +103,7 @@ CREATE TABLE participant (
   CONSTRAINT ux_participant_email UNIQUE KEY ((LOWER(email)))
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_participant_city ON participant(city_id);
+CREATE INDEX idx_participant_city ON participant(event_id);
 
 -- =========================================================
 -- INSCRIPCIONES (enrollment) separadas de asistencia
@@ -165,7 +165,7 @@ CREATE INDEX idx_attendance_status ON attendance(status);
 -- =========================================================
 CREATE TABLE form (
   id            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  city_id       BIGINT UNSIGNED NULL,
+  event_id       BIGINT UNSIGNED NULL,
   cycle_id      BIGINT UNSIGNED NULL,
   version       INT NOT NULL DEFAULT 1,
   title         VARCHAR(200) NOT NULL,
@@ -177,7 +177,7 @@ CREATE TABLE form (
 
   PRIMARY KEY (id),
   CONSTRAINT fk_form_city
-    FOREIGN KEY (city_id) REFERENCES city(id)
+    FOREIGN KEY (event_id) REFERENCES city(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT fk_form_cycle
@@ -185,13 +185,13 @@ CREATE TABLE form (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
 
-  -- exactamente uno de (city_id, cycle_id) debe estar presente
+  -- exactamente uno de (event_id, cycle_id) debe estar presente
   CONSTRAINT chk_form_scope CHECK (
-    (city_id IS NOT NULL) XOR (cycle_id IS NOT NULL)
+    (event_id IS NOT NULL) XOR (cycle_id IS NOT NULL)
   )
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_form_city ON form(city_id);
+CREATE INDEX idx_form_city ON form(event_id);
 CREATE INDEX idx_form_cycle ON form(cycle_id);
 CREATE INDEX idx_form_active ON form(active);
 
@@ -253,7 +253,7 @@ SELECT
   ci.name   AS city_name,
   COUNT(e.id) AS enrollments
 FROM cycle c
-JOIN city ci ON ci.id = c.city_id
+JOIN city ci ON ci.id = c.event_id
 LEFT JOIN enrollment e ON e.cycle_id = c.id
 GROUP BY c.id;
 

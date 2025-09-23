@@ -65,7 +65,7 @@ class FormService
     {
         return DB::transaction(function () use ($data) {
             // Increment version for the city
-            $latestVersion = Form::where('city_id', $data['city_id'])
+            $latestVersion = Form::where('event_id', $data['event_id'])
                 ->max('version') ?? 0;
             $data['version'] = $latestVersion + 1;
 
@@ -142,7 +142,6 @@ class FormService
             $submission = FormSubmission::create([
                 'form_id' => $form->id,
                 'participant_id' => $participant->id,
-                'user_id' => $user ? $user->id : null,
                 'data_json' => $data, // Only dynamic fields (already separated)
                 'submitted_at' => now(),
             ]);
@@ -170,9 +169,9 @@ class FormService
             $query->where('form_id', $filters['form_id']);
         }
 
-        if (isset($filters['city_id'])) {
+        if (isset($filters['event_id'])) {
             $query->whereHas('form', function ($q) use ($filters) {
-                $q->where('city_id', $filters['city_id']);
+                $q->where('event_id', $filters['event_id']);
             });
         }
 
@@ -215,22 +214,22 @@ class FormService
     }
 
     /**
-     * Check if a user has already submitted a form.
+     * Check if a participant has already submitted a form.
      */
-    public function hasUserSubmitted(Form $form, $user): bool
+    public function hasParticipantSubmitted(Form $form, Participant $participant): bool
     {
         return $form->formSubmissions()
-            ->where('user_id', $user->id)
+            ->where('participant_id', $participant->id)
             ->exists();
     }
 
     /**
-     * Get the latest submission for a user and form.
+     * Get the latest submission for a participant and form.
      */
-    public function getLatestUserSubmission(Form $form, $user): ?FormSubmission
+    public function getLatestParticipantSubmission(Form $form, Participant $participant): ?FormSubmission
     {
         return $form->formSubmissions()
-            ->where('user_id', $user->id)
+            ->where('participant_id', $participant->id)
             ->latest('submitted_at')
             ->first();
     }

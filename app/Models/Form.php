@@ -21,7 +21,7 @@ class Form extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'city_id',
+        'event_id',
         'name',
         'slug',
         'description',
@@ -52,15 +52,15 @@ class Form extends Model
      */
     public function event(): BelongsTo
     {
-        return $this->belongsTo(Event::class, 'city_id');
+        return $this->belongsTo(Event::class, 'event_id');
     }
 
     /**
-     * Get the city that owns the form (alias for backward compatibility).
+     * Get the city through the event relationship (convenience method).
      */
     public function city(): BelongsTo
     {
-        return $this->belongsTo(Event::class, 'city_id');
+        return $this->belongsTo(Event::class, 'event_id');
     }
 
     /**
@@ -72,6 +72,14 @@ class Form extends Model
     }
 
     /**
+     * Get the form field orders for the form.
+     */
+    public function formFieldOrders(): HasMany
+    {
+        return $this->hasMany(FormFieldOrder::class, 'form_id');
+    }
+
+    /**
      * Scope a query to only include active forms.
      */
     public function scopeActive($query)
@@ -80,11 +88,11 @@ class Form extends Model
     }
 
     /**
-     * Scope a query to only include forms for a specific city.
+     * Scope a query to only include forms for a specific event.
      */
-    public function scopeForCity($query, $cityId)
+    public function scopeForEvent($query, $eventId)
     {
-        return $query->where('city_id', $cityId);
+        return $query->where('event_id', $eventId);
     }
 
 

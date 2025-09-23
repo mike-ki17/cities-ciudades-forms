@@ -11,20 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('forms', function (Blueprint $table) {
+        Schema::create('form_categories', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('event_id')->nullable();
+            $table->string('code')->unique();
             $table->string('name');
-            $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->json('schema_json');
             $table->boolean('is_active')->default(true);
-            $table->integer('version')->default(1);
             $table->timestamps();
-            $table->softDeletes();
             
-            $table->foreign('event_id')->references('id')->on('cities')->onDelete('cascade');
-            $table->index(['event_id', 'is_active']);
+            // Indexes for better performance
+            $table->index(['is_active']);
+            $table->index(['code']);
         });
     }
 
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('forms');
+        Schema::dropIfExists('form_categories');
     }
 };

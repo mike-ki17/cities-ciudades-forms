@@ -27,8 +27,6 @@ class Participant extends Model
         'document_type',
         'document_number',
         'birth_date',
-        'city_id',
-        'extra_data',
     ];
 
     /**
@@ -45,19 +43,11 @@ class Participant extends Model
     }
 
     /**
-     * Get the event that owns the participant.
+     * Get the attendances for the participant.
      */
-    public function event(): BelongsTo
+    public function attendances(): HasMany
     {
-        return $this->belongsTo(Event::class, 'city_id');
-    }
-
-    /**
-     * Get the city that owns the participant (alias for backward compatibility).
-     */
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(Event::class, 'city_id');
+        return $this->hasMany(Attendance::class, 'participant_id');
     }
 
     /**
@@ -126,13 +116,6 @@ class Participant extends Model
                     ->where('document_number', $documentNumber);
     }
 
-    /**
-     * Scope a query to only include participants for a specific city.
-     */
-    public function scopeForCity($query, $cityId)
-    {
-        return $query->where('city_id', $cityId);
-    }
 
     /**
      * Check if participant has submitted a specific form.

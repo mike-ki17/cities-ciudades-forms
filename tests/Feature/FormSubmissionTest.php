@@ -31,7 +31,7 @@ class FormSubmissionTest extends TestCase
         ]);
 
         $form = Form::create([
-            'city_id' => $event->id,
+            'event_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',
@@ -65,7 +65,7 @@ class FormSubmissionTest extends TestCase
         ]);
 
         $form = Form::create([
-            'city_id' => $event->id,
+            'event_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',
@@ -100,7 +100,7 @@ class FormSubmissionTest extends TestCase
         ]);
 
         $participant = Participant::create([
-            'city_id' => $event->id,
+            'event_id' => $event->id,
             'name' => 'Test Participant',
             'email' => 'test@example.com',
             'phone' => '1234567890',
@@ -111,7 +111,7 @@ class FormSubmissionTest extends TestCase
         $user->update(['participant_id' => $participant->id]);
 
         $form = Form::create([
-            'city_id' => $event->id,
+            'event_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',
@@ -138,9 +138,8 @@ class FormSubmissionTest extends TestCase
         $response->assertRedirect();
         $response->assertSessionHas('success', 'Formulario enviado exitosamente.');
 
-        $this->assertDatabaseHas('form_submission', [
+        $this->assertDatabaseHas('form_submissions', [
             'form_id' => $form->id,
-            'user_id' => $user->id,
             'participant_id' => $participant->id
         ]);
     }
@@ -156,7 +155,7 @@ class FormSubmissionTest extends TestCase
         ]);
 
         $participant = Participant::create([
-            'city_id' => $event->id,
+            'event_id' => $event->id,
             'name' => 'Test Participant',
             'email' => 'test@example.com',
             'phone' => '1234567890',
@@ -167,7 +166,7 @@ class FormSubmissionTest extends TestCase
         $user->update(['participant_id' => $participant->id]);
 
         $form = Form::create([
-            'city_id' => $event->id,
+            'event_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',
@@ -188,7 +187,6 @@ class FormSubmissionTest extends TestCase
         // Create existing submission
         FormSubmission::create([
             'form_id' => $form->id,
-            'user_id' => $user->id,
             'participant_id' => $participant->id,
             'data_json' => ['name' => 'John Doe'],
             'submitted_at' => now()
@@ -205,7 +203,7 @@ class FormSubmissionTest extends TestCase
 
         // Verify only one submission exists
         $this->assertEquals(1, FormSubmission::where('form_id', $form->id)
-            ->where('user_id', $user->id)
+            ->where('participant_id', $participant->id)
             ->count());
     }
 
@@ -219,8 +217,21 @@ class FormSubmissionTest extends TestCase
             'year' => 2024
         ]);
 
+        $participant = Participant::create([
+            'name' => 'Test Participant',
+            'email' => 'test@example.com',
+            'phone' => '123456789',
+            'document_type' => 'DNI',
+            'document_number' => '12345678',
+            'birth_date' => '1990-01-01',
+            'event_id' => $event->id
+        ]);
+
+        // Associate user with participant
+        $user->update(['participant_id' => $participant->id]);
+
         $form = Form::create([
-            'city_id' => $event->id,
+            'event_id' => $event->id,
             'name' => 'Test Form',
             'slug' => 'test-form',
             'description' => 'Test Description',
@@ -233,8 +244,7 @@ class FormSubmissionTest extends TestCase
 
         FormSubmission::create([
             'form_id' => $form->id,
-            'user_id' => $user->id,
-            'participant_id' => null,
+            'participant_id' => $participant->id,
             'data_json' => [],
             'submitted_at' => now()
         ]);

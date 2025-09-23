@@ -6,21 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Attendance extends Model
+class ParentFormOption extends Model
 {
     use HasFactory;
 
     /**
      * The table associated with the model.
      */
-    protected $table = 'attendances';
+    protected $table = 'parent_form_options';
 
     /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'participant_id',
-        'cycle_id',
+        'form_option_parent_id',
+        'form_option_child_id',
     ];
 
     /**
@@ -29,27 +29,26 @@ class Attendance extends Model
     protected function casts(): array
     {
         return [
-            'participant_id' => 'integer',
-            'cycle_id' => 'integer',
+            'form_option_parent_id' => 'integer',
+            'form_option_child_id' => 'integer',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
     }
 
     /**
-     * Get the participant that owns the attendance.
+     * Get the parent form option.
      */
-    public function participant(): BelongsTo
+    public function parentOption(): BelongsTo
     {
-        return $this->belongsTo(Participant::class, 'participant_id');
+        return $this->belongsTo(FormOption::class, 'form_option_parent_id');
     }
 
     /**
-     * Get the cycle that owns the attendance.
+     * Get the child form option.
      */
-    public function cycle(): BelongsTo
+    public function childOption(): BelongsTo
     {
-        return $this->belongsTo(Cycle::class, 'cycle_id');
+        return $this->belongsTo(FormOption::class, 'form_option_child_id');
     }
-
 }

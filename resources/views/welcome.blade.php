@@ -493,7 +493,7 @@
             <h2 class="section-title">Formularios Disponibles</h2>
                     
                     @php
-                        $forms = \App\Models\Form::with('city')->active()->get();
+                        $forms = \App\Models\Form::with('event')->active()->get();
                     @endphp
                     
                     @if($forms->count() > 0)
@@ -501,11 +501,11 @@
                                 @foreach($forms as $form)
                         <div class="form-card">
                             <h3 class="form-title">{{ $form->name }}</h3>
-                            <p class="form-city">{{ $form->city ? $form->city->name : 'General' }}</p>
+                            <p class="form-city">{{ $form->event ? $form->event->name : 'General' }}</p>
                             <p class="form-description">
                                 {{ $form->description ?? 'Formulario municipal disponible para completar en línea.' }}
                             </p>
-                            <a href="{{ route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]) }}" class="form-btn">
+                            <a href="{{ route('public.forms.slug.show', ['slug' => $form->slug]) }}" class="form-btn">
                                 Completar Formulario
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-left: 0.5rem;">
                                     <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>

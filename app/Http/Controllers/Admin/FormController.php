@@ -39,8 +39,8 @@ class FormController extends Controller
         }
 
         // Filtro por evento específico
-        if ($request->filled('city_id')) {
-            $query->where('city_id', $request->get('city_id'));
+        if ($request->filled('event_id')) {
+            $query->where('event_id', $request->get('event_id'));
         }
 
         // Filtro por estado (activo/inactivo)
@@ -49,7 +49,7 @@ class FormController extends Controller
             $query->where('is_active', $status);
         }
 
-        $forms = $query->orderBy('city_id')
+        $forms = $query->orderBy('event_id')
             ->orderBy('version', 'desc')
             ->paginate(15)
             ->withQueryString(); // Mantener parámetros de búsqueda en la paginación

@@ -13,11 +13,11 @@ return new class extends Migration
     {
         // First, drop foreign key constraints that reference cities table
         Schema::table('forms', function (Blueprint $table) {
-            $table->dropForeign(['city_id']);
+            $table->dropForeign(['event_id']);
         });
 
         Schema::table('participants', function (Blueprint $table) {
-            $table->dropForeign(['city_id']);
+            $table->dropForeign(['event_id']);
         });
 
         // Rename the cities table to events
@@ -41,11 +41,11 @@ return new class extends Migration
 
         // Recreate foreign key constraints pointing to events table
         Schema::table('forms', function (Blueprint $table) {
-            $table->foreign('city_id')->references('id')->on('events')->onDelete('cascade');
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
         });
 
         Schema::table('participants', function (Blueprint $table) {
-            $table->foreign('city_id')->references('id')->on('events')->onDelete('set null');
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('set null');
         });
     }
 
@@ -56,11 +56,11 @@ return new class extends Migration
     {
         // Drop foreign key constraints
         Schema::table('forms', function (Blueprint $table) {
-            $table->dropForeign(['city_id']);
+            $table->dropForeign(['event_id']);
         });
 
         Schema::table('participants', function (Blueprint $table) {
-            $table->dropForeign(['city_id']);
+            $table->dropForeign(['event_id']);
         });
 
         // Revert the events table structure
@@ -85,11 +85,11 @@ return new class extends Migration
 
         // Recreate foreign key constraints pointing to cities table
         Schema::table('forms', function (Blueprint $table) {
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+            $table->foreign('event_id')->references('id')->on('cities')->onDelete('cascade');
         });
 
         Schema::table('participants', function (Blueprint $table) {
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('set null');
+            $table->foreign('event_id')->references('id')->on('cities')->onDelete('set null');
         });
     }
 };

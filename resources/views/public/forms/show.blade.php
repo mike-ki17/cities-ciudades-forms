@@ -68,8 +68,8 @@
             @if($form->description)
                 <p class="mt-2 text-sm text-gray-600">{{ $form->description }}</p>
             @endif
-            @if($form->city)
-                <p class="mt-1 text-sm font-medium" style="color: {{ $primaryColor }};">{{ $form->city ? $form->city->name : 'General' }}{{ $form->city && $form->city->country ? ', ' . $form->city->country : '' }}</p>
+            @if($form->event)
+                <p class="mt-1 text-sm font-medium" style="color: {{ $primaryColor }};">{{ $form->event ? $form->event->name : 'General' }}{{ $form->event && $form->event->city ? ', ' . $form->event->city : '' }}</p>
             @endif
         </div>
 

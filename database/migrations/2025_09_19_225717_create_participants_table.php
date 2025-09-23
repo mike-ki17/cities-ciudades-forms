@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('participants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('city_id')->nullable();
+            $table->unsignedBigInteger('event_id')->nullable();
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
@@ -24,8 +24,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('set null');
-            $table->index(['city_id']);
+            $table->foreign('event_id')->references('id')->on('cities')->onDelete('set null');
+            $table->index(['event_id']);
         });
     }
 

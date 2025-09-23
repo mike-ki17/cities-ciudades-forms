@@ -101,13 +101,13 @@
                                 Ciudad
                             </label>
                             <div class="mt-1">
-                                @if($submission->form->city)
+                                @if($submission->form->event)
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium admin-alert-success">
                                         <svg class="w-4 h-4 mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         </svg>
-                                        {{ $submission->form->city ? $submission->form->city->name : 'General' }}
+                                        {{ $submission->form->event ? $submission->form->event->name : 'General' }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium admin-alert-error">
@@ -206,18 +206,6 @@
                             </div>
                         </div>
 
-                        @if($submission->participant->city)
-                            <div class="admin-field-group">
-                                <label class="admin-field-label">
-                                    <svg class="w-4 h-4 inline-block mr-1" style="color: #bb2558;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    </svg>
-                                    Ciudad
-                                </label>
-                                <div class="admin-text font-medium">{{ $submission->participant->city ? $submission->participant->city->name : 'General' }}</div>
-                            </div>
-                        @endif
 
                         @if($submission->participant->birth_date)
                             <div class="admin-field-group">

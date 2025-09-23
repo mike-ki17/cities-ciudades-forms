@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         // Redirect to welcome page if user has a participant
-        if ($user->participant && $user->participant->city) {
+        if ($user->participant) {
             return redirect()->intended('/');
         }
 

@@ -4,25 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Cycle extends Model
+class FormCategory extends Model
 {
     use HasFactory;
 
     /**
      * The table associated with the model.
      */
-    protected $table = 'cycles';
+    protected $table = 'form_categories';
 
     /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'events_id',
+        'code',
         'name',
-        'days',
+        'description',
         'is_active',
     ];
 
@@ -32,8 +31,6 @@ class Cycle extends Model
     protected function casts(): array
     {
         return [
-            'events_id' => 'integer',
-            'days' => 'integer',
             'is_active' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
@@ -41,26 +38,34 @@ class Cycle extends Model
     }
 
     /**
-     * Get the event that owns the cycle.
+     * Get the form options for the category.
      */
-    public function event(): BelongsTo
+    public function formOptions(): HasMany
     {
-        return $this->belongsTo(Event::class, 'events_id');
+        return $this->hasMany(FormOption::class, 'category_id');
     }
 
     /**
-     * Get the attendances for the cycle.
+     * Get the form field orders for the category.
      */
-    public function attendances(): HasMany
+    public function formFieldOrders(): HasMany
     {
-        return $this->hasMany(Attendance::class, 'cycle_id');
+        return $this->hasMany(FormFieldOrder::class, 'form_category_id');
     }
 
     /**
-     * Scope a query to only include active cycles.
+     * Scope a query to only include active categories.
      */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope a query to find a category by code.
+     */
+    public function scopeByCode($query, string $code)
+    {
+        return $query->where('code', $code);
     }
 }

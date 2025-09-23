@@ -165,7 +165,7 @@ class ConditionalFormSeeder extends Seeder
 
         // Create the form
         Form::create([
-            'city_id' => null, // General form
+            'event_id' => null, // General form
             'name' => 'Formulario de Cuidador con Campos Condicionales',
             'description' => 'Formulario de ejemplo que demuestra el uso de campos condicionales para cuidadores de personas con discapacidad.',
             'schema_json' => $conditionalFormSchema,

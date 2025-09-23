@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Models\Event;
 use App\Models\Participant;
 use App\Models\User;
 use App\Services\ParticipantService;
@@ -25,8 +24,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();
-        return view('auth.register', compact('events'));
+        return view('auth.register');
     }
 
     /**
@@ -43,7 +41,6 @@ class RegisteredUserController extends Controller
             'phone' => $validated['phone'] ?? null,
             'document_type' => $validated['document_type'],
             'document_number' => $validated['document_number'],
-            'city_id' => $validated['city_id'],
         ]);
 
         // Create user

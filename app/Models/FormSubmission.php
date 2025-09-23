@@ -21,7 +21,6 @@ class FormSubmission extends Model
     protected $fillable = [
         'form_id',
         'participant_id',
-        'user_id',
         'data_json',
         'submitted_at',
     ];
@@ -55,13 +54,6 @@ class FormSubmission extends Model
         return $this->belongsTo(Participant::class);
     }
 
-    /**
-     * Get the user that owns the submission.
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
     /**
      * Scope a query to only include submissions for a specific form.
@@ -79,13 +71,6 @@ class FormSubmission extends Model
         return $query->where('participant_id', $participantId);
     }
 
-    /**
-     * Scope a query to only include submissions for a specific user.
-     */
-    public function scopeForUser($query, $userId)
-    {
-        return $query->where('user_id', $userId);
-    }
 
     /**
      * Scope a query to only include submissions within a date range.

@@ -56,23 +56,23 @@
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                         <!-- City -->
                         <div class="admin-field-group">
-                            <label for="city_id" class="admin-field-label">
+                            <label for="event_id" class="admin-field-label">
                                 <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
                                 Ciudad *
                             </label>
-                            <select name="city_id" id="city_id" class="admin-select w-full">
+                            <select name="event_id" id="event_id" class="admin-select w-full">
                                 <option value="">Seleccionar evento</option>
                                 @foreach($events as $event)
-                                    <option value="{{ $event->id }}" {{ old('city_id') == $event->id ? 'selected' : '' }}>
+                                    <option value="{{ $event->id }}" {{ old('event_id') == $event->id ? 'selected' : '' }}>
                                         {{ $event->full_name }}
                                     </option>
                                 @endforeach
                             </select>
                             <div class="admin-field-help">Selecciona la ciudad para la cual será este formulario</div>
-                            @error('city_id')
+                            @error('event_id')
                                 <div class="admin-field-error">{{ $message }}</div>
                             @enderror
                         </div>

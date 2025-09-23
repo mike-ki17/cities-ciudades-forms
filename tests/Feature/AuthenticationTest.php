@@ -35,3 +35,4 @@ class AuthenticationTest extends TestCase
         $this->assertFalse($user->hasSubmittedForm(999));
     }
 }
+

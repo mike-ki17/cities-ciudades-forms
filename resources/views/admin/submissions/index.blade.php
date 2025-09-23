@@ -47,17 +47,17 @@
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                         <!-- City Filter -->
                         <div class="admin-field-group">
-                            <label for="city_id" class="admin-field-label">
+                            <label for="event_id" class="admin-field-label">
                                 <svg class="w-4 h-4 inline-block mr-1" style="color: #00ffbd;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 </svg>
                                 Ciudad
                             </label>
-                            <select name="city_id" id="city_id" class="admin-select w-full">
+                            <select name="event_id" id="event_id" class="admin-select w-full">
                                 <option value="">Todos los eventos</option>
                                 @foreach($events as $event)
-                                    <option value="{{ $event->id }}" {{ request('city_id') == $event->id ? 'selected' : '' }}>
+                                    <option value="{{ $event->id }}" {{ request('event_id') == $event->id ? 'selected' : '' }}>
                                         {{ $event->full_name }}
                                     </option>
                                 @endforeach
@@ -115,7 +115,7 @@
                             Aplicar Filtros
                         </button>
                         
-                        @if(request()->hasAny(['city_id', 'form_id', 'date_from', 'date_to']))
+                        @if(request()->hasAny(['event_id', 'form_id', 'date_from', 'date_to']))
                             <a href="{{ route('admin.submissions.index') }}" class="admin-button-outline px-6 py-3 rounded-lg text-sm font-medium">
                                 <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>

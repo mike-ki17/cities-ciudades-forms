@@ -9,6 +9,7 @@ use App\Models\FormSubmission;
 use App\Models\Participant;
 use App\Repositories\SubmissionRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -28,6 +29,7 @@ class DashboardController extends Controller
         $activeForms = Form::active()->count();
         $totalParticipants = Participant::count();
         $totalSubmissions = FormSubmission::count();
+        $totalCities = Event::distinct('city')->count('city');
 
         // Get recent submissions
         $recentSubmissions = $this->submissionRepository->getRecent(10);
@@ -36,12 +38,20 @@ class DashboardController extends Controller
         $submissionsByEvent = Event::withCount(['forms' => function ($query) {
             $query->where('is_active', true);
         }])
-        ->withCount(['participants'])
         ->get()
         ->map(function ($event) {
             $event->submissions_count = FormSubmission::whereHas('form', function ($query) use ($event) {
-                $query->where('city_id', $event->id);
+                $query->where('event_id', $event->id);
             })->count();
+            
+            // Calculate participants count through cycles and attendances
+            $event->participants_count = DB::table('participants')
+                ->join('attendances', 'participants.id', '=', 'attendances.participant_id')
+                ->join('cycles', 'attendances.cycle_id', '=', 'cycles.id')
+                ->where('cycles.events_id', $event->id)
+                ->distinct('participants.id')
+                ->count();
+                
             return $event;
         });
 
@@ -65,6 +75,7 @@ class DashboardController extends Controller
             'activeForms',
             'totalParticipants',
             'totalSubmissions',
+            'totalCities',
             'recentSubmissions',
             'submissionsByEvent',
             'submissionsByDate',

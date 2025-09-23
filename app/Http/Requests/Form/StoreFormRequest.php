@@ -20,7 +20,7 @@ class StoreFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'city_id' => ['required', 'integer', 'exists:events,id'],
+            'event_id' => ['required', 'integer', 'exists:events,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'schema_json' => ['required', 'array'],
@@ -36,8 +36,8 @@ class StoreFormRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'city_id.required' => 'Debe seleccionar una ciudad.',
-            'city_id.exists' => 'La ciudad seleccionada no existe.',
+            'event_id.required' => 'Debe seleccionar una ciudad.',
+            'event_id.exists' => 'La ciudad seleccionada no existe.',
             'name.required' => 'El nombre del formulario es obligatorio.',
             'name.max' => 'El nombre del formulario no puede tener más de 255 caracteres.',
             'schema_json.required' => 'La configuración del formulario es obligatoria.',

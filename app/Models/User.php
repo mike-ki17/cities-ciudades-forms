@@ -60,11 +60,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the form submissions for the user.
+     * Get the form submissions for the user through their participant.
      */
     public function formSubmissions(): HasMany
     {
-        return $this->hasMany(FormSubmission::class);
+        return $this->hasManyThrough(FormSubmission::class, Participant::class, 'id', 'participant_id', 'participant_id');
     }
 
     /**
@@ -80,6 +80,10 @@ class User extends Authenticatable
      */
     public function hasSubmittedForm(int $formId): bool
     {
-        return $this->formSubmissions()->where('form_id', $formId)->exists();
+        if (!$this->participant) {
+            return false;
+        }
+        
+        return $this->participant->formSubmissions()->where('form_id', $formId)->exists();
     }
 }

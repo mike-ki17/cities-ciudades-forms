@@ -15,7 +15,7 @@ class FormSeeder extends Seeder
 
         if ($generalEvent) {
             Form::firstOrCreate(
-                ['city_id' => $generalEvent->id, 'version' => 1],
+                ['event_id' => $generalEvent->id, 'version' => 1],
                 [
                     'name' => 'Formulario General de Participación',
                     'description' => 'Formulario general para todas las ciudades',
@@ -106,7 +106,7 @@ class FormSeeder extends Seeder
 
         if ($bogotaEvent) {
             Form::firstOrCreate(
-                ['city_id' => $bogotaEvent->id, 'version' => 1],
+                ['event_id' => $bogotaEvent->id, 'version' => 1],
                 [
                     'name' => 'Formulario Específico de Bogotá',
                     'description' => 'Formulario específico para participantes de Bogotá',

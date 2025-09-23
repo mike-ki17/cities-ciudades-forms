@@ -26,7 +26,7 @@ class TestFormSeeder extends Seeder
 
         // Create a test form
         $form = Form::create([
-            'city_id' => $event->id,
+            'event_id' => $event->id,
             'name' => 'Formulario de Prueba - URLs Públicas',
             'description' => 'Formulario para probar la funcionalidad de URLs públicas sin autenticación',
             'schema_json' => [
@@ -78,6 +78,6 @@ class TestFormSeeder extends Seeder
         ]);
 
         $this->command->info("Formulario de prueba creado con slug: {$form->slug}");
-        $this->command->info("URL pública: " . route('public.forms.slug.show', ['id' => $form->id, 'slug' => $form->slug]));
+        $this->command->info("URL pública: " . route('public.forms.slug.show', ['slug' => $form->slug]));
     }
 }

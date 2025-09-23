@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Models\Event;
 use App\Models\Participant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -54,11 +53,6 @@ class RegisterRequest extends FormRequest
                     }
                 }
             ],
-            'city_id' => [
-                'required',
-                'integer',
-                'exists:events,id'
-            ],
         ];
     }
 
@@ -80,8 +74,6 @@ class RegisterRequest extends FormRequest
             'document_type.in' => 'El tipo de documento seleccionado no es válido.',
             'document_number.required' => 'El campo número de documento es obligatorio.',
             'document_number.max' => 'El número de documento no puede tener más de 50 caracteres.',
-            'city_id.required' => 'El campo ciudad es obligatorio.',
-            'city_id.exists' => 'La ciudad seleccionada no es válida.',
         ];
     }
 
@@ -97,7 +89,6 @@ class RegisterRequest extends FormRequest
             'phone' => 'teléfono',
             'document_type' => 'tipo de documento',
             'document_number' => 'número de documento',
-            'city_id' => 'ciudad',
         ];
     }
 }

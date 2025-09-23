@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Collection;
 class FormRepository
 {
     /**
-     * Get the active form for a specific city.
+     * Get the active form for a specific event.
      */
-    public function getActiveFormForCity(int $cityId): ?Form
+    public function getActiveFormForEvent(int $eventId): ?Form
     {
         return Form::active()
-            ->forCity($cityId)
+            ->forEvent($eventId)
             ->latestVersion()
             ->first();
     }
@@ -24,8 +24,8 @@ class FormRepository
      */
     public function getAll(): Collection
     {
-        return Form::with('city')
-            ->orderBy('city_id')
+        return Form::with('event')
+            ->orderBy('event_id')
             ->orderBy('version', 'desc')
             ->get();
     }
@@ -36,8 +36,8 @@ class FormRepository
     public function getActive(): Collection
     {
         return Form::active()
-            ->with('city')
-            ->orderBy('city_id')
+            ->with('event')
+            ->orderBy('event_id')
             ->orderBy('version', 'desc')
             ->get();
     }
@@ -47,7 +47,7 @@ class FormRepository
      */
     public function findById(int $id): ?Form
     {
-        return Form::with('city')->find($id);
+        return Form::with('event')->find($id);
     }
 
     /**
@@ -76,26 +76,34 @@ class FormRepository
     }
 
     /**
-     * Get forms for a specific city.
+     * Get forms for a specific event.
      */
-    public function getFormsForCity(int $cityId): Collection
+    public function getFormsForEvent(int $eventId): Collection
     {
-        return Form::forCity($cityId)
-            ->with('city')
+        return Form::forEvent($eventId)
+            ->with('event')
             ->orderBy('version', 'desc')
             ->get();
     }
 
     /**
-     * Get active forms for a specific city.
+     * Get active forms for a specific event.
      */
-    public function getActiveFormsForCity(int $cityId): Collection
+    public function getActiveFormsForEvent(int $eventId): Collection
     {
         return Form::active()
-            ->forCity($cityId)
-            ->with('city')
+            ->forEvent($eventId)
+            ->with('event')
             ->orderBy('version', 'desc')
             ->get();
+    }
+
+    /**
+     * Get active forms for a specific event (alias for backward compatibility).
+     */
+    public function getActiveFormsForCity(int $eventId): Collection
+    {
+        return $this->getActiveFormsForEvent($eventId);
     }
 
 
@@ -104,9 +112,9 @@ class FormRepository
      */
     public function getFormsWithSubmissionsCount(): Collection
     {
-        return Form::with(['city', 'formSubmissions'])
+        return Form::with(['event', 'formSubmissions'])
             ->withCount('formSubmissions')
-            ->orderBy('city_id')
+            ->orderBy('event_id')
             ->orderBy('version', 'desc')
             ->get();
     }
@@ -118,8 +126,8 @@ class FormRepository
     {
         return Form::where('title', 'like', "%{$query}%")
             ->orWhere('description', 'like', "%{$query}%")
-            ->with('city')
-            ->orderBy('city_id')
+            ->with('event')
+            ->orderBy('event_id')
             ->orderBy('version', 'desc')
             ->get();
     }
@@ -130,18 +138,18 @@ class FormRepository
     public function getFormsByVersionRange(int $minVersion, int $maxVersion): Collection
     {
         return Form::whereBetween('version', [$minVersion, $maxVersion])
-            ->with('city')
-            ->orderBy('city_id')
+            ->with('event')
+            ->orderBy('event_id')
             ->orderBy('version', 'desc')
             ->get();
     }
 
     /**
-     * Get the latest version for a city.
+     * Get the latest version for an event.
      */
-    public function getLatestVersionForCity(int $cityId): int
+    public function getLatestVersionForEvent(int $eventId): int
     {
-        return Form::forCity($cityId)->max('version') ?? 0;
+        return Form::forEvent($eventId)->max('version') ?? 0;
     }
 
 

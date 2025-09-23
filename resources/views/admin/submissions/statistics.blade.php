@@ -70,7 +70,7 @@ canvas {
                                     <option value="">Todos los formularios</option>
                                     @foreach($forms as $form)
                                         <option value="{{ $form->id }}" {{ request('form_id') == $form->id ? 'selected' : '' }}>
-                                            {{ $form->name }} ({{ $form->city->name ?? 'General' }})
+                                            {{ $form->name }} ({{ $form->event->name ?? 'General' }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -78,13 +78,13 @@ canvas {
 
                             <!-- Filtro por ciudad -->
                             <div>
-                                <label for="city_id" class="block text-sm font-medium admin-text-secondary mb-2">
+                                <label for="event_id" class="block text-sm font-medium admin-text-secondary mb-2">
                                     Evento
                                 </label>
-                                <select id="city_id" name="city_id" class="admin-input w-full">
+                                <select id="event_id" name="event_id" class="admin-input w-full">
                                     <option value="">Todos los eventos</option>
                                     @foreach($events as $event)
-                                        <option value="{{ $event->id }}" {{ request('city_id') == $event->id ? 'selected' : '' }}>
+                                        <option value="{{ $event->id }}" {{ request('event_id') == $event->id ? 'selected' : '' }}>
                                             {{ $event->full_name }}
                                         </option>
                                     @endforeach
