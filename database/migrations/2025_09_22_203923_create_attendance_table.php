@@ -11,9 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendance', function (Blueprint $table) {
+        Schema::create('attendances', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('participant_id');
+            $table->unsignedBigInteger('cycle_id');
+            $table->boolean('attended')->default(false);
+            $table->timestamp('attended_at')->nullable();
             $table->timestamps();
+            
+            // Foreign key constraints
+            $table->foreign('participant_id')->references('id')->on('participants')->onDelete('cascade');
+            $table->foreign('cycle_id')->references('id')->on('cycles')->onDelete('cascade');
+            
+            // Indexes for better performance
+            $table->index(['participant_id', 'cycle_id']);
+            $table->index(['cycle_id']);
         });
     }
 
@@ -22,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendance');
+        Schema::dropIfExists('attendances');
     }
 };

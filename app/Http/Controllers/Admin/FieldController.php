@@ -240,4 +240,45 @@ class FieldController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    /**
+     * Get available fields for form creation (AJAX endpoint).
+     */
+    public function getAvailableFields()
+    {
+        try {
+            $fields = FormCategory::with(['formOptions' => function ($query) {
+                $query->where('is_active', true)->orderBy('order');
+            }])
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+            $formattedFields = $fields->map(function ($field) {
+                return [
+                    'id' => $field->id,
+                    'code' => $field->code,
+                    'name' => $field->name,
+                    'description' => $field->description,
+                    'options' => $field->formOptions->map(function ($option) {
+                        return [
+                            'value' => $option->value,
+                            'label' => $option->label,
+                            'description' => $option->description,
+                        ];
+                    })->toArray(),
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'fields' => $formattedFields,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }

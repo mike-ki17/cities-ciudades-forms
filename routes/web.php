@@ -20,8 +20,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Temporary test route for fields (remove after testing)
-Route::get('/test-fields', function () {
+// Public route for getting available fields (used by form creation)
+Route::get('/api/fields/available', function () {
     try {
         $fields = \App\Models\FormCategory::with(['formOptions' => function ($query) {
             $query->where('is_active', true)->orderBy('order');
@@ -110,6 +110,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Fields management (Form Categories and Options)
     Route::resource('fields', FieldController::class);
     Route::post('/fields/{field}/toggle-status', [FieldController::class, 'toggleStatus'])->name('fields.toggle-status');
+    Route::get('/fields/available', [FieldController::class, 'getAvailableFields'])->name('fields.available');
     
     // Field options management
     Route::get('/fields/{field}/options', [FieldController::class, 'options'])->name('fields.options');

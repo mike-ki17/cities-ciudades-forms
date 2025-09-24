@@ -620,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadAvailableFields() {
         try {
             console.log('Cargando campos disponibles...');
-            const url = '/test-fields'; // Temporal para probar
+            const url = '/api/fields/available';
             console.log('URL:', url);
             
             // Mostrar indicador de carga
@@ -654,6 +654,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error('No tienes permisos para acceder a esta funcionalidad.');
                 } else if (response.status === 404) {
                     throw new Error('Endpoint no encontrado. Verifica que la ruta esté configurada correctamente.');
+                } else if (response.status === 500) {
+                    throw new Error('Error interno del servidor. Verifica los logs.');
                 } else {
                     throw new Error(`Error del servidor: ${response.status}`);
                 }

@@ -21,6 +21,8 @@ class Attendance extends Model
     protected $fillable = [
         'participant_id',
         'cycle_id',
+        'attended',
+        'attended_at',
     ];
 
     /**
@@ -31,6 +33,8 @@ class Attendance extends Model
         return [
             'participant_id' => 'integer',
             'cycle_id' => 'integer',
+            'attended' => 'boolean',
+            'attended_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

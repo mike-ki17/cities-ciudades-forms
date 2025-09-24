@@ -45,12 +45,22 @@ class DashboardController extends Controller
             })->count();
             
             // Calculate participants count through cycles and attendances
-            $event->participants_count = DB::table('participants')
-                ->join('attendances', 'participants.id', '=', 'attendances.participant_id')
-                ->join('cycles', 'attendances.cycle_id', '=', 'cycles.id')
-                ->where('cycles.events_id', $event->id)
-                ->distinct('participants.id')
-                ->count();
+            try {
+                $event->participants_count = DB::table('participants')
+                    ->join('attendances', 'participants.id', '=', 'attendances.participant_id')
+                    ->join('cycles', 'attendances.cycle_id', '=', 'cycles.id')
+                    ->where('cycles.events_id', $event->id)
+                    ->distinct('participants.id')
+                    ->count();
+            } catch (\Exception $e) {
+                // Fallback: count participants who have submitted forms for this event
+                $event->participants_count = DB::table('participants')
+                    ->join('form_submissions', 'participants.id', '=', 'form_submissions.participant_id')
+                    ->join('forms', 'form_submissions.form_id', '=', 'forms.id')
+                    ->where('forms.event_id', $event->id)
+                    ->distinct('participants.id')
+                    ->count();
+            }
                 
             return $event;
         });

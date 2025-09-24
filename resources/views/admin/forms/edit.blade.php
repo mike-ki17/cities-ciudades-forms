@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadAvailableFields() {
         try {
             console.log('Cargando campos disponibles...');
-            const url = '/test-fields'; // Temporal para probar
+            const url = '/api/fields/available';
             console.log('URL:', url);
             
             // Mostrar indicador de carga
