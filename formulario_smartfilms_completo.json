@@ -1,0 +1,846 @@
+{
+    "fields": [
+        {
+            "key": "seccion_informacion_personal",
+            "label": "Información Personal",
+            "type": "section",
+            "required": false,
+            "order": 1,
+            "description": "Complete la siguiente información personal para su inscripción al festival SMARTFILMS® Bogotá 2025."
+        },
+        {
+            "key": "genero",
+            "label": "Géneros",
+            "type": "select",
+            "required": true,
+            "order": 2,
+            "description": "Seleccione su género",
+            "options": [
+                {
+                    "value": "masculino",
+                    "label": "Masculino",
+                    "description": null
+                },
+                {
+                    "value": "femenino",
+                    "label": "Femenino",
+                    "description": null
+                },
+                {
+                    "value": "no_binario",
+                    "label": "No binario",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                },
+                {
+                    "value": "prefiero_no_decir",
+                    "label": "Prefiero no decir",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "correo_electronico",
+            "label": "Correo Electrónico",
+            "type": "email",
+            "required": true,
+            "order": 3,
+            "placeholder": "usuario@ejemplo.com",
+            "description": "Su correo electrónico",
+            "validations": {
+                "format": "email"
+            }
+        },
+        {
+            "key": "telefono_celular",
+            "label": "Teléfono Celular",
+            "type": "text",
+            "required": true,
+            "order": 4,
+            "placeholder": "+57 300 123 4567",
+            "description": "Su número de teléfono celular",
+            "validations": {
+                "pattern": "^\\+?[1-9]\\d{1,14}$"
+            }
+        },
+        {
+            "key": "niveles_educativos",
+            "label": "Niveles Educativos",
+            "type": "select",
+            "required": true,
+            "order": 5,
+            "description": "Seleccione su nivel educativo más alto",
+            "options": [
+                {
+                    "value": "primaria",
+                    "label": "Primaria",
+                    "description": null
+                },
+                {
+                    "value": "secundaria",
+                    "label": "Secundaria",
+                    "description": null
+                },
+                {
+                    "value": "tecnico",
+                    "label": "Técnico",
+                    "description": null
+                },
+                {
+                    "value": "tecnologo",
+                    "label": "Tecnólogo",
+                    "description": null
+                },
+                {
+                    "value": "pregrado",
+                    "label": "Pregrado",
+                    "description": null
+                },
+                {
+                    "value": "especializacion",
+                    "label": "Especialización",
+                    "description": null
+                },
+                {
+                    "value": "maestria",
+                    "label": "Maestría",
+                    "description": null
+                },
+                {
+                    "value": "doctorado",
+                    "label": "Doctorado",
+                    "description": null
+                },
+                {
+                    "value": "ninguno",
+                    "label": "Ninguno",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "caracterizaciones",
+            "label": "Caracterizaciones",
+            "type": "select",
+            "required": true,
+            "order": 6,
+            "description": "Seleccione su caracterización principal",
+            "options": [
+                {
+                    "value": "estudiante",
+                    "label": "Estudiante",
+                    "description": null
+                },
+                {
+                    "value": "profesional",
+                    "label": "Profesional",
+                    "description": null
+                },
+                {
+                    "value": "empresario",
+                    "label": "Empresario",
+                    "description": null
+                },
+                {
+                    "value": "artista",
+                    "label": "Artista",
+                    "description": null
+                },
+                {
+                    "value": "comunicador",
+                    "label": "Comunicador",
+                    "description": null
+                },
+                {
+                    "value": "audiovisual",
+                    "label": "Audiovisual",
+                    "description": null
+                },
+                {
+                    "value": "docente",
+                    "label": "Docente",
+                    "description": null
+                },
+                {
+                    "value": "investigador",
+                    "label": "Investigador",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "actualmente_empleado",
+            "label": "Actualmente estoy empleado/a",
+            "type": "checkbox",
+            "required": false,
+            "order": 7,
+            "description": "Marque si actualmente tiene empleo"
+        },
+        {
+            "key": "seccion_domicilio_contacto",
+            "label": "Domicilio y Contacto",
+            "type": "section",
+            "required": false,
+            "order": 8,
+            "description": "Información de ubicación y contacto de emergencia."
+        },
+        {
+            "key": "direccion_residencia",
+            "label": "Dirección de Residencia",
+            "type": "textarea",
+            "required": true,
+            "order": 9,
+            "placeholder": "Ingrese su dirección completa",
+            "description": "Su dirección de residencia completa",
+            "validations": {
+                "max_length": 200,
+                "min_length": 10
+            }
+        },
+        {
+            "key": "ciudad",
+            "label": "Ciudad",
+            "type": "select",
+            "required": true,
+            "order": 10,
+            "description": "Seleccione su ciudad",
+            "options": [
+                {
+                    "value": "bogota",
+                    "label": "Bogotá D.C.",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "localidad",
+            "label": "Localidad",
+            "type": "select",
+            "required": true,
+            "order": 11,
+            "description": "Seleccione primero un municipio. Las localidades aplican según el municipio seleccionado",
+            "placeholder": "Seleccione primero un municipio",
+            "visible": {
+                "model": "ciudad",
+                "value": "bogota",
+                "condition": "equal"
+            },
+            "options": [
+                {
+                    "value": "usaquen",
+                    "label": "Usaquén",
+                    "description": null
+                },
+                {
+                    "value": "chapinero",
+                    "label": "Chapinero",
+                    "description": null
+                },
+                {
+                    "value": "santa_fe",
+                    "label": "Santa Fe",
+                    "description": null
+                },
+                {
+                    "value": "san_cristobal",
+                    "label": "San Cristóbal",
+                    "description": null
+                },
+                {
+                    "value": "usme",
+                    "label": "Usme",
+                    "description": null
+                },
+                {
+                    "value": "tunjuelito",
+                    "label": "Tunjuelito",
+                    "description": null
+                },
+                {
+                    "value": "bosa",
+                    "label": "Bosa",
+                    "description": null
+                },
+                {
+                    "value": "kennedy",
+                    "label": "Kennedy",
+                    "description": null
+                },
+                {
+                    "value": "fontibon",
+                    "label": "Fontibón",
+                    "description": null
+                },
+                {
+                    "value": "engativa",
+                    "label": "Engativá",
+                    "description": null
+                },
+                {
+                    "value": "suba",
+                    "label": "Suba",
+                    "description": null
+                },
+                {
+                    "value": "barrios_unidos",
+                    "label": "Barrios Unidos",
+                    "description": null
+                },
+                {
+                    "value": "teusaquillo",
+                    "label": "Teusaquillo",
+                    "description": null
+                },
+                {
+                    "value": "los_martires",
+                    "label": "Los Mártires",
+                    "description": null
+                },
+                {
+                    "value": "antonio_narino",
+                    "label": "Antonio Nariño",
+                    "description": null
+                },
+                {
+                    "value": "puente_aranda",
+                    "label": "Puente Aranda",
+                    "description": null
+                },
+                {
+                    "value": "candelaria",
+                    "label": "La Candelaria",
+                    "description": null
+                },
+                {
+                    "value": "rafael_uribe",
+                    "label": "Rafael Uribe Uribe",
+                    "description": null
+                },
+                {
+                    "value": "ciudad_bolivar",
+                    "label": "Ciudad Bolívar",
+                    "description": null
+                },
+                {
+                    "value": "sumapaz",
+                    "label": "Sumapaz",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "barrios",
+            "label": "Barrios",
+            "type": "select",
+            "required": true,
+            "order": 12,
+            "description": "Seleccione primero una localidad. Los barrios aplican según la localidad seleccionada",
+            "placeholder": "Seleccione primero una localidad",
+            "visible": {
+                "model": "localidad",
+                "value": "",
+                "condition": "not_empty"
+            },
+            "options": [
+                {
+                    "value": "barrio_usaquen_1",
+                    "label": "Barrio Usaquén 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_usaquen_2",
+                    "label": "Barrio Usaquén 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_chapinero_1",
+                    "label": "Barrio Chapinero 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_chapinero_2",
+                    "label": "Barrio Chapinero 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_santa_fe_1",
+                    "label": "Barrio Santa Fe 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_santa_fe_2",
+                    "label": "Barrio Santa Fe 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_san_cristobal_1",
+                    "label": "Barrio San Cristóbal 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_san_cristobal_2",
+                    "label": "Barrio San Cristóbal 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_usme_1",
+                    "label": "Barrio Usme 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_usme_2",
+                    "label": "Barrio Usme 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_tunjuelito_1",
+                    "label": "Barrio Tunjuelito 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_tunjuelito_2",
+                    "label": "Barrio Tunjuelito 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_bosa_1",
+                    "label": "Barrio Bosa 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_bosa_2",
+                    "label": "Barrio Bosa 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_kennedy_1",
+                    "label": "Barrio Kennedy 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_kennedy_2",
+                    "label": "Barrio Kennedy 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_fontibon_1",
+                    "label": "Barrio Fontibón 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_fontibon_2",
+                    "label": "Barrio Fontibón 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_engativa_1",
+                    "label": "Barrio Engativá 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_engativa_2",
+                    "label": "Barrio Engativá 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_suba_1",
+                    "label": "Barrio Suba 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_suba_2",
+                    "label": "Barrio Suba 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_barrios_unidos_1",
+                    "label": "Barrio Barrios Unidos 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_barrios_unidos_2",
+                    "label": "Barrio Barrios Unidos 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_teusaquillo_1",
+                    "label": "Barrio Teusaquillo 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_teusaquillo_2",
+                    "label": "Barrio Teusaquillo 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_los_martires_1",
+                    "label": "Barrio Los Mártires 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_los_martires_2",
+                    "label": "Barrio Los Mártires 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_antonio_narino_1",
+                    "label": "Barrio Antonio Nariño 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_antonio_narino_2",
+                    "label": "Barrio Antonio Nariño 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_puente_aranda_1",
+                    "label": "Barrio Puente Aranda 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_puente_aranda_2",
+                    "label": "Barrio Puente Aranda 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_candelaria_1",
+                    "label": "Barrio La Candelaria 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_candelaria_2",
+                    "label": "Barrio La Candelaria 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_rafael_uribe_1",
+                    "label": "Barrio Rafael Uribe Uribe 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_rafael_uribe_2",
+                    "label": "Barrio Rafael Uribe Uribe 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_ciudad_bolivar_1",
+                    "label": "Barrio Ciudad Bolívar 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_ciudad_bolivar_2",
+                    "label": "Barrio Ciudad Bolívar 2",
+                    "description": null
+                },
+                {
+                    "value": "barrio_sumapaz_1",
+                    "label": "Barrio Sumapaz 1",
+                    "description": null
+                },
+                {
+                    "value": "barrio_sumapaz_2",
+                    "label": "Barrio Sumapaz 2",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "estratos_socioeconomicos",
+            "label": "Estratos Socioeconómicos",
+            "type": "select",
+            "required": true,
+            "order": 13,
+            "description": "Seleccione su estrato socioeconómico",
+            "options": [
+                {
+                    "value": "1",
+                    "label": "Estrato 1",
+                    "description": "Bajo-bajo"
+                },
+                {
+                    "value": "2",
+                    "label": "Estrato 2",
+                    "description": "Bajo"
+                },
+                {
+                    "value": "3",
+                    "label": "Estrato 3",
+                    "description": "Medio-bajo"
+                },
+                {
+                    "value": "4",
+                    "label": "Estrato 4",
+                    "description": "Medio"
+                },
+                {
+                    "value": "5",
+                    "label": "Estrato 5",
+                    "description": "Medio-alto"
+                },
+                {
+                    "value": "6",
+                    "label": "Estrato 6",
+                    "description": "Alto"
+                }
+            ]
+        },
+        {
+            "key": "nombre_contacto_emergencia",
+            "label": "Nombre de Contacto de Emergencia",
+            "type": "text",
+            "required": true,
+            "order": 14,
+            "placeholder": "Nombre completo del contacto de emergencia",
+            "description": "Nombre completo de la persona de contacto en caso de emergencia",
+            "validations": {
+                "max_length": 100,
+                "min_length": 2,
+                "pattern": "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$"
+            }
+        },
+        {
+            "key": "telefono_contacto_emergencia",
+            "label": "Teléfono de Contacto de Emergencia",
+            "type": "text",
+            "required": true,
+            "order": 15,
+            "placeholder": "+57 300 123 4567",
+            "description": "Número de teléfono del contacto de emergencia",
+            "validations": {
+                "pattern": "^\\+?[1-9]\\d{1,14}$"
+            }
+        },
+        {
+            "key": "fuentes_referencia",
+            "label": "Fuentes de Referencia",
+            "type": "select",
+            "required": true,
+            "order": 16,
+            "description": "¿Cómo se enteró del festival?",
+            "options": [
+                {
+                    "value": "redes_sociales",
+                    "label": "Redes Sociales",
+                    "description": null
+                },
+                {
+                    "value": "pagina_web",
+                    "label": "Página Web",
+                    "description": null
+                },
+                {
+                    "value": "amigos_familia",
+                    "label": "Amigos/Familia",
+                    "description": null
+                },
+                {
+                    "value": "institucion_educativa",
+                    "label": "Institución Educativa",
+                    "description": null
+                },
+                {
+                    "value": "medios_comunicacion",
+                    "label": "Medios de Comunicación",
+                    "description": null
+                },
+                {
+                    "value": "evento_anterior",
+                    "label": "Evento Anterior",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "seccion_poblacion_diferencial",
+            "label": "Población Diferencial y Situación Especial",
+            "type": "section",
+            "required": false,
+            "order": 17,
+            "description": "Esta información es importante para fines estadísticos y para ofrecerle servicios adaptados a sus necesidades."
+        },
+        {
+            "key": "tiene_discapacidad",
+            "label": "¿Tiene alguna discapacidad?",
+            "type": "select",
+            "required": false,
+            "order": 18,
+            "description": "Seleccione si presenta alguna discapacidad. Si no presenta ninguna, seleccione 'Ninguna'",
+            "options": [
+                {
+                    "value": "ninguna",
+                    "label": "Ninguna",
+                    "description": "No presenta ninguna discapacidad"
+                },
+                {
+                    "value": "visual",
+                    "label": "Visual (baja visión o ceguera)",
+                    "description": "Discapacidad visual"
+                },
+                {
+                    "value": "auditiva",
+                    "label": "Auditiva (dificultades para escuchar)",
+                    "description": "Discapacidad auditiva"
+                },
+                {
+                    "value": "cognitiva",
+                    "label": "Cognitiva/Intelectual (limitaciones en el aprendizaje y desarrollo intelectual)",
+                    "description": "Discapacidad cognitiva o intelectual"
+                },
+                {
+                    "value": "psicosocial",
+                    "label": "Psicosocial/Mental (trastornos mentales que afectan relaciones interpersonales)",
+                    "description": "Discapacidad psicosocial o mental"
+                },
+                {
+                    "value": "multiple",
+                    "label": "Múltiple (dos o más tipos de discapacidad)",
+                    "description": "Discapacidad múltiple"
+                },
+                {
+                    "value": "sordoceguera",
+                    "label": "Sordoceguera (combinación de discapacidad auditiva y visual)",
+                    "description": "Sordoceguera"
+                },
+                {
+                    "value": "fisica",
+                    "label": "Física (limitaciones para moverse, caminar o realizar actividades cotidianas)",
+                    "description": "Discapacidad física"
+                }
+            ]
+        },
+        {
+            "key": "seccion_informacion_poblacional",
+            "label": "Información Poblacional",
+            "type": "section",
+            "required": false,
+            "order": 26,
+            "description": "Solo marque las opciones que correspondan a su situación. Si ninguna aplica, puede dejar todo sin marcar"
+        },
+        {
+            "key": "victima_conflicto_armado",
+            "label": "Víctima del conflicto armado",
+            "type": "checkbox",
+            "required": false,
+            "order": 19,
+            "description": "Marque si es víctima del conflicto armado"
+        },
+        {
+            "key": "poblacion_campesina",
+            "label": "Población Campesina",
+            "type": "checkbox",
+            "required": false,
+            "order": 20,
+            "description": "Marque si pertenece a la población campesina"
+        },
+        {
+            "key": "poblacion_afrodescendiente",
+            "label": "Población afrodescendiente",
+            "type": "checkbox",
+            "required": false,
+            "order": 21,
+            "description": "Marque si pertenece a la población afrodescendiente"
+        },
+        {
+            "key": "poblacion_indigena",
+            "label": "Población indígena",
+            "type": "checkbox",
+            "required": false,
+            "order": 22,
+            "description": "Marque si pertenece a la población indígena"
+        },
+        {
+            "key": "jefe_hogar",
+            "label": "Jefe de hogar",
+            "type": "checkbox",
+            "required": false,
+            "order": 23,
+            "description": "Marque si es jefe de hogar"
+        },
+        {
+            "key": "casado_union_libre",
+            "label": "Casado/a o unión libre",
+            "type": "checkbox",
+            "required": false,
+            "order": 24,
+            "description": "Marque si está casado/a o en unión libre"
+        },
+        {
+            "key": "poblacion_lgbtiq",
+            "label": "Población LGBTIQ+",
+            "type": "checkbox",
+            "required": false,
+            "order": 25,
+            "description": "Marque si pertenece a la población LGBTIQ+"
+        },
+        {
+            "key": "poblacion_migrante",
+            "label": "Población migrante",
+            "type": "checkbox",
+            "required": false,
+            "order": 26,
+            "description": "Marque si pertenece a la población migrante"
+        },
+        {
+            "key": "pospandado",
+            "label": "Pospenado",
+            "type": "checkbox",
+            "required": false,
+            "order": 27,
+            "description": "Marque si está pospenado"
+        },
+        {
+            "key": "cuidador",
+            "label": "Cuidador/a",
+            "type": "checkbox",
+            "required": false,
+            "order": 28,
+            "description": "Marque si es cuidador/a"
+        },
+        {
+            "key": "seccion_habeas_data",
+            "label": "Habeas Data - Política de Tratamiento de Datos",
+            "type": "section",
+            "required": false,
+            "order": 29,
+            "description": "ACEPTACIÓN POLÍTICA DE TRATAMIENTO DE LA INFORMACIÓN – HABEAS DATA.\n\nAcepto y conozco que tengo derecho a conocer, consultar, actualizar, rectificar y/o suprimir la información, además de poder solicitar prueba de esta autorización, como titular de los datos suministrados. Derechos que se me han informado por Valencia Producciones FX SAS, puedo ejercer a través de los canales: info@valenciaproducciones.com portal web Web: https://www.valenciaproducciones.com y https://www.smartfilms.com.co Tel: (601) 4672437, Dirección para correo físico (Carrera 22 No. 142 – 58 de Bogotá D.C).\n\nAutorizo que los datos ingresados sean utilizados con el propósito de contactarme para esta convocatoria, ofrecerme oportunidades de formación y realizar actividades inherentes al festival SMARTFILMS® Bogotá, así como los demás fines previstos en la política de Habeas data, Privacidad y Tratamiento de Datos de Valencia Producciones FX SAS.\n\nEl titular de la información conoce, acepta y autoriza para que en virtud de los fines establecidos la información podrá ser transferida o suministrada a terceros. Lo anterior, de conformidad con la Ley 1581 de 2012, Decreto 1377 de 2013, Ley 1266 de 2008 y la Política de Tratamiento de Datos de Valencia Producciones FX SAS – y SMARTFILMS®.\n\nA través del presente documento declaro y otorgo, de manera previa, libre, informada, voluntaria y expresa, la correspondiente autorización."
+        },
+        {
+            "key": "acepta_politica_datos",
+            "label": "Acepto la política de tratamiento de datos personales",
+            "type": "checkbox",
+            "required": true,
+            "order": 30,
+            "description": "Debe marcar esta opción para continuar con el proceso de inscripción"
+        },
+        {
+            "key": "seccion_contrato_pedagogico",
+            "label": "Contrato Pedagógico",
+            "type": "section",
+            "required": false,
+            "order": 31,
+            "description": "CONTRATO PEDAGÓGICO\n\nEn nombre propio y como participante de SMARTFILMS® BOGOTÁ 2025, expresamente acepto los siguientes términos y compromisos:\n\n1. Tengo conocimiento que el programa tiene como objetivo y está orientado a capacitarme en el fortalecimiento de habilidades digitales, comunicativas y audiovisuales, con enfoque de derechos humanos y participación ciudadana.\n\n2. Tengo conocimiento que el alcance del programa es estrictamente formativo por lo que no existe responsabilidad alguna por parte de Valencia Producciones FX SAS, a través de SMARTFILMS®, de conseguir mi vinculación laboral, o algún fin diferente al establecido.\n\n3. Como beneficiario del programa, o participante del mismo acepto las normas que sean fijadas por la entidad que realiza la formación, y me acojo a los términos y sanciones que allí están establecidas.\n\n4. Acepto que para aprobar la fase académica, debo cumplir los logros que para la misma estén establecidos, así como la asistencia mínima que sea requerida para tal fin.\n\n5. Soy consciente y acepto, que dentro de la formación y fase académica no hay prácticas pagas.\n\n6. Conozco y acepto que mi ausencia justificada o injustificada hasta del 20% del total de horas de formación previstas en cada materia, ocasionará la cancelación de la matrícula, así como la terminación del programa de formación y retiro del mismo.\n\n7. Conozco y acepto que si por alguna razón se presenta mi retiro del programa de formación, estoy renunciando a la posibilidad de ingresar nuevamente al mismo en la presente, o en futuras convocatorias.\n\n8. Conozco y acepto que debo diligenciar y firmar las planillas de asistencia reglamentarias que sean establecidas para tal fin, y que en caso de enmendaduras, o suplantación podré ser sancionado y retirado del programa de formación.\n\n9. Conozco y acepto que en caso de presentarse por mi parte alguna observación, aclaración o situación especial, la misma se presentará siguiendo el conducto regular ante la entidad formadora.\n\n10. Acepto y conozco que tengo derecho a conocer, consultar, actualizar, rectificar y/o suprimir la información, además de poder solicitar prueba de esta autorización, como titular de los datos suministrados. Derechos que se me han informado por Valencia Producciones FX SAS, puedo ejercer a través de los canales: info@valenciaproducciones.com portal web Web: https://www.valenciaproducciones.com y https://www.smartfilms.com.co Tel: (601) 4672437, Dirección para correo físico (Carrera 22 No. 142 – 58 de Bogotá D.C.).\n\n11. Autorizo que los datos ingresados sean utilizados con el propósito de contactarme para esta convocatoria, ofrecerme oportunidades de formación y realizar actividades inherentes al festival SMARTFILMS® Bogotá, así como los demás fines previstos en la política de Habeas data, Privacidad y Tratamiento de Datos de Valencia Producciones FX SAS.\n\nLo anterior, de conformidad con la Ley 1581 de 2012, Decreto 1377 de 2013, Ley 1266 de 2008 y la Política de Tratamiento de Datos de Valencia Producciones FX SAS- y SMARTFILMS®.\n\nA través del presente documento declaro y otorgo, de manera previa, libre, informada, voluntaria y expresa, la correspondiente autorización."
+        },
+        {
+            "key": "acepta_contrato_pedagogico",
+            "label": "Acepto los términos del contrato pedagógico",
+            "type": "checkbox",
+            "required": true,
+            "order": 32,
+            "description": "Debe marcar esta opción para continuar con el proceso de inscripción"
+        }
+    ]
+}

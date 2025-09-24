@@ -315,7 +315,7 @@
                             @endif
                             
                             @if(isset($field['description']) && !empty($field['description']))
-                                <p class="mt-2 text-sm text-gray-600 leading-relaxed">
+                                <p class="mt-2 text-sm text-gray-600 leading-relaxed" style="text-align: justify;">
                                     {{ $field['description'] }}
                                 </p>
                             @endif
