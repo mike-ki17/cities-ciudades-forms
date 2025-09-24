@@ -1,0 +1,526 @@
+{
+  "name": "Formulario SMARTFILMS® Barranquilla 2025 - Corregido",
+  "description": "Formulario de inscripción para el festival SMARTFILMS® Barranquilla 2025 con campos condicionales y secciones organizadas",
+  "schema_json": {
+    "fields": [
+      {
+        "key": "seccion_informacion_personal",
+        "label": "Información Personal",
+        "type": "section",
+        "level": "h2",
+        "description": "Complete la siguiente información personal para su inscripción al festival SMARTFILMS® Barranquilla 2025."
+      },
+      {
+        "key": "genero",
+        "label": "Géneros",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "masculino", "label": "Masculino"},
+          {"value": "femenino", "label": "Femenino"},
+          {"value": "no_binario", "label": "No binario"},
+          {"value": "otro", "label": "Otro"},
+          {"value": "prefiero_no_decir", "label": "Prefiero no decir"}
+        ],
+        "description": "Seleccione su género"
+      },
+      {
+        "key": "correo_electronico",
+        "label": "Correo Electrónico",
+        "type": "email",
+        "required": true,
+        "placeholder": "usuario@ejemplo.com",
+        "validations": {
+          "format": "email"
+        },
+        "description": "Su correo electrónico"
+      },
+      {
+        "key": "telefono_celular",
+        "label": "Teléfono Celular",
+        "type": "text",
+        "required": true,
+        "placeholder": "+57 300 123 4567",
+        "validations": {
+          "pattern": "^\\+?[1-9]\\d{1,14}$"
+        },
+        "description": "Su número de teléfono celular"
+      },
+      {
+        "key": "niveles_educativos",
+        "label": "Niveles Educativos",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "primaria", "label": "Primaria"},
+          {"value": "secundaria", "label": "Secundaria"},
+          {"value": "tecnico", "label": "Técnico"},
+          {"value": "tecnologo", "label": "Tecnólogo"},
+          {"value": "pregrado", "label": "Pregrado"},
+          {"value": "especializacion", "label": "Especialización"},
+          {"value": "maestria", "label": "Maestría"},
+          {"value": "doctorado", "label": "Doctorado"},
+          {"value": "ninguno", "label": "Ninguno"}
+        ],
+        "description": "Seleccione su nivel educativo más alto"
+      },
+      {
+        "key": "caracterizaciones",
+        "label": "Caracterizaciones",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "estudiante", "label": "Estudiante"},
+          {"value": "profesional", "label": "Profesional"},
+          {"value": "empresario", "label": "Empresario"},
+          {"value": "artista", "label": "Artista"},
+          {"value": "comunicador", "label": "Comunicador"},
+          {"value": "audiovisual", "label": "Audiovisual"},
+          {"value": "docente", "label": "Docente"},
+          {"value": "investigador", "label": "Investigador"},
+          {"value": "otro", "label": "Otro"}
+        ],
+        "description": "Seleccione su caracterización principal"
+      },
+      {
+        "key": "actualmente_empleado",
+        "label": "Actualmente estoy empleado/a",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si actualmente tiene empleo"
+      },
+      {
+        "key": "seccion_domicilio_contacto",
+        "label": "Domicilio y Contacto",
+        "type": "section",
+        "level": "h2",
+        "description": "Información de ubicación y contacto de emergencia."
+      },
+      {
+        "key": "direccion_residencia",
+        "label": "Dirección de Residencia",
+        "type": "textarea",
+        "required": true,
+        "placeholder": "Ingrese su dirección completa",
+        "validations": {
+          "min_length": 10,
+          "max_length": 200
+        },
+        "description": "Su dirección de residencia completa"
+      },
+      {
+        "key": "ciudad",
+        "label": "Ciudad",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "bogota", "label": "Bogotá D.C."},
+          {"value": "medellin", "label": "Medellín"},
+          {"value": "cali", "label": "Cali"},
+          {"value": "barranquilla", "label": "Barranquilla"},
+          {"value": "cartagena", "label": "Cartagena"},
+          {"value": "bucaramanga", "label": "Bucaramanga"},
+          {"value": "pereira", "label": "Pereira"},
+          {"value": "santa_marta", "label": "Santa Marta"},
+          {"value": "ibague", "label": "Ibagué"},
+          {"value": "pasto", "label": "Pasto"},
+          {"value": "manizales", "label": "Manizales"},
+          {"value": "villavicencio", "label": "Villavicencio"},
+          {"value": "otra", "label": "Otra"}
+        ],
+        "description": "Seleccione su ciudad"
+      },
+      {
+        "key": "localidad_bogota",
+        "label": "Localidad",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "usaquen", "label": "Usaquén"},
+          {"value": "chapinero", "label": "Chapinero"},
+          {"value": "santa_fe", "label": "Santa Fe"},
+          {"value": "san_cristobal", "label": "San Cristóbal"},
+          {"value": "usme", "label": "Usme"},
+          {"value": "tunjuelito", "label": "Tunjuelito"},
+          {"value": "bosa", "label": "Bosa"},
+          {"value": "kennedy", "label": "Kennedy"},
+          {"value": "fontibon", "label": "Fontibón"},
+          {"value": "engativa", "label": "Engativá"},
+          {"value": "suba", "label": "Suba"},
+          {"value": "barrios_unidos", "label": "Barrios Unidos"},
+          {"value": "teusaquillo", "label": "Teusaquillo"},
+          {"value": "martires", "label": "Los Mártires"},
+          {"value": "antonio_narino", "label": "Antonio Nariño"},
+          {"value": "puente_aranda", "label": "Puente Aranda"},
+          {"value": "candelaria", "label": "La Candelaria"},
+          {"value": "rafael_uribe", "label": "Rafael Uribe Uribe"},
+          {"value": "ciudad_bolivar", "label": "Ciudad Bolívar"},
+          {"value": "sumapaz", "label": "Sumapaz"}
+        ],
+        "visible": {
+          "model": "ciudad",
+          "value": "bogota",
+          "condition": "equal"
+        },
+        "description": "Seleccione su localidad en Bogotá"
+      },
+      {
+        "key": "localidad_medellin",
+        "label": "Comuna",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "popular", "label": "Popular"},
+          {"value": "santa_cruz", "label": "Santa Cruz"},
+          {"value": "manrique", "label": "Manrique"},
+          {"value": "aranjuez", "label": "Aranjuez"},
+          {"value": "castilla", "label": "Castilla"},
+          {"value": "doce_octubre", "label": "Doce de Octubre"},
+          {"value": "robledo", "label": "Robledo"},
+          {"value": "villa_hermosa", "label": "Villa Hermosa"},
+          {"value": "buenavista", "label": "Buenavista"},
+          {"value": "la_candelaria", "label": "La Candelaria"},
+          {"value": "laureles", "label": "Laureles-Estadio"},
+          {"value": "la_america", "label": "La América"},
+          {"value": "san_javier", "label": "San Javier"},
+          {"value": "el_poblado", "label": "El Poblado"},
+          {"value": "guayabal", "label": "Guayabal"},
+          {"value": "belen", "label": "Belén"}
+        ],
+        "visible": {
+          "model": "ciudad",
+          "value": "medellin",
+          "condition": "equal"
+        },
+        "description": "Seleccione su comuna en Medellín"
+      },
+      {
+        "key": "localidad_barranquilla",
+        "label": "Localidad",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "riomar", "label": "Riomar"},
+          {"value": "norte_centro_historico", "label": "Norte Centro Histórico"},
+          {"value": "sur_occidente", "label": "Sur Occidente"},
+          {"value": "metropolitana", "label": "Metropolitana"},
+          {"value": "suroriente", "label": "Suroriente"}
+        ],
+        "visible": {
+          "model": "ciudad",
+          "value": "barranquilla",
+          "condition": "equal"
+        },
+        "description": "Seleccione su localidad en Barranquilla"
+      },
+      {
+        "key": "barrios_bogota_usaquen",
+        "label": "Barrios",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "usaquen_centro", "label": "Usaquén Centro"},
+          {"value": "casa_blanca", "label": "Casa Blanca"},
+          {"value": "cedritos", "label": "Cedritos"},
+          {"value": "la_california", "label": "La California"},
+          {"value": "niza", "label": "Niza"},
+          {"value": "prado_veraniego", "label": "Prado Veraniego"},
+          {"value": "santa_barbara", "label": "Santa Bárbara"},
+          {"value": "santa_cecilia", "label": "Santa Cecilia"},
+          {"value": "santa_rita", "label": "Santa Rita"},
+          {"value": "tocarema", "label": "Tocarema"}
+        ],
+        "visible": {
+          "model": "localidad_bogota",
+          "value": "usaquen",
+          "condition": "equal"
+        },
+        "description": "Seleccione su barrio en Usaquén"
+      },
+      {
+        "key": "barrios_bogota_chapinero",
+        "label": "Barrios",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "chapinero_centro", "label": "Chapinero Centro"},
+          {"value": "antiguo_country", "label": "Antiguo Country"},
+          {"value": "bellavista", "label": "Bellavista"},
+          {"value": "bosque_calderon", "label": "Bosque Calderón"},
+          {"value": "chapinero_alto", "label": "Chapinero Alto"},
+          {"value": "el_lago", "label": "El Lago"},
+          {"value": "el_retiro", "label": "El Retiro"},
+          {"value": "la_candelaria", "label": "La Candelaria"},
+          {"value": "la_macarena", "label": "La Macarena"},
+          {"value": "rosales", "label": "Rosales"},
+          {"value": "san_luis", "label": "San Luis"},
+          {"value": "santa_teresa", "label": "Santa Teresa"},
+          {"value": "teusaquillo", "label": "Teusaquillo"},
+          {"value": "zona_g", "label": "Zona G"}
+        ],
+        "visible": {
+          "model": "localidad_bogota",
+          "value": "chapinero",
+          "condition": "equal"
+        },
+        "description": "Seleccione su barrio en Chapinero"
+      },
+      {
+        "key": "barrios_barranquilla_riomar",
+        "label": "Barrios",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "riomar_centro", "label": "Riomar Centro"},
+          {"value": "altos_del_prado", "label": "Altos del Prado"},
+          {"value": "boston", "label": "Boston"},
+          {"value": "el_prado", "label": "El Prado"},
+          {"value": "golf", "label": "Golf"},
+          {"value": "la_ceiba", "label": "La Ceiba"},
+          {"value": "las_mercedes", "label": "Las Mercedes"},
+          {"value": "miami", "label": "Miami"},
+          {"value": "nuevo_prado", "label": "Nuevo Prado"},
+          {"value": "prado_mar", "label": "Prado Mar"},
+          {"value": "rio_mar", "label": "Río Mar"},
+          {"value": "santa_veronica", "label": "Santa Verónica"}
+        ],
+        "visible": {
+          "model": "localidad_barranquilla",
+          "value": "riomar",
+          "condition": "equal"
+        },
+        "description": "Seleccione su barrio en Riomar"
+      },
+      {
+        "key": "estratos_socioeconomicos",
+        "label": "Estratos Socioeconómicos",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "1", "label": "Estrato 1"},
+          {"value": "2", "label": "Estrato 2"},
+          {"value": "3", "label": "Estrato 3"},
+          {"value": "4", "label": "Estrato 4"},
+          {"value": "5", "label": "Estrato 5"},
+          {"value": "6", "label": "Estrato 6"},
+          {"value": "no_aplica", "label": "No aplica"}
+        ],
+        "description": "Seleccione su estrato socioeconómico"
+      },
+      {
+        "key": "nombre_contacto_emergencia",
+        "label": "Nombre de Contacto de Emergencia",
+        "type": "text",
+        "required": true,
+        "placeholder": "Nombre completo del contacto de emergencia",
+        "validations": {
+          "min_length": 2,
+          "max_length": 100
+        },
+        "description": "Nombre completo de la persona de contacto en caso de emergencia"
+      },
+      {
+        "key": "telefono_contacto_emergencia",
+        "label": "Teléfono de Contacto de Emergencia",
+        "type": "text",
+        "required": true,
+        "placeholder": "+57 300 123 4567",
+        "validations": {
+          "pattern": "^\\+?[1-9]\\d{1,14}$"
+        },
+        "description": "Teléfono de la persona de contacto en caso de emergencia"
+      },
+      {
+        "key": "fuentes_referencia",
+        "label": "Fuentes de Referencia",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "redes_sociales", "label": "Redes Sociales"},
+          {"value": "pagina_web", "label": "Página Web"},
+          {"value": "amigos_familia", "label": "Amigos/Familia"},
+          {"value": "medios_comunicacion", "label": "Medios de Comunicación"},
+          {"value": "institucion_educativa", "label": "Institución Educativa"},
+          {"value": "organizacion_comunitaria", "label": "Organización Comunitaria"},
+          {"value": "evento_anterior", "label": "Evento Anterior"},
+          {"value": "otro", "label": "Otro"}
+        ],
+        "description": "¿Cómo se enteró de esta convocatoria?"
+      },
+      {
+        "key": "seccion_poblacion_diferencial",
+        "label": "Población Diferencial y Situación Especial",
+        "type": "section",
+        "level": "h2",
+        "description": "Esta información es importante para fines estadísticos y para ofrecerle servicios adaptados a sus necesidades."
+      },
+      {
+        "key": "subtitulo_discapacidades",
+        "label": "¿Tiene alguna discapacidad?",
+        "type": "section",
+        "level": "h3",
+        "description": "Solo marque las opciones que correspondan a su situación. Si no presenta ninguna discapacidad, puede dejar todo sin marcar"
+      },
+      {
+        "key": "discapacidad_visual",
+        "label": "Visual (baja visión o ceguera)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad visual"
+      },
+      {
+        "key": "discapacidad_auditiva",
+        "label": "Auditiva (dificultades para escuchar)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad auditiva"
+      },
+      {
+        "key": "discapacidad_cognitiva",
+        "label": "Cognitiva/Intelectual (limitaciones en el aprendizaje y desarrollo intelectual)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad cognitiva o intelectual"
+      },
+      {
+        "key": "discapacidad_psicosocial",
+        "label": "Psicosocial/Mental (trastornos mentales que afectan relaciones interpersonales)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad psicosocial o mental"
+      },
+      {
+        "key": "discapacidad_multiple",
+        "label": "Múltiple (dos o más tipos de discapacidad)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad múltiple"
+      },
+      {
+        "key": "discapacidad_sordoceguera",
+        "label": "Sordoceguera (combinación de discapacidad auditiva y visual)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta sordoceguera"
+      },
+      {
+        "key": "discapacidad_fisica",
+        "label": "Física (limitaciones para moverse, caminar o realizar actividades cotidianas)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad física"
+      },
+      {
+        "key": "subtitulo_informacion_poblacional",
+        "label": "Información Poblacional",
+        "type": "section",
+        "level": "h3",
+        "description": "Solo marque las opciones que correspondan a su situación. Si ninguna aplica, puede dejar todo sin marcar"
+      },
+      {
+        "key": "victima_conflicto_armado",
+        "label": "Víctima del conflicto armado",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si es víctima del conflicto armado"
+      },
+      {
+        "key": "poblacion_campesina",
+        "label": "Población Campesina",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población campesina"
+      },
+      {
+        "key": "poblacion_afrodescendiente",
+        "label": "Población afrodescendiente",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población afrodescendiente"
+      },
+      {
+        "key": "poblacion_indigena",
+        "label": "Población indígena",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población indígena"
+      },
+      {
+        "key": "jefe_hogar",
+        "label": "Jefe de hogar",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si es jefe de hogar"
+      },
+      {
+        "key": "casado_union_libre",
+        "label": "Casado/a o unión libre",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si está casado/a o en unión libre"
+      },
+      {
+        "key": "poblacion_lgbtiq",
+        "label": "Población LGBTIQ+",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población LGBTIQ+"
+      },
+      {
+        "key": "poblacion_migrante",
+        "label": "Población migrante",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población migrante"
+      },
+      {
+        "key": "pospenado",
+        "label": "Pospenado",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si está pospenado"
+      },
+      {
+        "key": "cuidador",
+        "label": "Cuidador/a",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si es cuidador/a"
+      },
+      {
+        "key": "seccion_habeas_data",
+        "label": "Habeas Data - Política de Tratamiento de Datos",
+        "type": "section",
+        "level": "h2",
+        "description": "ACEPTACIÓN POLÍTICA DE TRATAMIENTO DE LA INFORMACIÓN – HABEAS DATA.\n\nAcepto y conozco que tengo derecho a conocer, consultar, actualizar, rectificar y/o suprimir la información, además de poder solicitar prueba de esta autorización, como titular de los datos suministrados. Derechos que se me han informado por Valencia Producciones FX SAS, puedo ejercer a través de los canales: info@valenciaproducciones.com portal web Web: https://www.valenciaproducciones.com  y https://www.smartfilms.com.co  Tel: (601) 4672437, Dirección para  correo físico (Carrera 22 No. 142 – 58 de Bogotá D.C). Autorizo que los datos ingresados sean utilizados con el propósito de contactarme para esta convocatoria, ofrecerme oportunidades de formación y realizar actividades inherentes al festival SMARTFILMS® Barranquilla, así como los demás fines previstos en la pólitica de Habeas data, Privacidad y Tratamiento de Datos de Valencia Producciones FX SAS. El titular de la información conoce, acepta y autoriza para que en virtud de los fines establecidos la información podrá ser transferida o suministrada a terceros. Lo anterior, de conformidad con la Ley 1581 de 2012, Decreto 1377 de 2013, Ley 1266 de 2008 y la Política de Tratamiento de Datos de Valencia Producciones FX SAS – y SMARTFILMS®.\n\nA través del presente documento declaro y otorgo, de manera previa, libre, informada, voluntaria y expresa, la correspondiente autorización."
+      },
+      {
+        "key": "acepta_habeas_data",
+        "label": "Acepto la política de tratamiento de datos personales",
+        "type": "checkbox",
+        "required": true,
+        "validations": {
+          "required": true
+        },
+        "description": "Debe aceptar la política de tratamiento de datos para continuar"
+      },
+      {
+        "key": "seccion_contrato_pedagogico",
+        "label": "Contrato Pedagógico",
+        "type": "section",
+        "level": "h2",
+        "description": "CONTRATO PEDAGÓGICO\n\nEn nombre propio y como participante de SMARTFILMS® BARRANQUILLA 2025, expresamente acepto los siguientes términos y compromisos:\n\nTengo conocimiento que el programa tiene como objetivo y esta orientado a capacitame en el fortalecimiento de habilidades digitales, comunicativas y audiovisuales, con enfoque de derechos humanos y participación ciudadana.\nTengo conocimiento que el alcance del programa es estrictamente formativo por lo que no existe responsabilidad alguna por parte de Valencia Producciones FX SAS, a través de SMARTFILMS®, de conseguir mi vinculación laboral, o algún fin diferente al establecido.\nComo beneficiario del programa, o participante del mismo acepto las normas que sean fijadas por la entidad que realiza la formación, y me acojo a los términos y sanciones que allí están establecidas.\nAcepto que para aprobar la fase académica, debo cumplir los logros que para la misma estén establecidos, así como la asistencia mínima que sea requerida para tal fin.\nSoy consiente y acepto, que dentro de la formación y fase académica no hay prácticas pagas.\nConozco y acepto que mi ausencia justificada o injustificada hasta del 20% del total de horas de formación previstas en cada materia, ocasionará la cancelación de la matrícula, asi como la términación del programa de formación y retiro del mismo.\nConozco y acepto que si por alguna razón se presenta mi retiro del programa de formación, estoy renunciando a la posibilidad de ingresar nuevamente al mismo en la presente, o en futuras convocatorias.\nConozco y acepto que debo diligenciar y firmar las planillas de asistencia reglamentarias que sean establecidas par tal fin, y que en caso de enmendaduras, o suplantación podré ser sancionado y retirado del programa de formación.\nConozco y acepto que en caso de presentarse por mi parte alguna observación, aclaración o situación especial, la misma se presentará siguiendo el conducto regular antes la entidad formadora.\nAcepto y conozco que tengo derecho a conocer, consultar, actualizar, rectificar y/o suprimir la información, además de poder solicitar prueba de esta autorización, como titular de los datos suministrados. Derechos que se me han informado por Valencia Producciones FX SAS, puedo ejercer a través de los canales: info@valenciaproducciones.com portal web Web: https://www.valenciaproducciones.com  y https://www.smartfilms.com.co  Tel: (601) 4672437, Dirección para  correo físico (Carrera 22 No. 142 – 58 de Bogotá D.C.).\nAutorizo que los datos ingresados sean utilizados con el propósito de contactarme para esta convocatoria, ofrecerme oportunidades de formación y realizar actividades inherentes al festival SMARTFILMS® Barranquilla, así como los demás fines previstos en la pólitica de Habeas data, Privacidad y Tratamiento de Datos de Valencia Producciones FX SAS.\n\nLo anterior, de conformidad con la Ley 1581 de 2012, Decreto 1377 de 2013, Ley 1266 de 2008 y la Política de Tratamiento de Datos de Valencia Producciones FX SAS- y SMARTFILMS®.\n\nA través del presente documento declaro y otorgo, de manera previa, libre, informada, voluntaria y expresa, la correspondiente autorización."
+      },
+      {
+        "key": "acepta_contrato_pedagogico",
+        "label": "Acepto los términos del contrato pedagógico",
+        "type": "checkbox",
+        "required": true,
+        "validations": {
+          "required": true
+        },
+        "description": "Debe aceptar los términos del contrato pedagógico para continuar"
+      }
+    ]
+  }
+}

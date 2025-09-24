@@ -42,10 +42,11 @@
                         <div class="admin-field-error">{{ $message }}</div>
                     @enderror
                     <div class="admin-field-help">
-                        <strong>Propiedades requeridas:</strong> key, label, type, required<br>
-                        <strong>Propiedades opcionales:</strong> placeholder, options (para select), help, validations, visible, default_value, description<br>
-                        <strong>Tipos de campos disponibles:</strong> text, email, number, date, select, textarea, checkbox<br>
-                        <strong>Validaciones disponibles:</strong> min_length, max_length, pattern, format, min_value, max_value, min_date, max_date, required_if, unique, allowed_chars, forbidden_chars, min_words, max_words, decimal_places, step
+                        <strong>Propiedades requeridas:</strong> key, label, type, required (excepto para section)<br>
+                        <strong>Propiedades opcionales:</strong> placeholder, options (para select), help, validations, visible, default_value, description, level (para section)<br>
+                        <strong>Tipos de campos disponibles:</strong> text, email, number, date, select, textarea, checkbox, section<br>
+                        <strong>Validaciones disponibles:</strong> min_length, max_length, pattern, format, min_value, max_value, min_date, max_date, required_if, unique, allowed_chars, forbidden_chars, min_words, max_words, decimal_places, step<br>
+                        <strong>Para campos section:</strong> level (h1, h2, h3), description (texto descriptivo)
                     </div>
                 </div>
 

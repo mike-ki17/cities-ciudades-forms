@@ -128,7 +128,7 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Datos del Participante</h3>
                     
                     {{-- Nombre --}}
-                    <div class="form-group">
+                    <div class="form-group mb-6">
                         <label for="name" class="form-label">
                             Nombre completo
                             <span class="text-red-500">*</span>
@@ -151,7 +151,7 @@
                     </div>
 
                     {{-- Email --}}
-                    <div class="form-group">
+                    <div class="form-group mb-6">
                         <label for="email" class="form-label">
                             Correo electrónico
                             <span class="text-red-500">*</span>
@@ -174,7 +174,7 @@
                     </div>
 
                     {{-- Teléfono --}}
-                    <div class="form-group">
+                    <div class="form-group mb-6">
                         <label for="phone" class="form-label">
                             Teléfono
                             <span class="text-red-500">*</span>
@@ -201,7 +201,7 @@
                     </div>
 
                     {{-- Tipo de documento --}}
-                    <div class="form-group">
+                    <div class="form-group mb-6">
                         <label for="document_type" class="form-label">
                             Tipo de documento
                             <span class="text-red-500">*</span>
@@ -230,7 +230,7 @@
                     </div>
 
                     {{-- Número de documento --}}
-                    <div class="form-group">
+                    <div class="form-group mb-6">
                         <label for="document_number" class="form-label">
                             Número de documento
                             <span class="text-red-500">*</span>
@@ -253,7 +253,7 @@
                     </div>
 
                     {{-- Fecha de nacimiento --}}
-                    <div class="form-group">
+                    <div class="form-group mb-6">
                         <label for="birth_date" class="form-label">
                             Fecha de nacimiento
                             <span class="text-red-500">*</span>
@@ -293,20 +293,49 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Información Adicional</h3>
                         
                         @foreach($dynamicFields as $field)
-                    <div class="form-group" 
-                         @if(isset($field['visible']) && is_array($field['visible']) && isset($field['visible']['model']))
-                             data-conditional-field="true"
-                             data-conditional-model="{{ $field['visible']['model'] }}"
-                             data-conditional-value="{{ is_array($field['visible']['value'] ?? '') ? json_encode($field['visible']['value']) : ($field['visible']['value'] ?? '') }}"
-                             data-conditional-condition="{{ $field['visible']['condition'] ?? 'equal' }}"
-                             style="display: none;"
-                         @endif>
-                        <label for="{{ $field['key'] }}" class="form-label">
-                            {{ $field['label'] }}
-                            @if($field['required'] ?? false)
-                                <span class="text-red-500">*</span>
+                    @if($field['type'] === 'section')
+                        {{-- Renderizar campo de sección directamente --}}
+                        <div class="section-field mt-10 mb-8">
+                            @if(isset($field['level']) && $field['level'] == 'h1')
+                                <h1 class="text-2xl font-bold text-gray-900 border-b-2 border-gray-200 pb-2">
+                                    {{ $field['label'] }}
+                                </h1>
+                            @elseif(isset($field['level']) && $field['level'] == 'h2')
+                                <h2 class="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2 mt-6">
+                                    {{ $field['label'] }}
+                                </h2>
+                            @elseif(isset($field['level']) && $field['level'] == 'h3')
+                                <h3 class="text-lg font-medium text-gray-700 border-b border-gray-100 pb-1 mt-4">
+                                    {{ $field['label'] }}
+                                </h3>
+                            @else
+                                <h3 class="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2 mt-6">
+                                    {{ $field['label'] }}
+                                </h3>
                             @endif
-                        </label>
+                            
+                            @if(isset($field['description']) && !empty($field['description']))
+                                <p class="mt-2 text-sm text-gray-600 leading-relaxed">
+                                    {{ $field['description'] }}
+                                </p>
+                            @endif
+                        </div>
+                    @else
+                        {{-- Renderizar campo normal --}}
+                        <div class="form-group mb-6" 
+                             @if(isset($field['visible']) && is_array($field['visible']) && isset($field['visible']['model']))
+                                 data-conditional-field="true"
+                                 data-conditional-model="{{ $field['visible']['model'] }}"
+                                 data-conditional-value="{{ is_array($field['visible']['value'] ?? '') ? json_encode($field['visible']['value']) : ($field['visible']['value'] ?? '') }}"
+                                 data-conditional-condition="{{ $field['visible']['condition'] ?? 'equal' }}"
+                                 style="display: none;"
+                             @endif>
+                            <label for="{{ $field['key'] }}" class="form-label">
+                                {{ $field['label'] }}
+                                @if($field['required'] ?? false)
+                                    <span class="text-red-500">*</span>
+                                @endif
+                            </label>
 
                         @switch($field['type'])
                             @case('text')
@@ -473,6 +502,7 @@
                             </div>
                         @endif
                     </div>
+                    @endif
                         @endforeach
                     </div>
                 @endif
@@ -997,6 +1027,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .form-styled a:hover {
     color: color-mix(in srgb, var(--primary-color) 85%, black) !important;
-}
+    }
+
 </style>
 @endsection

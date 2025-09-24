@@ -212,10 +212,11 @@
                                 </div>
                             </div>
                             <div class="admin-field-help">
-                                <strong>Tipos de campos disponibles:</strong> text, email, number, date, select, textarea, checkbox<br>
-                                <strong>Propiedades requeridas:</strong> key, label, type, required<br>
-                                <strong>Propiedades opcionales:</strong> placeholder, options (para select), help, validations<br>
-                                <strong>Validaciones disponibles:</strong> min_length, max_length, pattern, format, min_value, max_value, min_date, max_date, required_if, unique, allowed_chars, forbidden_chars, min_words, max_words, decimal_places, step
+                                <strong>Tipos de campos disponibles:</strong> text, email, number, date, select, textarea, checkbox, section, tel<br>
+                                <strong>Propiedades requeridas:</strong> key, label, type, required (excepto para section)<br>
+                                <strong>Propiedades opcionales:</strong> placeholder, options (para select), help, validations, level (para section), description<br>
+                                <strong>Validaciones disponibles:</strong> min_length, max_length, pattern, format, min_value, max_value, min_date, max_date, required_if, unique, allowed_chars, forbidden_chars, min_words, max_words, decimal_places, step<br>
+                                <strong>Para campos section:</strong> level (h1, h2, h3), description (texto descriptivo)
                             </div>
                             <div class="mt-2 flex space-x-2">
                                 <button type="button" id="format-json" class="admin-button-outline text-xs px-3 py-1">
@@ -866,7 +867,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!field.type || field.type.trim() === '') {
                     fieldErrors.push(`${fieldPrefix}: Falta la propiedad "type"`);
                 } else {
-                    const validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date'];
+                    const validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date', 'section', 'tel'];
                     if (!validTypes.includes(field.type)) {
                         fieldErrors.push(`${fieldPrefix}: Tipo "${field.type}" no válido. Tipos válidos: ${validTypes.join(', ')}`);
                     }

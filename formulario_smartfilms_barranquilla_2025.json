@@ -1,0 +1,585 @@
+{
+  "name": "Formulario SMARTFILMS® Barranquilla 2025",
+  "description": "Formulario de inscripción para el festival SMARTFILMS® Barranquilla 2025 con campos condicionales para ubicación geográfica",
+  "schema_json": {
+    "fields": [
+      {
+        "key": "genero",
+        "label": "Géneros",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "masculino", "label": "Masculino"},
+          {"value": "femenino", "label": "Femenino"},
+          {"value": "no_binario", "label": "No binario"},
+          {"value": "otro", "label": "Otro"},
+          {"value": "prefiero_no_decir", "label": "Prefiero no decir"}
+        ],
+        "description": "Seleccione su género"
+      },
+      {
+        "key": "correo_electronico",
+        "label": "Correo Electrónico",
+        "type": "email",
+        "required": true,
+        "placeholder": "usuario@ejemplo.com",
+        "validations": {
+          "format": "email"
+        },
+        "description": "Su correo electrónico"
+      },
+      {
+        "key": "telefono_celular",
+        "label": "Teléfono Celular",
+        "type": "tel",
+        "required": true,
+        "placeholder": "+57 300 123 4567",
+        "validations": {
+          "pattern": "^\\+?[1-9]\\d{1,14}$"
+        },
+        "description": "Su número de teléfono celular"
+      },
+      {
+        "key": "niveles_educativos",
+        "label": "Niveles Educativos",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "primaria", "label": "Primaria"},
+          {"value": "secundaria", "label": "Secundaria"},
+          {"value": "tecnico", "label": "Técnico"},
+          {"value": "tecnologo", "label": "Tecnólogo"},
+          {"value": "pregrado", "label": "Pregrado"},
+          {"value": "especializacion", "label": "Especialización"},
+          {"value": "maestria", "label": "Maestría"},
+          {"value": "doctorado", "label": "Doctorado"},
+          {"value": "ninguno", "label": "Ninguno"}
+        ],
+        "description": "Seleccione su nivel educativo más alto"
+      },
+      {
+        "key": "caracterizaciones",
+        "label": "Caracterizaciones",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "estudiante", "label": "Estudiante"},
+          {"value": "profesional", "label": "Profesional"},
+          {"value": "empresario", "label": "Empresario"},
+          {"value": "artista", "label": "Artista"},
+          {"value": "comunicador", "label": "Comunicador"},
+          {"value": "audiovisual", "label": "Audiovisual"},
+          {"value": "docente", "label": "Docente"},
+          {"value": "investigador", "label": "Investigador"},
+          {"value": "otro", "label": "Otro"}
+        ],
+        "description": "Seleccione su caracterización principal"
+      },
+      {
+        "key": "actualmente_empleado",
+        "label": "Actualmente estoy empleado/a",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si actualmente tiene empleo"
+      },
+      {
+        "key": "direccion_residencia",
+        "label": "Dirección de Residencia",
+        "type": "textarea",
+        "required": true,
+        "placeholder": "Ingrese su dirección completa",
+        "validations": {
+          "min_length": 10,
+          "max_length": 200
+        },
+        "description": "Su dirección de residencia completa"
+      },
+      {
+        "key": "ciudad",
+        "label": "Ciudad",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "bogota", "label": "Bogotá D.C."},
+          {"value": "medellin", "label": "Medellín"},
+          {"value": "cali", "label": "Cali"},
+          {"value": "barranquilla", "label": "Barranquilla"},
+          {"value": "cartagena", "label": "Cartagena"},
+          {"value": "bucaramanga", "label": "Bucaramanga"},
+          {"value": "pereira", "label": "Pereira"},
+          {"value": "santa_marta", "label": "Santa Marta"},
+          {"value": "ibague", "label": "Ibagué"},
+          {"value": "pasto", "label": "Pasto"},
+          {"value": "manizales", "label": "Manizales"},
+          {"value": "villavicencio", "label": "Villavicencio"},
+          {"value": "otra", "label": "Otra"}
+        ],
+        "description": "Seleccione su ciudad"
+      },
+      {
+        "key": "localidad_bogota",
+        "label": "Localidad",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "usaquen", "label": "Usaquén"},
+          {"value": "chapinero", "label": "Chapinero"},
+          {"value": "santa_fe", "label": "Santa Fe"},
+          {"value": "san_cristobal", "label": "San Cristóbal"},
+          {"value": "usme", "label": "Usme"},
+          {"value": "tunjuelito", "label": "Tunjuelito"},
+          {"value": "bosa", "label": "Bosa"},
+          {"value": "kennedy", "label": "Kennedy"},
+          {"value": "fontibon", "label": "Fontibón"},
+          {"value": "engativa", "label": "Engativá"},
+          {"value": "suba", "label": "Suba"},
+          {"value": "barrios_unidos", "label": "Barrios Unidos"},
+          {"value": "teusaquillo", "label": "Teusaquillo"},
+          {"value": "martires", "label": "Los Mártires"},
+          {"value": "antonio_narino", "label": "Antonio Nariño"},
+          {"value": "puente_aranda", "label": "Puente Aranda"},
+          {"value": "candelaria", "label": "La Candelaria"},
+          {"value": "rafael_uribe", "label": "Rafael Uribe Uribe"},
+          {"value": "ciudad_bolivar", "label": "Ciudad Bolívar"},
+          {"value": "sumapaz", "label": "Sumapaz"}
+        ],
+        "visible": {
+          "model": "ciudad",
+          "value": "bogota",
+          "condition": "equal"
+        },
+        "description": "Seleccione su localidad en Bogotá"
+      },
+      {
+        "key": "localidad_medellin",
+        "label": "Comuna",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "popular", "label": "Popular"},
+          {"value": "santa_cruz", "label": "Santa Cruz"},
+          {"value": "manrique", "label": "Manrique"},
+          {"value": "aranjuez", "label": "Aranjuez"},
+          {"value": "castilla", "label": "Castilla"},
+          {"value": "doce_octubre", "label": "Doce de Octubre"},
+          {"value": "robledo", "label": "Robledo"},
+          {"value": "villa_hermosa", "label": "Villa Hermosa"},
+          {"value": "buenavista", "label": "Buenavista"},
+          {"value": "la_candelaria", "label": "La Candelaria"},
+          {"value": "laureles", "label": "Laureles-Estadio"},
+          {"value": "la_america", "label": "La América"},
+          {"value": "san_javier", "label": "San Javier"},
+          {"value": "el_poblado", "label": "El Poblado"},
+          {"value": "guayabal", "label": "Guayabal"},
+          {"value": "belen", "label": "Belén"}
+        ],
+        "visible": {
+          "model": "ciudad",
+          "value": "medellin",
+          "condition": "equal"
+        },
+        "description": "Seleccione su comuna en Medellín"
+      },
+      {
+        "key": "localidad_cali",
+        "label": "Comuna",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "comuna_1", "label": "Comuna 1 - Popular"},
+          {"value": "comuna_2", "label": "Comuna 2 - Santa Rita"},
+          {"value": "comuna_3", "label": "Comuna 3 - Sucre"},
+          {"value": "comuna_4", "label": "Comuna 4 - Aranjuez"},
+          {"value": "comuna_5", "label": "Comuna 5 - Castilla"},
+          {"value": "comuna_6", "label": "Comuna 6 - Doce de Octubre"},
+          {"value": "comuna_7", "label": "Comuna 7 - Robledo"},
+          {"value": "comuna_8", "label": "Comuna 8 - Villa Hermosa"},
+          {"value": "comuna_9", "label": "Comuna 9 - Buenos Aires"},
+          {"value": "comuna_10", "label": "Comuna 10 - La Candelaria"},
+          {"value": "comuna_11", "label": "Comuna 11 - Laureles"},
+          {"value": "comuna_12", "label": "Comuna 12 - La América"},
+          {"value": "comuna_13", "label": "Comuna 13 - San Javier"},
+          {"value": "comuna_14", "label": "Comuna 14 - El Poblado"},
+          {"value": "comuna_15", "label": "Comuna 15 - Guayabal"},
+          {"value": "comuna_16", "label": "Comuna 16 - Belén"},
+          {"value": "comuna_17", "label": "Comuna 17 - Villa Hermosa"},
+          {"value": "comuna_18", "label": "Comuna 18 - Buenos Aires"},
+          {"value": "comuna_19", "label": "Comuna 19 - La Candelaria"},
+          {"value": "comuna_20", "label": "Comuna 20 - Laureles"},
+          {"value": "comuna_21", "label": "Comuna 21 - La América"},
+          {"value": "comuna_22", "label": "Comuna 22 - San Javier"}
+        ],
+        "visible": {
+          "model": "ciudad",
+          "value": "cali",
+          "condition": "equal"
+        },
+        "description": "Seleccione su comuna en Cali"
+      },
+      {
+        "key": "localidad_barranquilla",
+        "label": "Localidad",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "riomar", "label": "Riomar"},
+          {"value": "norte_centro_historico", "label": "Norte Centro Histórico"},
+          {"value": "sur_occidente", "label": "Sur Occidente"},
+          {"value": "metropolitana", "label": "Metropolitana"},
+          {"value": "suroriente", "label": "Suroriente"}
+        ],
+        "visible": {
+          "model": "ciudad",
+          "value": "barranquilla",
+          "condition": "equal"
+        },
+        "description": "Seleccione su localidad en Barranquilla"
+      },
+      {
+        "key": "localidad_cartagena",
+        "label": "Localidad",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "historia_y_caribe", "label": "Historia y Caribe Norte"},
+          {"value": "de_la_virgen_y_turistica", "label": "De la Virgen y Turística"},
+          {"value": "industrial_y_de_la_bahia", "label": "Industrial y de la Bahía"}
+        ],
+        "visible": {
+          "model": "ciudad",
+          "value": "cartagena",
+          "condition": "equal"
+        },
+        "description": "Seleccione su localidad en Cartagena"
+      },
+      {
+        "key": "localidad_bucaramanga",
+        "label": "Comuna",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "norte", "label": "Norte"},
+          {"value": "nororiente", "label": "Nororiente"},
+          {"value": "santander", "label": "Santander"},
+          {"value": "garcia_rovirosa", "label": "García Rovira"},
+          {"value": "convencion", "label": "Convención"},
+          {"value": "lacides_castro", "label": "Lácides Castro"},
+          {"value": "mutis", "label": "Mutis"},
+          {"value": "morrorico", "label": "Morrorico"},
+          {"value": "sur", "label": "Sur"},
+          {"value": "suroccidente", "label": "Suroccidente"},
+          {"value": "occidente", "label": "Occidente"},
+          {"value": "provenza", "label": "Provenza"},
+          {"value": "cabecera", "label": "Cabecera del Llano"},
+          {"value": "centro", "label": "Centro"},
+          {"value": "oriental", "label": "Oriental"},
+          {"value": "pedregosa", "label": "Pedregosa"},
+          {"value": "sureste", "label": "Sureste"}
+        ],
+        "visible": {
+          "model": "ciudad",
+          "value": "bucaramanga",
+          "condition": "equal"
+        },
+        "description": "Seleccione su comuna en Bucaramanga"
+      },
+      {
+        "key": "barrios_bogota_usaquen",
+        "label": "Barrios",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "usaquen_centro", "label": "Usaquén Centro"},
+          {"value": "casa_blanca", "label": "Casa Blanca"},
+          {"value": "cedritos", "label": "Cedritos"},
+          {"value": "la_california", "label": "La California"},
+          {"value": "niza", "label": "Niza"},
+          {"value": "prado_veraniego", "label": "Prado Veraniego"},
+          {"value": "santa_barbara", "label": "Santa Bárbara"},
+          {"value": "santa_cecilia", "label": "Santa Cecilia"},
+          {"value": "santa_rita", "label": "Santa Rita"},
+          {"value": "tocarema", "label": "Tocarema"}
+        ],
+        "visible": {
+          "model": "localidad_bogota",
+          "value": "usaquen",
+          "condition": "equal"
+        },
+        "description": "Seleccione su barrio en Usaquén"
+      },
+      {
+        "key": "barrios_bogota_chapinero",
+        "label": "Barrios",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "chapinero_centro", "label": "Chapinero Centro"},
+          {"value": "antiguo_country", "label": "Antiguo Country"},
+          {"value": "bellavista", "label": "Bellavista"},
+          {"value": "bosque_calderon", "label": "Bosque Calderón"},
+          {"value": "chapinero_alto", "label": "Chapinero Alto"},
+          {"value": "el_lago", "label": "El Lago"},
+          {"value": "el_retiro", "label": "El Retiro"},
+          {"value": "la_candelaria", "label": "La Candelaria"},
+          {"value": "la_macarena", "label": "La Macarena"},
+          {"value": "rosales", "label": "Rosales"},
+          {"value": "san_luis", "label": "San Luis"},
+          {"value": "santa_teresa", "label": "Santa Teresa"},
+          {"value": "teusaquillo", "label": "Teusaquillo"},
+          {"value": "zona_g", "label": "Zona G"}
+        ],
+        "visible": {
+          "model": "localidad_bogota",
+          "value": "chapinero",
+          "condition": "equal"
+        },
+        "description": "Seleccione su barrio en Chapinero"
+      },
+      {
+        "key": "barrios_medellin_el_poblado",
+        "label": "Barrios",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "el_poblado_centro", "label": "El Poblado Centro"},
+          {"value": "castropol", "label": "Castropol"},
+          {"value": "lalinde", "label": "Lalinde"},
+          {"value": "manila", "label": "Manila"},
+          {"value": "patio_bonito", "label": "Patio Bonito"},
+          {"value": "santa_maria", "label": "Santa María"},
+          {"value": "santa_rita", "label": "Santa Rita"},
+          {"value": "santa_teresa", "label": "Santa Teresa"},
+          {"value": "villa_carlota", "label": "Villa Carlota"},
+          {"value": "villa_nueva", "label": "Villa Nueva"}
+        ],
+        "visible": {
+          "model": "localidad_medellin",
+          "value": "el_poblado",
+          "condition": "equal"
+        },
+        "description": "Seleccione su barrio en El Poblado"
+      },
+      {
+        "key": "barrios_barranquilla_riomar",
+        "label": "Barrios",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "riomar_centro", "label": "Riomar Centro"},
+          {"value": "altos_del_prado", "label": "Altos del Prado"},
+          {"value": "boston", "label": "Boston"},
+          {"value": "el_prado", "label": "El Prado"},
+          {"value": "golf", "label": "Golf"},
+          {"value": "la_ceiba", "label": "La Ceiba"},
+          {"value": "las_mercedes", "label": "Las Mercedes"},
+          {"value": "miami", "label": "Miami"},
+          {"value": "nuevo_prado", "label": "Nuevo Prado"},
+          {"value": "prado_mar", "label": "Prado Mar"},
+          {"value": "rio_mar", "label": "Río Mar"},
+          {"value": "santa_veronica", "label": "Santa Verónica"}
+        ],
+        "visible": {
+          "model": "localidad_barranquilla",
+          "value": "riomar",
+          "condition": "equal"
+        },
+        "description": "Seleccione su barrio en Riomar"
+      },
+      {
+        "key": "estratos_socioeconomicos",
+        "label": "Estratos Socioeconómicos",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "1", "label": "Estrato 1"},
+          {"value": "2", "label": "Estrato 2"},
+          {"value": "3", "label": "Estrato 3"},
+          {"value": "4", "label": "Estrato 4"},
+          {"value": "5", "label": "Estrato 5"},
+          {"value": "6", "label": "Estrato 6"},
+          {"value": "no_aplica", "label": "No aplica"}
+        ],
+        "description": "Seleccione su estrato socioeconómico"
+      },
+      {
+        "key": "nombre_contacto_emergencia",
+        "label": "Nombre de Contacto de Emergencia",
+        "type": "text",
+        "required": true,
+        "placeholder": "Nombre completo del contacto de emergencia",
+        "validations": {
+          "min_length": 2,
+          "max_length": 100
+        },
+        "description": "Nombre completo de la persona de contacto en caso de emergencia"
+      },
+      {
+        "key": "telefono_contacto_emergencia",
+        "label": "Teléfono de Contacto de Emergencia",
+        "type": "tel",
+        "required": true,
+        "placeholder": "+57 300 123 4567",
+        "validations": {
+          "pattern": "^\\+?[1-9]\\d{1,14}$"
+        },
+        "description": "Teléfono de la persona de contacto en caso de emergencia"
+      },
+      {
+        "key": "fuentes_referencia",
+        "label": "Fuentes de Referencia",
+        "type": "select",
+        "required": true,
+        "options": [
+          {"value": "redes_sociales", "label": "Redes Sociales"},
+          {"value": "pagina_web", "label": "Página Web"},
+          {"value": "amigos_familia", "label": "Amigos/Familia"},
+          {"value": "medios_comunicacion", "label": "Medios de Comunicación"},
+          {"value": "institucion_educativa", "label": "Institución Educativa"},
+          {"value": "organizacion_comunitaria", "label": "Organización Comunitaria"},
+          {"value": "evento_anterior", "label": "Evento Anterior"},
+          {"value": "otro", "label": "Otro"}
+        ],
+        "description": "¿Cómo se enteró de esta convocatoria?"
+      },
+      {
+        "key": "discapacidad_visual",
+        "label": "Visual (baja visión o ceguera)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad visual"
+      },
+      {
+        "key": "discapacidad_auditiva",
+        "label": "Auditiva (dificultades para escuchar)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad auditiva"
+      },
+      {
+        "key": "discapacidad_cognitiva",
+        "label": "Cognitiva/Intelectual (limitaciones en el aprendizaje y desarrollo intelectual)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad cognitiva o intelectual"
+      },
+      {
+        "key": "discapacidad_psicosocial",
+        "label": "Psicosocial/Mental (trastornos mentales que afectan relaciones interpersonales)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad psicosocial o mental"
+      },
+      {
+        "key": "discapacidad_multiple",
+        "label": "Múltiple (dos o más tipos de discapacidad)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad múltiple"
+      },
+      {
+        "key": "discapacidad_sordoceguera",
+        "label": "Sordoceguera (combinación de discapacidad auditiva y visual)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta sordoceguera"
+      },
+      {
+        "key": "discapacidad_fisica",
+        "label": "Física (limitaciones para moverse, caminar o realizar actividades cotidianas)",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si presenta discapacidad física"
+      },
+      {
+        "key": "victima_conflicto_armado",
+        "label": "Víctima del conflicto armado",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si es víctima del conflicto armado"
+      },
+      {
+        "key": "poblacion_campesina",
+        "label": "Población Campesina",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población campesina"
+      },
+      {
+        "key": "poblacion_afrodescendiente",
+        "label": "Población afrodescendiente",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población afrodescendiente"
+      },
+      {
+        "key": "poblacion_indigena",
+        "label": "Población indígena",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población indígena"
+      },
+      {
+        "key": "jefe_hogar",
+        "label": "Jefe de hogar",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si es jefe de hogar"
+      },
+      {
+        "key": "casado_union_libre",
+        "label": "Casado/a o unión libre",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si está casado/a o en unión libre"
+      },
+      {
+        "key": "poblacion_lgbtiq",
+        "label": "Población LGBTIQ+",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población LGBTIQ+"
+      },
+      {
+        "key": "poblacion_migrante",
+        "label": "Población migrante",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si pertenece a la población migrante"
+      },
+      {
+        "key": "pospenado",
+        "label": "Pospenado",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si está pospenado"
+      },
+      {
+        "key": "cuidador",
+        "label": "Cuidador/a",
+        "type": "checkbox",
+        "required": false,
+        "description": "Marque si es cuidador/a"
+      },
+      {
+        "key": "acepta_habeas_data",
+        "label": "Acepto la política de tratamiento de datos personales",
+        "type": "checkbox",
+        "required": true,
+        "validations": {
+          "required": true
+        },
+        "description": "Debe aceptar la política de tratamiento de datos para continuar"
+      },
+      {
+        "key": "acepta_contrato_pedagogico",
+        "label": "Acepto los términos del contrato pedagógico",
+        "type": "checkbox",
+        "required": true,
+        "validations": {
+          "required": true
+        },
+        "description": "Debe aceptar los términos del contrato pedagógico para continuar"
+      }
+    ]
+  }
+}

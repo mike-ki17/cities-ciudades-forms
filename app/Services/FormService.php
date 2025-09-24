@@ -285,6 +285,11 @@ class FormService
                     $this->addTextValidations($fieldRules, $field);
                     break;
 
+                case 'tel':
+                    $fieldRules[] = 'string';
+                    $this->addTextValidations($fieldRules, $field);
+                    break;
+
                 case 'date':
                     $fieldRules[] = 'date';
                     $this->addDateValidations($fieldRules, $field);
@@ -296,6 +301,11 @@ class FormService
 
                 case 'checkbox':
                     $this->addCheckboxValidations($fieldRules, $field);
+                    break;
+
+                case 'section':
+                    // Los campos de sección no se validan como campos de entrada
+                    $fieldRules = ['nullable'];
                     break;
             }
 
