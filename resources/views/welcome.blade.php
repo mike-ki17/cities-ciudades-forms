@@ -450,8 +450,8 @@
     <section class="hero-section">
         <div class="hero-content">
             <div class="logo-container">
-                <img src="{{ asset('build/img/LOGO BOGOTÁ.png') }}" alt="Logo Bogotá" class="main-logo">
-                <img src="{{ asset('build/img/LOGO CCB.png') }}" alt="Logo CCB" class="ccb-logo">
+                <img src="https://deuouqyoujoig.cloudfront.net/uploads/2025/fomurlarios-ciudades/LOGO_BOGOT__.png" alt="Logo Bogotá" class="main-logo">
+                <img src="https://deuouqyoujoig.cloudfront.net/uploads/2025/fomurlarios-ciudades/LOGO_CCB.png" alt="Logo CCB" class="ccb-logo">
             </div>
             <h1 class="hero-title">Smartfilms Forms</h1>
             <p class="hero-subtitle">
