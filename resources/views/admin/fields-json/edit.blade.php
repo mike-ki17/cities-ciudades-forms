@@ -46,6 +46,7 @@
                                 'placeholder' => $field->placeholder,
                                 'validations' => $field->validations,
                                 'visible' => $field->visible,
+                                'dynamic_options' => $field->dynamic_options,
                                 'default_value' => $field->default_value,
                                 'description' => $field->description,
                                 'options' => $field->formFieldOrders->first()?->formCategory?->formOptions?->map(function($option) {

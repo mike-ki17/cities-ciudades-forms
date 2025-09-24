@@ -89,7 +89,7 @@ class StoreFieldJsonRequest extends FormRequest
         if (!isset($field['type']) || empty($field['type'])) {
             $validator->errors()->add('field_json.type', 'El campo debe tener un tipo (type).');
         } else {
-            $validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date'];
+            $validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date', 'dynamic_select'];
             if (!in_array($field['type'], $validTypes)) {
                 $validator->errors()->add('field_json.type', 'El tipo de campo debe ser uno de: ' . implode(', ', $validTypes));
             }
@@ -99,6 +99,28 @@ class StoreFieldJsonRequest extends FormRequest
         if (isset($field['type']) && $field['type'] === 'select') {
             if (!isset($field['options']) || !is_array($field['options']) || empty($field['options'])) {
                 $validator->errors()->add('field_json.options', 'Los campos de tipo select deben tener opciones.');
+            }
+        }
+
+        // Validate dynamic_select options
+        if (isset($field['type']) && $field['type'] === 'dynamic_select') {
+            if (!isset($field['dynamic_options']) || !is_array($field['dynamic_options'])) {
+                $validator->errors()->add('field_json.dynamic_options', 'Los campos de tipo dynamic_select deben tener configuración dynamic_options.');
+            } else {
+                $dynamicOptions = $field['dynamic_options'];
+                if (!isset($dynamicOptions['api_endpoint']) || empty($dynamicOptions['api_endpoint'])) {
+                    $validator->errors()->add('field_json.dynamic_options.api_endpoint', 'El campo dynamic_options debe tener un api_endpoint.');
+                }
+                if (!isset($dynamicOptions['parent_field']) || empty($dynamicOptions['parent_field'])) {
+                    $validator->errors()->add('field_json.dynamic_options.parent_field', 'El campo dynamic_options debe tener un parent_field.');
+                }
+                if (!isset($dynamicOptions['child_field']) || empty($dynamicOptions['child_field'])) {
+                    $validator->errors()->add('field_json.dynamic_options.child_field', 'El campo dynamic_options debe tener un child_field.');
+                }
+            }
+            
+            if (!isset($field['options']) || !is_array($field['options']) || empty($field['options'])) {
+                $validator->errors()->add('field_json.options', 'Los campos de tipo dynamic_select deben tener opciones para el campo padre.');
             }
         }
 

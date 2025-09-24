@@ -1,0 +1,140 @@
+{
+  "name": "Formulario de Ubicación - Ciudades y Localidades (Mejorado)",
+  "description": "Ejemplo del formulario mejorado con campos dinámicos donde al seleccionar una ciudad se cargan las localidades correspondientes desde la API",
+  "schema_json": {
+    "fields": [
+      {
+        "key": "nombre_completo",
+        "label": "Nombre Completo",
+        "type": "text",
+        "required": true,
+        "placeholder": "Ingrese su nombre completo",
+        "validations": {
+          "min_length": 2,
+          "max_length": 100
+        },
+        "description": "Su nombre completo"
+      },
+      {
+        "key": "email",
+        "label": "Correo Electrónico",
+        "type": "email",
+        "required": true,
+        "placeholder": "usuario@ejemplo.com",
+        "validations": {
+          "format": "email"
+        },
+        "description": "Su correo electrónico"
+      },
+      {
+        "key": "ciudad",
+        "label": "Ciudad",
+        "type": "select",
+        "required": true,
+        "options": [
+          {
+            "value": "bogota",
+            "label": "Bogotá D.C."
+          },
+          {
+            "value": "medellin",
+            "label": "Medellín"
+          },
+          {
+            "value": "cali",
+            "label": "Cali"
+          },
+          {
+            "value": "barranquilla",
+            "label": "Barranquilla"
+          },
+          {
+            "value": "cartagena",
+            "label": "Cartagena"
+          },
+          {
+            "value": "bucaramanga",
+            "label": "Bucaramanga"
+          }
+        ],
+        "description": "Seleccione su ciudad"
+      },
+      {
+        "key": "localidad",
+        "label": "Localidad/Comuna",
+        "type": "select",
+        "required": true,
+        "options": [],
+        "visible": {
+          "model": "ciudad",
+          "value": "",
+          "condition": "not_equal"
+        },
+        "description": "Seleccione su localidad o comuna",
+        "dynamic_options": true,
+        "api_endpoint": "/api/localities/"
+      },
+      {
+        "key": "direccion",
+        "label": "Dirección",
+        "type": "textarea",
+        "required": true,
+        "placeholder": "Ingrese su dirección completa",
+        "validations": {
+          "min_length": 10,
+          "max_length": 200
+        },
+        "description": "Su dirección completa"
+      },
+      {
+        "key": "telefono",
+        "label": "Teléfono",
+        "type": "tel",
+        "required": true,
+        "placeholder": "+57 300 123 4567",
+        "validations": {
+          "pattern": "^\\+?[1-9]\\d{1,14}$"
+        },
+        "description": "Su número de teléfono"
+      },
+      {
+        "key": "acepta_terminos",
+        "label": "Acepto los términos y condiciones",
+        "type": "checkbox",
+        "required": true,
+        "validations": {
+          "required": true
+        },
+        "description": "Debe aceptar los términos para continuar"
+      }
+    ]
+  },
+  "mejoras_implementadas": {
+    "descripcion": "Este formulario implementa las mejoras solicitadas para manejar campos relacionados de manera eficiente",
+    "caracteristicas": [
+      "Campo único 'localidad' en lugar de campos separados por ciudad",
+      "Carga dinámica de opciones desde API endpoint (/api/localities/{city})",
+      "Solo se guardan los datos relevantes (sin campos vacíos)",
+      "Mejor experiencia de usuario con carga dinámica",
+      "Filtrado automático de campos vacíos antes del envío"
+    ],
+    "comportamiento": {
+      "seleccion_ciudad": "Cuando el usuario selecciona una ciudad, el campo 'localidad' se hace visible",
+      "carga_dinamica": "Las opciones del campo 'localidad' se cargan automáticamente desde la API",
+      "envio_formulario": "Solo se envían los campos con valores, evitando datos innecesarios",
+      "resultado_esperado": {
+        "ciudad": "Bogotá",
+        "direccion": "Calle 100 #25-30",
+        "localidad": "Usaquén"
+      }
+    },
+    "api_endpoints": {
+      "/api/localities/bogota": "Retorna las 20 localidades de Bogotá",
+      "/api/localities/medellin": "Retorna las 16 comunas de Medellín",
+      "/api/localities/cali": "Retorna las 22 comunas de Cali",
+      "/api/localities/barranquilla": "Retorna las 5 localidades de Barranquilla",
+      "/api/localities/cartagena": "Retorna las 3 localidades de Cartagena",
+      "/api/localities/bucaramanga": "Retorna las 17 comunas de Bucaramanga"
+    }
+  }
+}

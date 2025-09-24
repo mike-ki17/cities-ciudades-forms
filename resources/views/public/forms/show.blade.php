@@ -177,13 +177,19 @@
                     <div class="form-group">
                         <label for="phone" class="form-label">
                             Teléfono
+                            <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" 
+                        <input type="tel" 
                                id="phone" 
                                name="phone" 
                                value="{{ old('phone') }}"
-                               placeholder="+1 (555) 123-4567"
+                               placeholder="1234567890"
+                               pattern="[0-9]{7,12}"
+                               minlength="7"
+                               maxlength="12"
+                               required
                                class="form-input @error('phone') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                        <p class="mt-1 text-sm text-gray-500">Ingresa entre 7 y 12 números</p>
                         @error('phone')
                             <div class="mt-1 flex items-center">
                                 <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -207,10 +213,10 @@
                             <option value="">Selecciona un tipo</option>
                             <option value="CC" {{ old('document_type') == 'CC' ? 'selected' : '' }}>Cédula de Ciudadanía</option>
                             <option value="CE" {{ old('document_type') == 'CE' ? 'selected' : '' }}>Cédula de Extranjería</option>
-                            <option value="DNI" {{ old('document_type') == 'DNI' ? 'selected' : '' }}>DNI</option>
+                            {{-- <option value="DNI" {{ old('document_type') == 'DNI' ? 'selected' : '' }}>DNI</option> --}}
                             <option value="PASAPORTE" {{ old('document_type') == 'PASAPORTE' ? 'selected' : '' }}>Pasaporte</option>
                             <option value="NIT" {{ old('document_type') == 'NIT' ? 'selected' : '' }}>NIT</option>
-                            <option value="CEDULA" {{ old('document_type') == 'CEDULA' ? 'selected' : '' }}>Cédula</option>
+                            {{-- <option value="CEDULA" {{ old('document_type') == 'CEDULA' ? 'selected' : '' }}>Cédula</option> --}}
                             <option value="OTRO" {{ old('document_type') == 'OTRO' ? 'selected' : '' }}>Otro</option>
                         </select>
                         @error('document_type')
@@ -250,12 +256,16 @@
                     <div class="form-group">
                         <label for="birth_date" class="form-label">
                             Fecha de nacimiento
+                            <span class="text-red-500">*</span>
                         </label>
                         <input type="date" 
                                id="birth_date" 
                                name="birth_date" 
                                value="{{ old('birth_date') }}"
+                               max="{{ now()->subYears(18)->format('Y-m-d') }}"
+                               required
                                class="form-input @error('birth_date') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                        <p class="mt-1 text-sm text-gray-500">Debes ser mayor de edad (18 años o más)</p>
                         @error('birth_date')
                             <div class="mt-1 flex items-center">
                                 <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -356,23 +366,32 @@
                                 <select id="{{ $field['key'] }}" 
                                         name="{{ $field['key'] }}" 
                                         class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
-                                        {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                        {{ ($field['required'] ?? false) ? 'required' : '' }}
+                                        @if(isset($field['dynamic_options']) && $field['dynamic_options'])
+                                            data-dynamic-options="true"
+                                            data-api-endpoint="{{ $field['api_endpoint'] ?? '' }}"
+                                        @endif>
                                     <option value="">Selecciona una opción</option>
-                                    @foreach($field['options'] ?? [] as $option)
-                                        @if(is_array($option))
-                                            {{-- Formato: [{"value": "valor", "label": "etiqueta"}] --}}
-                                            <option value="{{ $option['value'] }}" 
-                                                    {{ old($field['key'], $field['default_value'] ?? '') == $option['value'] ? 'selected' : '' }}>
-                                                {{ $option['label'] }}
-                                            </option>
-                                        @else
-                                            {{-- Formato: ["valor1", "valor2"] --}}
-                                            <option value="{{ $option }}" 
-                                                    {{ old($field['key'], $field['default_value'] ?? '') == $option ? 'selected' : '' }}>
-                                                {{ $option }}
-                                            </option>
-                                        @endif
-                                    @endforeach
+                                    @if(isset($field['dynamic_options']) && $field['dynamic_options'])
+                                        {{-- Las opciones se cargarán dinámicamente via JavaScript --}}
+                                        <option value="" disabled>Cargando opciones...</option>
+                                    @else
+                                        @foreach($field['options'] ?? [] as $option)
+                                            @if(is_array($option))
+                                                {{-- Formato: [{"value": "valor", "label": "etiqueta"}] --}}
+                                                <option value="{{ $option['value'] }}" 
+                                                        {{ old($field['key'], $field['default_value'] ?? '') == $option['value'] ? 'selected' : '' }}>
+                                                    {{ $option['label'] }}
+                                                </option>
+                                            @else
+                                                {{-- Formato: ["valor1", "valor2"] --}}
+                                                <option value="{{ $option }}" 
+                                                        {{ old($field['key'], $field['default_value'] ?? '') == $option ? 'selected' : '' }}>
+                                                    {{ $option }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </select>
                                 @break
 
@@ -561,6 +580,68 @@ document.addEventListener('DOMContentLoaded', function() {
     const fieldsWithMaxElements = document.querySelectorAll('[data-max-elements]');
     fieldsWithMaxElements.forEach(limitCharacters);
     
+    // Validaciones específicas para campos fijos del participante
+    function setupParticipantFieldValidations() {
+        // Validación del campo nombre
+        const nameField = document.getElementById('name');
+        if (nameField) {
+            nameField.addEventListener('input', function() {
+                const value = this.value.trim();
+                const isValid = value.length >= 2 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value);
+                
+                if (value && !isValid) {
+                    this.setCustomValidity('El nombre debe tener al menos 2 letras y solo puede contener letras y espacios.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        }
+        
+        // Validación del campo teléfono
+        const phoneField = document.getElementById('phone');
+        if (phoneField) {
+            // Solo permitir números
+            phoneField.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                const value = this.value;
+                const isValid = value.length >= 7 && value.length <= 12;
+                
+                if (value && !isValid) {
+                    this.setCustomValidity('El teléfono debe contener entre 7 y 12 números.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+            
+            // Prevenir entrada de caracteres no numéricos
+            phoneField.addEventListener('keypress', function(e) {
+                if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
+                }
+            });
+        }
+        
+        // Validación del campo fecha de nacimiento
+        const birthDateField = document.getElementById('birth_date');
+        if (birthDateField) {
+            birthDateField.addEventListener('change', function() {
+                const selectedDate = new Date(this.value);
+                const today = new Date();
+                const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                
+                if (this.value && selectedDate > minDate) {
+                    this.setCustomValidity('Debes ser mayor de edad (18 años o más) para participar.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        }
+    }
+    
+    // Inicializar validaciones de campos del participante
+    setupParticipantFieldValidations();
+    
     // Para campos de tipo number, también limitar en keydown
     const numberFields = document.querySelectorAll('input[type="number"][data-max-elements]');
     numberFields.forEach(function(field) {
@@ -637,6 +718,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         input.setAttribute('required', 'required');
                     }
                 });
+                
+                // Cargar opciones dinámicas si es necesario
+                loadDynamicOptions(field, referenceField);
             } else {
                 field.style.display = 'none';
                 // Limpiar valores de campos ocultos
@@ -652,6 +736,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         });
+    }
+    
+    // Función para cargar opciones dinámicas
+    async function loadDynamicOptions(field, referenceField) {
+        const dynamicSelect = field.querySelector('[data-dynamic-options="true"]');
+        if (!dynamicSelect) return;
+        
+        const apiEndpoint = dynamicSelect.getAttribute('data-api-endpoint');
+        const cityValue = referenceField.value;
+        
+        if (!apiEndpoint || !cityValue) return;
+        
+        try {
+            // Mostrar indicador de carga
+            dynamicSelect.innerHTML = '<option value="">Cargando opciones...</option>';
+            dynamicSelect.disabled = true;
+            
+            const response = await fetch(`${apiEndpoint}${cityValue}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                credentials: 'same-origin'
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.success && data.localities) {
+                // Limpiar opciones existentes
+                dynamicSelect.innerHTML = '<option value="">Selecciona una opción</option>';
+                
+                // Agregar nuevas opciones
+                data.localities.forEach(function(locality) {
+                    const option = document.createElement('option');
+                    option.value = locality.value;
+                    option.textContent = locality.label;
+                    dynamicSelect.appendChild(option);
+                });
+                
+                dynamicSelect.disabled = false;
+                
+                console.log(`Opciones cargadas para ${cityValue}:`, data.localities.length);
+            } else {
+                throw new Error('Respuesta del servidor no válida');
+            }
+            
+        } catch (error) {
+            console.error('Error al cargar opciones dinámicas:', error);
+            dynamicSelect.innerHTML = '<option value="">Error al cargar opciones</option>';
+            dynamicSelect.disabled = true;
+        }
     }
     
     // Aplicar lógica condicional a todos los campos de referencia
@@ -684,6 +826,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     input.removeAttribute('required');
                 });
             });
+            
+            // Filtrar campos vacíos antes del envío
+            filterEmptyFields();
+        });
+    }
+    
+    // Función para filtrar campos vacíos antes del envío
+    function filterEmptyFields() {
+        const allInputs = document.querySelectorAll('input, select, textarea');
+        
+        allInputs.forEach(function(input) {
+            // Si el campo está oculto o vacío, deshabilitarlo para que no se envíe
+            const fieldContainer = input.closest('[data-conditional-field="true"]');
+            const isHidden = fieldContainer && fieldContainer.style.display === 'none';
+            const isEmpty = !input.value || input.value.trim() === '';
+            
+            if (isHidden || isEmpty) {
+                input.disabled = true;
+            } else {
+                input.disabled = false;
+            }
         });
     }
 });

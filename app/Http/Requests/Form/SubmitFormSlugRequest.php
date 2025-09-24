@@ -28,12 +28,12 @@ class SubmitFormSlugRequest extends FormRequest
 
         // Fixed participant fields validation rules
         $participantRules = [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'min:2', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'email' => ['required', 'email', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['required', 'string', 'regex:/^[0-9]{7,12}$/'],
             'document_type' => ['required', 'string', 'max:50'], // Allow any document type up to 50 characters
             'document_number' => ['required', 'string', 'max:50'],
-            'birth_date' => ['nullable', 'date', 'before:today'],
+            'birth_date' => ['required', 'date', 'before:today', 'before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
         ];
 
         // Get dynamic form fields validation rules
@@ -64,6 +64,27 @@ class SubmitFormSlugRequest extends FormRequest
             'max' => 'El campo :attribute no puede tener más de :max caracteres.',
             'regex' => 'El formato del campo :attribute no es válido.',
             'in' => 'El valor seleccionado para :attribute no es válido.',
+            'before' => 'El campo :attribute debe ser una fecha anterior a hoy.',
+            'before_or_equal' => 'El campo :attribute debe ser una fecha que indique que eres mayor de edad (18 años o más).',
+            'name.min' => 'El nombre debe tener al menos 2 letras.',
+            'name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'phone.regex' => 'El teléfono debe contener entre 7 y 12 números.',
+            'birth_date.before_or_equal' => 'Debes ser mayor de edad (18 años o más) para participar.',
+        ];
+    }
+
+    /**
+     * Get custom attribute names for validator errors.
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => 'nombre completo',
+            'email' => 'correo electrónico',
+            'phone' => 'teléfono',
+            'document_type' => 'tipo de documento',
+            'document_number' => 'número de documento',
+            'birth_date' => 'fecha de nacimiento',
         ];
     }
 

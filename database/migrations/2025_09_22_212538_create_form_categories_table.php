@@ -13,15 +13,7 @@ return new class extends Migration
     {
         Schema::create('form_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
-            // Indexes for better performance
-            $table->index(['is_active']);
-            $table->index(['code']);
         });
     }
 

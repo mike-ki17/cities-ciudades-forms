@@ -88,6 +88,73 @@
 }</code></pre>
                         </div>
 
+                        <!-- Campo Select de Ciudad -->
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="text-sm font-medium admin-text mb-2">Campo Select de Ciudad</h4>
+                            <pre class="text-xs admin-text-secondary overflow-x-auto"><code>{
+  "key": "ciudad",
+  "label": "Ciudad",
+  "type": "select",
+  "required": true,
+  "order": 3,
+  "description": "Seleccione su ciudad",
+  "options": [
+    {"value": "bogota", "label": "Bogotá D.C.", "description": null},
+    {"value": "medellin", "label": "Medellín", "description": null},
+    {"value": "cali", "label": "Cali", "description": null},
+    {"value": "barranquilla", "label": "Barranquilla", "description": null},
+    {"value": "cartagena", "label": "Cartagena", "description": null},
+    {"value": "bucaramanga", "label": "Bucaramanga", "description": null}
+  ]
+}</code></pre>
+                        </div>
+
+                        <!-- Campo Dinámico Ciudad-Localidad -->
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="text-sm font-medium admin-text mb-2">Campo Dinámico Ciudad-Localidad</h4>
+                            <pre class="text-xs admin-text-secondary overflow-x-auto"><code>{
+  "key": "ubicacion",
+  "label": "Ubicación",
+  "type": "dynamic_select",
+  "required": true,
+  "order": 3,
+  "description": "Seleccione su ciudad y localidad",
+  "dynamic_options": {
+    "api_endpoint": "/api/localities/{city}",
+    "parent_field": "ciudad",
+    "child_field": "localidad"
+  },
+  "options": [
+    {"value": "bogota", "label": "Bogotá D.C.", "description": null},
+    {"value": "medellin", "label": "Medellín", "description": null},
+    {"value": "cali", "label": "Cali", "description": null}
+  ]
+}</code></pre>
+                        </div>
+
+                        <!-- Campo con Visibilidad Condicional -->
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="text-sm font-medium admin-text mb-2">Campo con Visibilidad Condicional</h4>
+                            <pre class="text-xs admin-text-secondary overflow-x-auto"><code>{
+  "key": "localidad_bogota",
+  "label": "Localidad",
+  "type": "select",
+  "required": true,
+  "order": 4,
+  "description": "Seleccione su localidad en Bogotá",
+  "visible": {
+    "model": "ciudad",
+    "value": "bogota",
+    "condition": "equal"
+  },
+  "options": [
+    {"value": "usaquen", "label": "Usaquén", "description": null},
+    {"value": "chapinero", "label": "Chapinero", "description": null},
+    {"value": "santa_fe", "label": "Santa Fe", "description": null}
+  ]
+}</code></pre>
+                        </div>
+
                         <!-- Campo con Validaciones -->
                         <div class="bg-gray-800 p-4 rounded-lg">
                             <h4 class="text-sm font-medium admin-text mb-2">Campo con Validaciones</h4>
@@ -101,6 +168,31 @@
     "max_value": 100
   }
 }</code></pre>
+                        </div>
+
+                        <!-- Ejemplos Rápidos -->
+                        <div class="bg-green-900/20 border border-green-500/30 p-4 rounded-lg">
+                            <h4 class="text-sm font-medium text-green-300 mb-2">🚀 Ejemplos Rápidos</h4>
+                            <p class="text-xs text-green-200 mb-3">
+                                Haz clic en cualquiera de estos ejemplos para cargarlo automáticamente:
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <button type="button" onclick="loadExample('ciudad_localidad_dinamico')" class="text-xs bg-blue-700 hover:bg-blue-600 text-white px-3 py-2 rounded font-bold">
+                                    🚀 Ciudad + Localidad Dinámico
+                                </button>
+                                <button type="button" onclick="loadExample('ciudad')" class="text-xs bg-green-700 hover:bg-green-600 text-white px-3 py-2 rounded">
+                                    Campo Ciudad
+                                </button>
+                                <button type="button" onclick="loadExample('localidad_bogota')" class="text-xs bg-green-700 hover:bg-green-600 text-white px-3 py-2 rounded">
+                                    Localidad Bogotá
+                                </button>
+                                <button type="button" onclick="loadExample('localidad_medellin')" class="text-xs bg-green-700 hover:bg-green-600 text-white px-3 py-2 rounded">
+                                    Localidad Medellín
+                                </button>
+                                <button type="button" onclick="loadExample('localidad_cali')" class="text-xs bg-green-700 hover:bg-green-600 text-white px-3 py-2 rounded">
+                                    Localidad Cali
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Botón para cargar CSV -->
@@ -182,5 +274,155 @@
                 }
             });
         });
+
+        // Load specific examples
+        function loadExample(type) {
+            const examples = {
+                'ciudad_localidad_dinamico': {
+                    "key": "ubicacion",
+                    "label": "Ubicación",
+                    "type": "dynamic_select",
+                    "required": true,
+                    "order": 3,
+                    "description": "Seleccione su ciudad y localidad",
+                    "dynamic_options": {
+                        "api_endpoint": "/api/localities/{city}",
+                        "parent_field": "ciudad",
+                        "child_field": "localidad"
+                    },
+                    "options": [
+                        {"value": "bogota", "label": "Bogotá D.C.", "description": null},
+                        {"value": "medellin", "label": "Medellín", "description": null},
+                        {"value": "cali", "label": "Cali", "description": null},
+                        {"value": "barranquilla", "label": "Barranquilla", "description": null},
+                        {"value": "cartagena", "label": "Cartagena", "description": null},
+                        {"value": "bucaramanga", "label": "Bucaramanga", "description": null}
+                    ]
+                },
+                'ciudad': {
+                    "key": "ciudad",
+                    "label": "Ciudad",
+                    "type": "select",
+                    "required": true,
+                    "order": 3,
+                    "description": "Seleccione su ciudad",
+                    "options": [
+                        {"value": "bogota", "label": "Bogotá D.C.", "description": null},
+                        {"value": "medellin", "label": "Medellín", "description": null},
+                        {"value": "cali", "label": "Cali", "description": null},
+                        {"value": "barranquilla", "label": "Barranquilla", "description": null},
+                        {"value": "cartagena", "label": "Cartagena", "description": null},
+                        {"value": "bucaramanga", "label": "Bucaramanga", "description": null}
+                    ]
+                },
+                'localidad_bogota': {
+                    "key": "localidad_bogota",
+                    "label": "Localidad",
+                    "type": "select",
+                    "required": true,
+                    "order": 4,
+                    "description": "Seleccione su localidad en Bogotá",
+                    "visible": {
+                        "model": "ciudad",
+                        "value": "bogota",
+                        "condition": "equal"
+                    },
+                    "options": [
+                        {"value": "usaquen", "label": "Usaquén", "description": null},
+                        {"value": "chapinero", "label": "Chapinero", "description": null},
+                        {"value": "santa_fe", "label": "Santa Fe", "description": null},
+                        {"value": "san_cristobal", "label": "San Cristóbal", "description": null},
+                        {"value": "usme", "label": "Usme", "description": null},
+                        {"value": "tunjuelito", "label": "Tunjuelito", "description": null},
+                        {"value": "bosa", "label": "Bosa", "description": null},
+                        {"value": "kennedy", "label": "Kennedy", "description": null},
+                        {"value": "fontibon", "label": "Fontibón", "description": null},
+                        {"value": "engativa", "label": "Engativá", "description": null},
+                        {"value": "suba", "label": "Suba", "description": null},
+                        {"value": "barrios_unidos", "label": "Barrios Unidos", "description": null},
+                        {"value": "teusaquillo", "label": "Teusaquillo", "description": null},
+                        {"value": "martires", "label": "Los Mártires", "description": null},
+                        {"value": "antonio_narino", "label": "Antonio Nariño", "description": null},
+                        {"value": "puente_aranda", "label": "Puente Aranda", "description": null},
+                        {"value": "candelaria", "label": "La Candelaria", "description": null},
+                        {"value": "rafael_uribe", "label": "Rafael Uribe Uribe", "description": null},
+                        {"value": "ciudad_bolivar", "label": "Ciudad Bolívar", "description": null},
+                        {"value": "sumapaz", "label": "Sumapaz", "description": null}
+                    ]
+                },
+                'localidad_medellin': {
+                    "key": "localidad_medellin",
+                    "label": "Comuna",
+                    "type": "select",
+                    "required": true,
+                    "order": 5,
+                    "description": "Seleccione su comuna en Medellín",
+                    "visible": {
+                        "model": "ciudad",
+                        "value": "medellin",
+                        "condition": "equal"
+                    },
+                    "options": [
+                        {"value": "popular", "label": "Popular", "description": null},
+                        {"value": "santa_cruz", "label": "Santa Cruz", "description": null},
+                        {"value": "manrique", "label": "Manrique", "description": null},
+                        {"value": "aranjuez", "label": "Aranjuez", "description": null},
+                        {"value": "castilla", "label": "Castilla", "description": null},
+                        {"value": "doce_octubre", "label": "Doce de Octubre", "description": null},
+                        {"value": "robledo", "label": "Robledo", "description": null},
+                        {"value": "villa_hermosa", "label": "Villa Hermosa", "description": null},
+                        {"value": "buenavista", "label": "Buenavista", "description": null},
+                        {"value": "la_candelaria", "label": "La Candelaria", "description": null},
+                        {"value": "laureles", "label": "Laureles-Estadio", "description": null},
+                        {"value": "la_america", "label": "La América", "description": null},
+                        {"value": "san_javier", "label": "San Javier", "description": null},
+                        {"value": "el_poblado", "label": "El Poblado", "description": null},
+                        {"value": "guayabal", "label": "Guayabal", "description": null},
+                        {"value": "belen", "label": "Belén", "description": null}
+                    ]
+                },
+                'localidad_cali': {
+                    "key": "localidad_cali",
+                    "label": "Comuna",
+                    "type": "select",
+                    "required": true,
+                    "order": 6,
+                    "description": "Seleccione su comuna en Cali",
+                    "visible": {
+                        "model": "ciudad",
+                        "value": "cali",
+                        "condition": "equal"
+                    },
+                    "options": [
+                        {"value": "comuna_1", "label": "Comuna 1 - Popular", "description": null},
+                        {"value": "comuna_2", "label": "Comuna 2 - Santa Rita", "description": null},
+                        {"value": "comuna_3", "label": "Comuna 3 - Sucre", "description": null},
+                        {"value": "comuna_4", "label": "Comuna 4 - Aranjuez", "description": null},
+                        {"value": "comuna_5", "label": "Comuna 5 - Castilla", "description": null},
+                        {"value": "comuna_6", "label": "Comuna 6 - Doce de Octubre", "description": null},
+                        {"value": "comuna_7", "label": "Comuna 7 - Robledo", "description": null},
+                        {"value": "comuna_8", "label": "Comuna 8 - Villa Hermosa", "description": null},
+                        {"value": "comuna_9", "label": "Comuna 9 - Buenos Aires", "description": null},
+                        {"value": "comuna_10", "label": "Comuna 10 - La Candelaria", "description": null},
+                        {"value": "comuna_11", "label": "Comuna 11 - Laureles", "description": null},
+                        {"value": "comuna_12", "label": "Comuna 12 - La América", "description": null},
+                        {"value": "comuna_13", "label": "Comuna 13 - San Javier", "description": null},
+                        {"value": "comuna_14", "label": "Comuna 14 - El Poblado", "description": null},
+                        {"value": "comuna_15", "label": "Comuna 15 - Guayabal", "description": null},
+                        {"value": "comuna_16", "label": "Comuna 16 - Belén", "description": null},
+                        {"value": "comuna_17", "label": "Comuna 17 - Villa Hermosa", "description": null},
+                        {"value": "comuna_18", "label": "Comuna 18 - Buenos Aires", "description": null},
+                        {"value": "comuna_19", "label": "Comuna 19 - La Candelaria", "description": null},
+                        {"value": "comuna_20", "label": "Comuna 20 - Laureles", "description": null},
+                        {"value": "comuna_21", "label": "Comuna 21 - La América", "description": null},
+                        {"value": "comuna_22", "label": "Comuna 22 - San Javier", "description": null}
+                    ]
+                }
+            };
+
+            if (examples[type]) {
+                document.getElementById('field_json').value = JSON.stringify(examples[type], null, 2);
+            }
+        }
     </script>
 @endsection

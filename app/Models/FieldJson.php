@@ -26,6 +26,7 @@ class FieldJson extends Model
         'placeholder',
         'validations',
         'visible',
+        'dynamic_options',
         'default_value',
         'description',
         'is_active',
@@ -39,6 +40,8 @@ class FieldJson extends Model
         return [
             'required' => 'boolean',
             'validations' => 'array',
+            'visible' => 'array',
+            'dynamic_options' => 'array',
             'is_active' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',

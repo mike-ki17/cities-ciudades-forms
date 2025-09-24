@@ -66,6 +66,7 @@ class FieldJsonController extends Controller
             'placeholder' => $fieldData['placeholder'] ?? null,
             'validations' => $fieldData['validations'] ?? [],
             'visible' => $fieldData['visible'] ?? null,
+            'dynamic_options' => $fieldData['dynamic_options'] ?? null,
             'default_value' => $fieldData['default_value'] ?? null,
             'description' => $fieldData['description'] ?? null,
             'is_active' => true,
@@ -137,6 +138,7 @@ class FieldJsonController extends Controller
             'placeholder' => $fieldData['placeholder'] ?? null,
             'validations' => $fieldData['validations'] ?? [],
             'visible' => $fieldData['visible'] ?? null,
+            'dynamic_options' => $fieldData['dynamic_options'] ?? null,
             'default_value' => $fieldData['default_value'] ?? null,
             'description' => $fieldData['description'] ?? null,
         ]);

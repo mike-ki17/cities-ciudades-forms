@@ -82,7 +82,10 @@ class FormSlugSubmitController extends Controller
             // Only include fields that are in form JSON AND are not fixed participant fields
             // Fixed participant fields take priority and are never stored in form_submissions
             if (in_array($key, $formFieldKeys) && !in_array($key, $fixedParticipantFields)) {
-                $dynamicFields[$key] = $value;
+                // Filter out empty values to avoid storing unnecessary data
+                if (!empty($value) || $value === '0' || $value === 0) {
+                    $dynamicFields[$key] = $value;
+                }
             }
         }
         

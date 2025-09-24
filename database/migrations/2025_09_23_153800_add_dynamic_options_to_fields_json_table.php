@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendance', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('fields_json', function (Blueprint $table) {
+            $table->json('dynamic_options')->nullable()->after('visible');
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendance');
+        Schema::table('fields_json', function (Blueprint $table) {
+            $table->dropColumn('dynamic_options');
+        });
     }
 };
