@@ -1,0 +1,424 @@
+{
+    "fields": [
+        {
+            "key": "genero",
+            "label": "Géneros",
+            "type": "select",
+            "required": false,
+            "order": 1,
+            "options": [
+                {
+                    "value": "masculino",
+                    "label": "Masculino",
+                    "description": null
+                },
+                {
+                    "value": "femenino",
+                    "label": "Femenino",
+                    "description": null
+                },
+                {
+                    "value": "no_binario",
+                    "label": "No binario",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                },
+                {
+                    "value": "prefiero_no_decir",
+                    "label": "Prefiero no decir",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "correo_electronico",
+            "label": "Correo Electrónico",
+            "type": "text",
+            "required": false,
+            "order": 2
+        },
+        {
+            "key": "telefono_celular",
+            "label": "Teléfono Celular",
+            "type": "text",
+            "required": false,
+            "order": 3
+        },
+        {
+            "key": "niveles_educativos",
+            "label": "Niveles Educativos",
+            "type": "select",
+            "required": false,
+            "order": 4,
+            "options": [
+                {
+                    "value": "primaria",
+                    "label": "Primaria",
+                    "description": null
+                },
+                {
+                    "value": "secundaria",
+                    "label": "Secundaria",
+                    "description": null
+                },
+                {
+                    "value": "tecnico",
+                    "label": "Técnico",
+                    "description": null
+                },
+                {
+                    "value": "tecnologo",
+                    "label": "Tecnólogo",
+                    "description": null
+                },
+                {
+                    "value": "pregrado",
+                    "label": "Pregrado",
+                    "description": null
+                },
+                {
+                    "value": "especializacion",
+                    "label": "Especialización",
+                    "description": null
+                },
+                {
+                    "value": "maestria",
+                    "label": "Maestría",
+                    "description": null
+                },
+                {
+                    "value": "doctorado",
+                    "label": "Doctorado",
+                    "description": null
+                },
+                {
+                    "value": "ninguno",
+                    "label": "Ninguno",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "caracterizaciones",
+            "label": "Caracterizaciones",
+            "type": "select",
+            "required": false,
+            "order": 5,
+            "options": [
+                {
+                    "value": "estudiante",
+                    "label": "Estudiante",
+                    "description": null
+                },
+                {
+                    "value": "profesional",
+                    "label": "Profesional",
+                    "description": null
+                },
+                {
+                    "value": "empresario",
+                    "label": "Empresario",
+                    "description": null
+                },
+                {
+                    "value": "artista",
+                    "label": "Artista",
+                    "description": null
+                },
+                {
+                    "value": "comunicador",
+                    "label": "Comunicador",
+                    "description": null
+                },
+                {
+                    "value": "audiovisual",
+                    "label": "Audiovisual",
+                    "description": null
+                },
+                {
+                    "value": "docente",
+                    "label": "Docente",
+                    "description": null
+                },
+                {
+                    "value": "investigador",
+                    "label": "Investigador",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "actualmente_empleado",
+            "label": "Actualmente estoy empleado/a",
+            "type": "text",
+            "required": false,
+            "order": 6
+        },
+        {
+            "key": "direccion_residencia",
+            "label": "Dirección de Residencia",
+            "type": "text",
+            "required": false,
+            "order": 7
+        },
+        {
+            "key": "ciudad",
+            "label": "Ciudad",
+            "type": "select",
+            "required": false,
+            "order": 8,
+            "options": [
+                {
+                    "value": "bogota",
+                    "label": "Bogotá D.C.",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "localidad_bogota",
+            "label": "Localidad",
+            "type": "select",
+            "required": false,
+            "order": 9,
+            "description": "Seleccione su localidad en Bogotá",
+            "visible": {
+                "model": "ciudad",
+                "value": "bogota",
+                "condition": "equal"
+            },
+            "options": [
+                {
+                    "value": "usaquen",
+                    "label": "Usaquén",
+                    "description": null
+                },
+                {
+                    "value": "chapinero",
+                    "label": "Chapinero",
+                    "description": null
+                },
+                {
+                    "value": "santa_fe",
+                    "label": "Santa Fe",
+                    "description": null
+                },
+                {
+                    "value": "san_cristobal",
+                    "label": "San Cristóbal",
+                    "description": null
+                },
+                {
+                    "value": "usme",
+                    "label": "Usme",
+                    "description": null
+                },
+                {
+                    "value": "tunjuelito",
+                    "label": "Tunjuelito",
+                    "description": null
+                },
+                {
+                    "value": "bosa",
+                    "label": "Bosa",
+                    "description": null
+                },
+                {
+                    "value": "kennedy",
+                    "label": "Kennedy",
+                    "description": null
+                },
+                {
+                    "value": "fontibon",
+                    "label": "Fontibón",
+                    "description": null
+                },
+                {
+                    "value": "engativa",
+                    "label": "Engativá",
+                    "description": null
+                },
+                {
+                    "value": "suba",
+                    "label": "Suba",
+                    "description": null
+                },
+                {
+                    "value": "barrios_unidos",
+                    "label": "Barrios Unidos",
+                    "description": null
+                },
+                {
+                    "value": "teusaquillo",
+                    "label": "Teusaquillo",
+                    "description": null
+                },
+                {
+                    "value": "martires",
+                    "label": "Los Mártires",
+                    "description": null
+                },
+                {
+                    "value": "antonio_narino",
+                    "label": "Antonio Nariño",
+                    "description": null
+                },
+                {
+                    "value": "puente_aranda",
+                    "label": "Puente Aranda",
+                    "description": null
+                },
+                {
+                    "value": "candelaria",
+                    "label": "La Candelaria",
+                    "description": null
+                },
+                {
+                    "value": "rafael_uribe",
+                    "label": "Rafael Uribe Uribe",
+                    "description": null
+                },
+                {
+                    "value": "ciudad_bolivar",
+                    "label": "Ciudad Bolívar",
+                    "description": null
+                },
+                {
+                    "value": "sumapaz",
+                    "label": "Sumapaz",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "barrio_bogota",
+            "label": "Barrio",
+            "type": "text",
+            "required": false,
+            "order": 10,
+            "placeholder": "Ingrese su barrio",
+            "description": "Escriba el barrio correspondiente a la localidad seleccionada",
+            "visible": {
+                "model": "localidad_bogota",
+                "value": "",
+                "condition": "not_equal"
+            }
+        },
+        {
+            "key": "estratos_socioeconomicos",
+            "label": "Estratos Socioeconómicos",
+            "type": "select",
+            "required": false,
+            "order": 11,
+            "options": [
+                {
+                    "value": "1",
+                    "label": "Estrato 1",
+                    "description": null
+                },
+                {
+                    "value": "2",
+                    "label": "Estrato 2",
+                    "description": null
+                },
+                {
+                    "value": "3",
+                    "label": "Estrato 3",
+                    "description": null
+                },
+                {
+                    "value": "4",
+                    "label": "Estrato 4",
+                    "description": null
+                },
+                {
+                    "value": "5",
+                    "label": "Estrato 5",
+                    "description": null
+                },
+                {
+                    "value": "6",
+                    "label": "Estrato 6",
+                    "description": null
+                },
+                {
+                    "value": "no_aplica",
+                    "label": "No aplica",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "nombre_contacto_emergencia",
+            "label": "Nombre de Contacto de Emergencia",
+            "type": "text",
+            "required": false,
+            "order": 12
+        },
+        {
+            "key": "telefono_contacto_emergencia",
+            "label": "Teléfono de Contacto de Emergencia",
+            "type": "text",
+            "required": false,
+            "order": 13
+        },
+        {
+            "key": "fuentes_referencia",
+            "label": "Fuentes de Referencia",
+            "type": "select",
+            "required": false,
+            "order": 14,
+            "options": [
+                {
+                    "value": "redes_sociales",
+                    "label": "Redes Sociales",
+                    "description": null
+                },
+                {
+                    "value": "pagina_web",
+                    "label": "Página Web",
+                    "description": null
+                },
+                {
+                    "value": "amigos_familia",
+                    "label": "Amigos/Familia",
+                    "description": null
+                },
+                {
+                    "value": "medios_comunicacion",
+                    "label": "Medios de Comunicación",
+                    "description": null
+                },
+                {
+                    "value": "institucion_educativa",
+                    "label": "Institución Educativa",
+                    "description": null
+                },
+                {
+                    "value": "organizacion_comunitaria",
+                    "label": "Organización Comunitaria",
+                    "description": null
+                },
+                {
+                    "value": "evento_anterior",
+                    "label": "Evento Anterior",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                }
+            ]
+        }
+    ]
+}

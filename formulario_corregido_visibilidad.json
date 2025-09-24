@@ -1,0 +1,547 @@
+{
+    "fields": [
+        {
+            "key": "genero",
+            "label": "Géneros",
+            "type": "select",
+            "required": true,
+            "order": 1,
+            "options": [
+                {
+                    "value": "masculino",
+                    "label": "Masculino",
+                    "description": null
+                },
+                {
+                    "value": "femenino",
+                    "label": "Femenino",
+                    "description": null
+                },
+                {
+                    "value": "no_binario",
+                    "label": "No binario",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                },
+                {
+                    "value": "prefiero_no_decir",
+                    "label": "Prefiero no decir",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "telefono_celular",
+            "label": "Teléfono Celular",
+            "type": "number",
+            "required": true,
+            "order": 3,
+            "placeholder": "3001234567"
+        },
+        {
+            "key": "nivel_educativo",
+            "label": "Niveles Educativos",
+            "type": "select",
+            "required": true,
+            "order": 4,
+            "options": [
+                {
+                    "value": "primaria",
+                    "label": "Primaria",
+                    "description": null
+                },
+                {
+                    "value": "bachillerato",
+                    "label": "Bachillerato",
+                    "description": null
+                },
+                {
+                    "value": "tecnico",
+                    "label": "Técnico",
+                    "description": null
+                },
+                {
+                    "value": "tecnologo",
+                    "label": "Tecnólogo",
+                    "description": null
+                },
+                {
+                    "value": "universitario",
+                    "label": "Universitario",
+                    "description": null
+                },
+                {
+                    "value": "especializacion",
+                    "label": "Especialización",
+                    "description": null
+                },
+                {
+                    "value": "maestria",
+                    "label": "Maestría",
+                    "description": null
+                },
+                {
+                    "value": "doctorado",
+                    "label": "Doctorado",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "caracterizacion",
+            "label": "Caracterizaciones",
+            "type": "select",
+            "required": true,
+            "order": 5,
+            "options": [
+                {
+                    "value": "estudiante",
+                    "label": "Estudiante",
+                    "description": null
+                },
+                {
+                    "value": "profesional",
+                    "label": "Profesional",
+                    "description": null
+                },
+                {
+                    "value": "independiente",
+                    "label": "Independiente",
+                    "description": null
+                },
+                {
+                    "value": "empresario",
+                    "label": "Empresario",
+                    "description": null
+                },
+                {
+                    "value": "artista",
+                    "label": "Artista",
+                    "description": null
+                },
+                {
+                    "value": "comunicador",
+                    "label": "Comunicador",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "actualmente_empleado",
+            "label": "Actualmente estoy empleado/a",
+            "type": "checkbox",
+            "required": false,
+            "order": 6
+        },
+        {
+            "key": "direccion_residencia",
+            "label": "Dirección de Residencia",
+            "type": "text",
+            "required": true,
+            "order": 7,
+            "placeholder": "Calle 123 # 45-67"
+        },
+        {
+            "key": "ciudad",
+            "label": "Ciudad",
+            "type": "select",
+            "required": true,
+            "order": 8,
+            "description": "Seleccione su ciudad",
+            "options": [
+                {
+                    "value": "bogota",
+                    "label": "Bogotá D.C.",
+                    "description": null
+                },
+                {
+                    "value": "barranquilla",
+                    "label": "Barranquilla",
+                    "description": null
+                },
+                {
+                    "value": "medellin",
+                    "label": "Medellín",
+                    "description": null
+                },
+                {
+                    "value": "cali",
+                    "label": "Cali",
+                    "description": null
+                },
+                {
+                    "value": "cartagena",
+                    "label": "Cartagena",
+                    "description": null
+                },
+                {
+                    "value": "otra",
+                    "label": "Otra",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "localidad_bogota",
+            "label": "Localidad",
+            "type": "select",
+            "required": true,
+            "order": 9,
+            "description": "Seleccione su localidad en Bogotá",
+            "visible": {
+                "model": "ciudad",
+                "value": "bogota",
+                "condition": "equal"
+            },
+            "options": [
+                {
+                    "value": "usaquen",
+                    "label": "Usaquén",
+                    "description": null
+                },
+                {
+                    "value": "chapinero",
+                    "label": "Chapinero",
+                    "description": null
+                },
+                {
+                    "value": "santa_fe",
+                    "label": "Santa Fe",
+                    "description": null
+                },
+                {
+                    "value": "san_cristobal",
+                    "label": "San Cristóbal",
+                    "description": null
+                },
+                {
+                    "value": "usme",
+                    "label": "Usme",
+                    "description": null
+                },
+                {
+                    "value": "tunjuelito",
+                    "label": "Tunjuelito",
+                    "description": null
+                },
+                {
+                    "value": "bosa",
+                    "label": "Bosa",
+                    "description": null
+                },
+                {
+                    "value": "kennedy",
+                    "label": "Kennedy",
+                    "description": null
+                },
+                {
+                    "value": "fontibon",
+                    "label": "Fontibón",
+                    "description": null
+                },
+                {
+                    "value": "engativa",
+                    "label": "Engativá",
+                    "description": null
+                },
+                {
+                    "value": "suba",
+                    "label": "Suba",
+                    "description": null
+                },
+                {
+                    "value": "barrios_unidos",
+                    "label": "Barrios Unidos",
+                    "description": null
+                },
+                {
+                    "value": "teusaquillo",
+                    "label": "Teusaquillo",
+                    "description": null
+                },
+                {
+                    "value": "martires",
+                    "label": "Los Mártires",
+                    "description": null
+                },
+                {
+                    "value": "antonio_narino",
+                    "label": "Antonio Nariño",
+                    "description": null
+                },
+                {
+                    "value": "puente_aranda",
+                    "label": "Puente Aranda",
+                    "description": null
+                },
+                {
+                    "value": "candelaria",
+                    "label": "La Candelaria",
+                    "description": null
+                },
+                {
+                    "value": "rafael_uribe",
+                    "label": "Rafael Uribe Uribe",
+                    "description": null
+                },
+                {
+                    "value": "ciudad_bolivar",
+                    "label": "Ciudad Bolívar",
+                    "description": null
+                },
+                {
+                    "value": "sumapaz",
+                    "label": "Sumapaz",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "barrio",
+            "label": "Barrio",
+            "type": "text",
+            "required": true,
+            "order": 10,
+            "placeholder": "Nombre del barrio",
+            "description": "Ingrese el nombre de su barrio",
+            "visible": {
+                "model": "localidad_bogota",
+                "value": "",
+                "condition": "not_equal"
+            }
+        },
+        {
+            "key": "estrato_socioeconomico",
+            "label": "Estratos Socioeconómicos",
+            "type": "select",
+            "required": true,
+            "order": 11,
+            "options": [
+                {
+                    "value": "1",
+                    "label": "Estrato 1",
+                    "description": null
+                },
+                {
+                    "value": "2",
+                    "label": "Estrato 2",
+                    "description": null
+                },
+                {
+                    "value": "3",
+                    "label": "Estrato 3",
+                    "description": null
+                },
+                {
+                    "value": "4",
+                    "label": "Estrato 4",
+                    "description": null
+                },
+                {
+                    "value": "5",
+                    "label": "Estrato 5",
+                    "description": null
+                },
+                {
+                    "value": "6",
+                    "label": "Estrato 6",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "nombre_contacto_emergencia",
+            "label": "Nombre de Contacto de Emergencia",
+            "type": "text",
+            "required": true,
+            "order": 12,
+            "placeholder": "Nombre completo del contacto de emergencia"
+        },
+        {
+            "key": "telefono_contacto_emergencia",
+            "label": "Teléfono de Contacto de Emergencia",
+            "type": "number",
+            "required": true,
+            "order": 13,
+            "placeholder": "3001234567"
+        },
+        {
+            "key": "fuente_referencia",
+            "label": "Fuentes de Referencia",
+            "type": "select",
+            "required": true,
+            "order": 14,
+            "description": "¿Cómo se enteró del programa?",
+            "options": [
+                {
+                    "value": "redes_sociales",
+                    "label": "Redes sociales",
+                    "description": null
+                },
+                {
+                    "value": "pagina_web",
+                    "label": "Página web",
+                    "description": null
+                },
+                {
+                    "value": "recomendacion",
+                    "label": "Recomendación",
+                    "description": null
+                },
+                {
+                    "value": "medios_comunicacion",
+                    "label": "Medios de comunicación",
+                    "description": null
+                },
+                {
+                    "value": "institucion_educativa",
+                    "label": "Institución educativa",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "discapacidades",
+            "label": "¿Tiene alguna discapacidad?",
+            "type": "checkbox",
+            "required": false,
+            "order": 15,
+            "description": "Solo marque las opciones que correspondan a su situación. Si no presenta ninguna discapacidad, puede dejar todo sin marcar",
+            "options": [
+                {
+                    "value": "visual",
+                    "label": "Visual (baja visión o ceguera)",
+                    "description": null
+                },
+                {
+                    "value": "auditiva",
+                    "label": "Auditiva (dificultades para escuchar)",
+                    "description": null
+                },
+                {
+                    "value": "cognitiva",
+                    "label": "Cognitiva/Intelectual (limitaciones en el aprendizaje y desarrollo intelectual)",
+                    "description": null
+                },
+                {
+                    "value": "psicosocial",
+                    "label": "Psicosocial/Mental (trastornos mentales que afectan relaciones interpersonales)",
+                    "description": null
+                },
+                {
+                    "value": "multiple",
+                    "label": "Múltiple (dos o más tipos de discapacidad)",
+                    "description": null
+                },
+                {
+                    "value": "sordoceguera",
+                    "label": "Sordoceguera (combinación de discapacidad auditiva y visual)",
+                    "description": null
+                },
+                {
+                    "value": "fisica",
+                    "label": "Física (limitaciones para moverse, caminar o realizar actividades cotidianas)",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "informacion_poblacional",
+            "label": "Información Poblacional",
+            "type": "checkbox",
+            "required": false,
+            "order": 16,
+            "description": "Solo marque las opciones que correspondan a su situación. Si ninguna aplica, puede dejar todo sin marcar",
+            "options": [
+                {
+                    "value": "victima_conflicto",
+                    "label": "Víctima del conflicto armado",
+                    "description": null
+                },
+                {
+                    "value": "campesino",
+                    "label": "Población Campesina",
+                    "description": null
+                },
+                {
+                    "value": "afrodescendiente",
+                    "label": "Población afrodescendiente",
+                    "description": null
+                },
+                {
+                    "value": "indigena",
+                    "label": "Población indígena",
+                    "description": null
+                },
+                {
+                    "value": "jefe_hogar",
+                    "label": "Jefe de hogar",
+                    "description": null
+                },
+                {
+                    "value": "casado_union_libre",
+                    "label": "Casado/a o unión libre",
+                    "description": null
+                },
+                {
+                    "value": "lgbtiq",
+                    "label": "Población LGBTIQ+",
+                    "description": null
+                },
+                {
+                    "value": "migrante",
+                    "label": "Población migrante",
+                    "description": null
+                },
+                {
+                    "value": "pospenado",
+                    "label": "Pospenado",
+                    "description": null
+                },
+                {
+                    "value": "cuidador",
+                    "label": "Cuidador/a",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "acepta_politica_datos",
+            "label": "Acepto la política de tratamiento de datos personales",
+            "type": "checkbox",
+            "required": true,
+            "order": 17,
+            "description": "ACEPTACIÓN POLÍTICA DE TRATAMIENTO DE LA INFORMACIÓN – HABEAS DATA. Acepto y conozco que tengo derecho a conocer, consultar, actualizar, rectificar y/o suprimir la información, además de poder solicitar prueba de esta autorización, como titular de los datos suministrados..."
+        },
+        {
+            "key": "acepta_contrato_pedagogico",
+            "label": "Acepto los términos del contrato pedagógico",
+            "type": "checkbox",
+            "required": true,
+            "order": 18,
+            "description": "CONTRATO PEDAGÓGICO. En nombre propio y como participante de SMARTFILMS® BARRANQUILLA 2025, expresamente acepto los siguientes términos y compromisos..."
+        },
+        {
+            "key": "comentarios",
+            "label": "Comentarios Adicionales",
+            "type": "textarea",
+            "required": false,
+            "order": 19,
+            "placeholder": "Escribe aquí cualquier comentario adicional..."
+        }
+    ]
+}

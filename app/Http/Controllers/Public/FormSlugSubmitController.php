@@ -112,8 +112,8 @@ class FormSlugSubmitController extends Controller
             // Store participant ID in session for future form access
             $request->session()->put('participant_id', $participant->id);
 
-            return redirect()->route('public.forms.slug.show', ['slug' => $slug])
-                ->with('success', 'Formulario enviado exitosamente.');
+            // Redirect to success page after successful submission
+            return redirect()->route('public.forms.slug.show', ['slug' => $slug]);
                 
         } catch (ValidationException $e) {
             \Log::info('Validation exception caught:', [

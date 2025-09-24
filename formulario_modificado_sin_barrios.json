@@ -1,0 +1,243 @@
+{
+    "fields": [
+        {
+            "key": "seccion_informacion_personal",
+            "label": "Información Personal",
+            "type": "section",
+            "required": false,
+            "order": 1,
+            "description": "Complete la siguiente información personal para su inscripción al festival SMARTFILMS® Barranquilla 2025."
+        },
+        {
+            "key": "genero",
+            "label": "Géneros",
+            "type": "select",
+            "required": true,
+            "order": 2,
+            "description": "Seleccione su género",
+            "options": [
+                {
+                    "value": "masculino",
+                    "label": "Masculino",
+                    "description": null
+                },
+                {
+                    "value": "femenino",
+                    "label": "Femenino",
+                    "description": null
+                },
+                {
+                    "value": "no_binario",
+                    "label": "No binario",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                },
+                {
+                    "value": "prefiero_no_decir",
+                    "label": "Prefiero no decir",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "correo_electronico",
+            "label": "Correo Electrónico",
+            "type": "email",
+            "required": true,
+            "order": 3,
+            "placeholder": "usuario@ejemplo.com",
+            "description": "Su correo electrónico",
+            "validations": {
+                "format": "email"
+            }
+        },
+        {
+            "key": "telefono_celular",
+            "label": "Teléfono Celular",
+            "type": "text",
+            "required": true,
+            "order": 4,
+            "placeholder": "+57 300 123 4567",
+            "description": "Su número de teléfono celular",
+            "validations": {
+                "pattern": "^\\+?[1-9]\\d{1,14}$"
+            }
+        },
+        {
+            "key": "niveles_educativos",
+            "label": "Niveles Educativos",
+            "type": "select",
+            "required": true,
+            "order": 5,
+            "description": "Seleccione su nivel educativo más alto",
+            "options": [
+                {
+                    "value": "primaria",
+                    "label": "Primaria",
+                    "description": null
+                },
+                {
+                    "value": "secundaria",
+                    "label": "Secundaria",
+                    "description": null
+                },
+                {
+                    "value": "tecnico",
+                    "label": "Técnico",
+                    "description": null
+                },
+                {
+                    "value": "tecnologo",
+                    "label": "Tecnólogo",
+                    "description": null
+                },
+                {
+                    "value": "pregrado",
+                    "label": "Pregrado",
+                    "description": null
+                },
+                {
+                    "value": "especializacion",
+                    "label": "Especialización",
+                    "description": null
+                },
+                {
+                    "value": "maestria",
+                    "label": "Maestría",
+                    "description": null
+                },
+                {
+                    "value": "doctorado",
+                    "label": "Doctorado",
+                    "description": null
+                },
+                {
+                    "value": "ninguno",
+                    "label": "Ninguno",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "caracterizaciones",
+            "label": "Caracterizaciones",
+            "type": "select",
+            "required": true,
+            "order": 6,
+            "description": "Seleccione su caracterización principal",
+            "options": [
+                {
+                    "value": "estudiante",
+                    "label": "Estudiante",
+                    "description": null
+                },
+                {
+                    "value": "profesional",
+                    "label": "Profesional",
+                    "description": null
+                },
+                {
+                    "value": "empresario",
+                    "label": "Empresario",
+                    "description": null
+                },
+                {
+                    "value": "artista",
+                    "label": "Artista",
+                    "description": null
+                },
+                {
+                    "value": "comunicador",
+                    "label": "Comunicador",
+                    "description": null
+                },
+                {
+                    "value": "audiovisual",
+                    "label": "Audiovisual",
+                    "description": null
+                },
+                {
+                    "value": "docente",
+                    "label": "Docente",
+                    "description": null
+                },
+                {
+                    "value": "investigador",
+                    "label": "Investigador",
+                    "description": null
+                },
+                {
+                    "value": "otro",
+                    "label": "Otro",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "actualmente_empleado",
+            "label": "Actualmente estoy empleado/a",
+            "type": "checkbox",
+            "required": false,
+            "order": 7,
+            "description": "Marque si actualmente tiene empleo"
+        },
+        {
+            "key": "seccion_domicilio_contacto",
+            "label": "Domicilio y Contacto",
+            "type": "section",
+            "required": false,
+            "order": 8,
+            "description": "Información de ubicación y contacto de emergencia."
+        },
+        {
+            "key": "direccion_residencia",
+            "label": "Dirección de Residencia",
+            "type": "textarea",
+            "required": true,
+            "order": 9,
+            "placeholder": "Ingrese su dirección completa",
+            "description": "Su dirección de residencia completa",
+            "validations": {
+                "max_length": 200,
+                "min_length": 10
+            }
+        },
+        {
+            "key": "ciudad",
+            "label": "Ciudad",
+            "type": "select",
+            "required": true,
+            "order": 10,
+            "description": "Seleccione su ciudad",
+            "options": [
+                {
+                    "value": "bogota",
+                    "label": "Bogotá D.C.",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "key": "localidad_bogota",
+            "label": "Localidad",
+            "type": "text",
+            "required": true,
+            "order": 11,
+            "placeholder": "Ingrese su localidad",
+            "description": "Ingrese su localidad en Bogotá",
+            "visible": {
+                "model": "ciudad",
+                "value": "bogota",
+                "condition": "equal"
+            },
+            "validations": {
+                "max_length": 100,
+                "min_length": 2
+            }
+        }
+    ]
+}

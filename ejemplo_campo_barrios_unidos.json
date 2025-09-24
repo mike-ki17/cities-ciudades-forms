@@ -1,0 +1,13 @@
+{
+  "key": "barrios_bogota_barrios_unidos",
+  "label": "Barrios",
+  "type": "select",
+  "required": true,
+  "order": 3,
+  "description": "Seleccione su barrio en Barrios Unidos",
+  "visible": {
+    "model": "localidad_bogota",
+    "value": "barrios_unidos",
+    "condition": "equal"
+  }
+}

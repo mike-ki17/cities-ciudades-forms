@@ -38,6 +38,9 @@ class FormSlugController extends Controller
                 $hasSubmitted = $this->formService->hasParticipantSubmitted($form, $participant);
                 if ($hasSubmitted) {
                     $latestSubmission = $this->formService->getLatestParticipantSubmission($form, $participant);
+                    
+                    // Si el formulario ya fue enviado, mostrar la vista de éxito
+                    return view('public.forms.success', compact('form', 'participant', 'hasSubmitted', 'latestSubmission', 'user'));
                 }
             }
         }
