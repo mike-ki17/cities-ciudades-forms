@@ -290,10 +290,10 @@
                                id="birth_date" 
                                name="birth_date" 
                                value="{{ old('birth_date') }}"
-                               max="{{ now()->subYears(18)->format('Y-m-d') }}"
+                               max="{{ now()->subYears(16)->format('Y-m-d') }}"
                                required
                                class="form-input @error('birth_date') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
-                        <p class="mt-1 text-sm text-gray-500">Debes ser mayor de edad (18 años o más)</p>
+                        <p class="mt-1 text-sm text-gray-500">Debes tener al menos 16 años para participar</p>
                         @error('birth_date')
                             <div class="mt-1 flex items-center">
                                 <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -302,6 +302,186 @@
                                 <p class="form-error">{{ $message }}</p>
                             </div>
                         @enderror
+                    </div>
+
+                    {{-- Campos de datos del representante legal (solo para menores de edad) --}}
+                    <div id="representative-data-section" class="border-t border-gray-200 pt-6 mt-6" style="display: none;">
+                        <h4 class="text-md font-semibold text-gray-800 mb-4">Datos del Representante Legal</h4>
+                        <p class="text-sm text-gray-600 mb-4">Los siguientes campos son obligatorios para menores de edad (menores de 18 años).</p>
+                        
+                        {{-- Nombre del representante legal --}}
+                        <div class="form-group mb-6">
+                            <label for="representative_name" class="form-label">
+                                Nombre completo del representante legal
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" 
+                                   id="representative_name" 
+                                   name="representative_name" 
+                                   value="{{ old('representative_name') }}"
+                                   placeholder="Ingresa el nombre completo del representante legal"
+                                   class="form-input @error('representative_name') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                            @error('representative_name')
+                                <div class="mt-1 flex items-center">
+                                    <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="form-error">{{ $message }}</p>
+                                </div>
+                            @enderror
+                        </div>
+
+                        {{-- Tipo de documento del representante legal --}}
+                        <div class="form-group mb-6">
+                            <label for="representative_document_type" class="form-label">
+                                Tipo de documento del representante legal
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <select id="representative_document_type" 
+                                    name="representative_document_type" 
+                                    class="form-input @error('representative_document_type') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                                <option value="">Selecciona un tipo</option>
+                                <option value="CC" {{ old('representative_document_type') == 'CC' ? 'selected' : '' }}>Cédula de Ciudadanía (CC)</option>
+                                <option value="TI" {{ old('representative_document_type') == 'TI' ? 'selected' : '' }}>Tarjeta de Identidad (TI)</option>
+                                <option value="CE" {{ old('representative_document_type') == 'CE' ? 'selected' : '' }}>Cédula de Extranjería (CE)</option>
+                                <option value="NIT" {{ old('representative_document_type') == 'NIT' ? 'selected' : '' }}>NIT</option>
+                                <option value="PASAPORTE" {{ old('representative_document_type') == 'PASAPORTE' ? 'selected' : '' }}>Pasaporte (PA)</option>
+                                <option value="RC" {{ old('representative_document_type') == 'RC' ? 'selected' : '' }}>Registro Civil (RC)</option>
+                                <option value="PEP" {{ old('representative_document_type') == 'PEP' ? 'selected' : '' }}>Permiso Especial de Permanencia (PEP)</option>
+                                <option value="PPT" {{ old('representative_document_type') == 'PPT' ? 'selected' : '' }}>Permiso por Protección Temporal (PPT)</option>
+                                <option value="OTRO" {{ old('representative_document_type') == 'OTRO' ? 'selected' : '' }}>Otro (NUIP, Carné Diplomático, etc.)</option>
+                            </select>
+                            @error('representative_document_type')
+                                <div class="mt-1 flex items-center">
+                                    <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="form-error">{{ $message }}</p>
+                                </div>
+                            @enderror
+                        </div>
+
+                        {{-- Número de documento del representante legal --}}
+                        <div class="form-group mb-6">
+                            <label for="representative_document_number" class="form-label">
+                                Número de documento del representante legal
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" 
+                                   id="representative_document_number" 
+                                   name="representative_document_number" 
+                                   value="{{ old('representative_document_number') }}"
+                                   placeholder="Ingresa el número de documento del representante legal"
+                                   class="form-input @error('representative_document_number') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                            <div id="representative_document_help" class="mt-1 text-sm text-gray-500">
+                                Selecciona el tipo de documento del representante legal para ver el formato requerido.
+                            </div>
+                            @error('representative_document_number')
+                                <div class="mt-1 flex items-center">
+                                    <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="form-error">{{ $message }}</p>
+                                </div>
+                            @enderror
+                        </div>
+
+                        {{-- Dirección del representante legal --}}
+                        <div class="form-group mb-6">
+                            <label for="representative_address" class="form-label">
+                                Dirección del representante legal
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" 
+                                   id="representative_address" 
+                                   name="representative_address" 
+                                   value="{{ old('representative_address') }}"
+                                   placeholder="Ingresa la dirección completa del representante legal"
+                                   class="form-input @error('representative_address') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                            @error('representative_address')
+                                <div class="mt-1 flex items-center">
+                                    <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="form-error">{{ $message }}</p>
+                                </div>
+                            @enderror
+                        </div>
+
+                        {{-- Teléfono del representante legal --}}
+                        <div class="form-group mb-6">
+                            <label for="representative_phone" class="form-label">
+                                Teléfono del representante legal
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel" 
+                                   id="representative_phone" 
+                                   name="representative_phone" 
+                                   value="{{ old('representative_phone') }}"
+                                   placeholder="Ingresa el teléfono del representante legal"
+                                   class="form-input @error('representative_phone') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                            <p class="mt-1 text-sm text-gray-500">Solo números, entre 7 y 12 dígitos</p>
+                            @error('representative_phone')
+                                <div class="mt-1 flex items-center">
+                                    <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="form-error">{{ $message }}</p>
+                                </div>
+                            @enderror
+                        </div>
+
+                        {{-- Correo electrónico del representante legal --}}
+                        <div class="form-group mb-6">
+                            <label for="representative_email" class="form-label">
+                                Correo electrónico del representante legal
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" 
+                                   id="representative_email" 
+                                   name="representative_email" 
+                                   value="{{ old('representative_email') }}"
+                                   placeholder="Ingresa el correo electrónico del representante legal"
+                                   class="form-input @error('representative_email') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
+                            @error('representative_email')
+                                <div class="mt-1 flex items-center">
+                                    <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="form-error">{{ $message }}</p>
+                                </div>
+                            @enderror
+                        </div>
+
+                        {{-- Checkbox de autorización --}}
+                        <div class="form-group mb-6">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="representative_authorization" 
+                                           name="representative_authorization" 
+                                           type="checkbox" 
+                                           value="1"
+                                           {{ old('representative_authorization') ? 'checked' : '' }}
+                                           class="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out @error('representative_authorization') border-red-500 @enderror">
+                                </div>
+                                <div class="ml-3">
+                                    <label for="representative_authorization" class="text-sm text-gray-700 leading-relaxed" style="text-align: justify !important;">
+                                        <span class="text-red-500">*</span>
+                                        Como padre/madre/representante legal del menor autorizo de manera expresa, libre e informada la participación del menor al que represento en el Festival SMARTFILMS® Bogotá 2025, igualmente autorizo el tratamiento de los datos personales e imagen del menor de manera conjunta por parte de Valencia Producciones FX SAS, NIT.900.525.880-3, y de La Cámara de Comercio de Bogotá - CCB, NIT.860.007.322-9 conforme a las finalidades establecidas y en cumplimiento de la normativa vigente sobre protección de datos personales.
+                                        <br><br>
+                                        Declaro haber sido informado/a sobre el uso que se dará a dicha información, conforme a lo previsto en la política de protección de datos personales de Valencia Producciones FX S.AS. publicada en www.valenciaproducciones.com, así como la política de protección de datos de la Cámara de Comercio de Bogotá – CCB ubicada en www.ccb.org.co/proteccion-de-datos-personales.
+                                    </label>
+                                    @error('representative_authorization')
+                                        <div class="mt-1 flex items-center">
+                                            <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                            </svg>
+                                            <p class="form-error">{{ $message }}</p>
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -798,18 +978,201 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Validación del campo fecha de nacimiento
+        // Validación del campo fecha de nacimiento y lógica de campos del representante legal
         const birthDateField = document.getElementById('birth_date');
+        const representativeDataSection = document.getElementById('representative-data-section');
+        const representativeNameField = document.getElementById('representative_name');
+        const representativeDocumentTypeField = document.getElementById('representative_document_type');
+        const representativeDocumentNumberField = document.getElementById('representative_document_number');
+        const representativeAddressField = document.getElementById('representative_address');
+        const representativePhoneField = document.getElementById('representative_phone');
+        const representativeEmailField = document.getElementById('representative_email');
+        const representativeAuthorizationField = document.getElementById('representative_authorization');
+        
         if (birthDateField) {
             birthDateField.addEventListener('change', function() {
                 const selectedDate = new Date(this.value);
                 const today = new Date();
-                const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                const minDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate());
+                const adultDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
                 
+                // Validar edad mínima (16 años)
                 if (this.value && selectedDate > minDate) {
-                    this.setCustomValidity('Debes ser mayor de edad (18 años o más) para participar.');
+                    this.setCustomValidity('Debes tener al menos 16 años para participar.');
                 } else {
                     this.setCustomValidity('');
+                }
+                
+                // Mostrar/ocultar campos del representante legal según la edad
+                if (this.value && selectedDate > adultDate) {
+                    // Es menor de edad (menos de 18 años) - mostrar campos del representante legal
+                    if (representativeDataSection) {
+                        representativeDataSection.style.display = 'block';
+                    }
+                    
+                    // Hacer obligatorios los campos del representante legal
+                    if (representativeNameField) representativeNameField.required = true;
+                    if (representativeDocumentTypeField) representativeDocumentTypeField.required = true;
+                    if (representativeDocumentNumberField) representativeDocumentNumberField.required = true;
+                    if (representativeAddressField) representativeAddressField.required = true;
+                    if (representativePhoneField) representativePhoneField.required = true;
+                    if (representativeEmailField) representativeEmailField.required = true;
+                    if (representativeAuthorizationField) representativeAuthorizationField.required = true;
+                } else {
+                    // Es mayor de edad (18 años o más) - ocultar campos del representante legal
+                    if (representativeDataSection) {
+                        representativeDataSection.style.display = 'none';
+                    }
+                    
+                    // Limpiar y hacer opcionales los campos del representante legal
+                    if (representativeNameField) {
+                        representativeNameField.value = '';
+                        representativeNameField.required = false;
+                    }
+                    if (representativeDocumentTypeField) {
+                        representativeDocumentTypeField.value = '';
+                        representativeDocumentTypeField.required = false;
+                    }
+                    if (representativeDocumentNumberField) {
+                        representativeDocumentNumberField.value = '';
+                        representativeDocumentNumberField.required = false;
+                    }
+                    if (representativeAddressField) {
+                        representativeAddressField.value = '';
+                        representativeAddressField.required = false;
+                    }
+                    if (representativePhoneField) {
+                        representativePhoneField.value = '';
+                        representativePhoneField.required = false;
+                    }
+                    if (representativeEmailField) {
+                        representativeEmailField.value = '';
+                        representativeEmailField.required = false;
+                    }
+                    if (representativeAuthorizationField) {
+                        representativeAuthorizationField.checked = false;
+                        representativeAuthorizationField.required = false;
+                    }
+                }
+            });
+            
+            // Ejecutar la lógica al cargar la página si ya hay una fecha
+            if (birthDateField.value) {
+                birthDateField.dispatchEvent(new Event('change'));
+            }
+        }
+        
+        // Validación de campos del representante legal
+        const representativeDocumentHelp = document.getElementById('representative_document_help');
+        
+        if (representativeDocumentTypeField && representativeDocumentNumberField && representativeDocumentHelp) {
+            // Actualizar mensaje de ayuda cuando cambie el tipo de documento del representante legal
+            representativeDocumentTypeField.addEventListener('change', function() {
+                updateRepresentativeDocumentHelp(this.value);
+                validateRepresentativeDocumentNumber();
+            });
+            
+            // Validar número de documento del representante legal cuando cambie
+            representativeDocumentNumberField.addEventListener('input', function() {
+                validateRepresentativeDocumentNumber();
+            });
+            
+            // Función para actualizar el mensaje de ayuda del representante legal
+            function updateRepresentativeDocumentHelp(documentType) {
+                const helpMessages = {
+                    'CC': 'Solo números. Entre 6 y 10 dígitos. Ejemplo: 1032456789',
+                    'TI': 'Solo números. Entre 6 y 11 dígitos. Ejemplo: 1002345678',
+                    'CE': 'Solo números. Entre 6 y 15 dígitos. Ejemplo: 987654321',
+                    'NIT': 'Entre 9 y 15 dígitos. Puede incluir dígito de verificación con guión. Ejemplo: 900123456-7',
+                    'PASAPORTE': 'Entre 6 y 12 caracteres alfanuméricos. Ejemplo: AB1234567',
+                    'RC': 'Solo números. Entre 10 y 15 dígitos. Ejemplo: 123456789012',
+                    'PEP': 'Entre 6 y 15 caracteres alfanuméricos. Ejemplo: PEP1234567',
+                    'PPT': 'Entre 6 y 15 caracteres alfanuméricos. Ejemplo: PPT1234567',
+                    'OTRO': 'Entre 6 y 15 caracteres alfanuméricos. Ejemplo: NUIP123456789'
+                };
+                
+                if (documentType && helpMessages[documentType]) {
+                    representativeDocumentHelp.textContent = helpMessages[documentType];
+                    representativeDocumentHelp.className = 'mt-1 text-sm text-blue-600';
+                } else {
+                    representativeDocumentHelp.textContent = 'Selecciona el tipo de documento del representante legal para ver el formato requerido.';
+                    representativeDocumentHelp.className = 'mt-1 text-sm text-gray-500';
+                }
+            }
+            
+            // Función para validar el número de documento del representante legal
+            function validateRepresentativeDocumentNumber() {
+                const documentType = representativeDocumentTypeField.value;
+                const documentNumber = representativeDocumentNumberField.value.trim().toUpperCase();
+                
+                if (!documentType || !documentNumber) {
+                    representativeDocumentNumberField.setCustomValidity('');
+                    return;
+                }
+                
+                let isValid = false;
+                let errorMessage = '';
+                
+                switch (documentType) {
+                    case 'CC':
+                        isValid = /^[0-9]{6,10}$/.test(documentNumber);
+                        errorMessage = 'La Cédula de Ciudadanía del representante legal debe contener solo números y tener entre 6 y 10 dígitos.';
+                        break;
+                    case 'TI':
+                        isValid = /^[0-9]{6,11}$/.test(documentNumber);
+                        errorMessage = 'La Tarjeta de Identidad del representante legal debe contener solo números y tener entre 6 y 11 dígitos.';
+                        break;
+                    case 'CE':
+                        isValid = /^[0-9]{6,15}$/.test(documentNumber);
+                        errorMessage = 'La Cédula de Extranjería del representante legal debe contener solo números y tener entre 6 y 15 dígitos.';
+                        break;
+                    case 'NIT':
+                        isValid = /^[0-9]{9,15}(-[0-9])?$/.test(documentNumber);
+                        errorMessage = 'El NIT del representante legal debe contener entre 9 y 15 dígitos y puede incluir un dígito de verificación separado por guión.';
+                        break;
+                    case 'PASAPORTE':
+                        isValid = /^[A-Z0-9]{6,12}$/.test(documentNumber);
+                        errorMessage = 'El Pasaporte del representante legal debe contener entre 6 y 12 caracteres alfanuméricos.';
+                        break;
+                    case 'RC':
+                        isValid = /^[0-9]{10,15}$/.test(documentNumber);
+                        errorMessage = 'El Registro Civil del representante legal debe contener solo números y tener entre 10 y 15 dígitos.';
+                        break;
+                    case 'PEP':
+                    case 'PPT':
+                        isValid = /^[A-Z0-9]{6,15}$/.test(documentNumber);
+                        errorMessage = 'El documento del representante legal debe contener entre 6 y 15 caracteres alfanuméricos.';
+                        break;
+                    case 'OTRO':
+                        isValid = /^[A-Z0-9]{6,15}$/.test(documentNumber);
+                        errorMessage = 'El documento del representante legal debe contener entre 6 y 15 caracteres alfanuméricos.';
+                        break;
+                }
+                
+                if (!isValid) {
+                    representativeDocumentNumberField.setCustomValidity(errorMessage);
+                } else {
+                    representativeDocumentNumberField.setCustomValidity('');
+                }
+            }
+            
+            // Limpiar espacios automáticamente en el número de documento del representante legal
+            representativeDocumentNumberField.addEventListener('input', function() {
+                // Remover espacios y convertir a mayúsculas
+                this.value = this.value.replace(/\s/g, '').toUpperCase();
+            });
+        }
+        
+        // Validación del teléfono del representante legal
+        if (representativePhoneField) {
+            representativePhoneField.addEventListener('input', function() {
+                // Solo permitir números
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+            
+            representativePhoneField.addEventListener('keypress', function(e) {
+                if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                    e.preventDefault();
                 }
             });
         }

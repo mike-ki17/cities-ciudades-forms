@@ -48,7 +48,13 @@ class FormSlugSubmitController extends Controller
             'document_type' => $allData['document_type'] ?? 'DNI',
             'document_number' => strtoupper(str_replace(' ', '', trim($allData['document_number'] ?? ''))),
             'birth_date' => $allData['birth_date'] ?? null,
-            'event_id' => $form->event_id,
+            'representative_name' => trim($allData['representative_name'] ?? ''),
+            'representative_document_type' => $allData['representative_document_type'] ?? null,
+            'representative_document_number' => $allData['representative_document_number'] ? strtoupper(str_replace(' ', '', trim($allData['representative_document_number']))) : null,
+            'representative_address' => trim($allData['representative_address'] ?? ''),
+            'representative_phone' => trim($allData['representative_phone'] ?? ''),
+            'representative_email' => trim($allData['representative_email'] ?? ''),
+            'representative_authorization' => isset($allData['representative_authorization']) ? (bool)$allData['representative_authorization'] : false,
         ];
         
         // Group 2: Dynamic fields (only those defined in form JSON, excluding fixed participant fields)
@@ -79,7 +85,14 @@ class FormSlugSubmitController extends Controller
             'phone', 'telefono',        // Phone fields
             'document_type',            // Document type
             'document_number',          // Document number
-            'birth_date', 'fecha_nacimiento'  // Birth date fields
+            'birth_date', 'fecha_nacimiento',  // Birth date fields
+            'representative_name',              // Representative name field
+            'representative_document_type',     // Representative document type
+            'representative_document_number',   // Representative document number
+            'representative_address',           // Representative address
+            'representative_phone',             // Representative phone
+            'representative_email',             // Representative email
+            'representative_authorization'      // Representative authorization
         ];
         
         foreach ($allData as $key => $value) {

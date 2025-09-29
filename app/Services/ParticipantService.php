@@ -16,11 +16,20 @@ class ParticipantService
     {
         return Participant::create([
             'name' => $data['name'] ?? $data['first_name'] ?? 'Usuario',
+            'first_name' => $data['first_name'] ?? '',
+            'last_name' => $data['last_name'] ?? '',
             'email' => $data['email'] ?? 'anonymous@example.com',
             'phone' => $data['phone'] ?? null,
             'document_type' => $data['document_type'] ?? 'DNI', // Will be saved exactly as provided
             'document_number' => $data['document_number'] ?? '00000000',
             'birth_date' => $data['birth_date'] ?? null,
+            'representative_name' => $data['representative_name'] ?? null,
+            'representative_document_type' => $data['representative_document_type'] ?? null,
+            'representative_document_number' => $data['representative_document_number'] ?? null,
+            'representative_address' => $data['representative_address'] ?? null,
+            'representative_phone' => $data['representative_phone'] ?? null,
+            'representative_email' => $data['representative_email'] ?? null,
+            'representative_authorization' => $data['representative_authorization'] ?? false,
         ]);
     }
 
@@ -41,9 +50,18 @@ class ParticipantService
                 // Update participant data with new information
                 $participant->update([
                     'name' => $data['name'] ?? $participant->name,
+                    'first_name' => $data['first_name'] ?? $participant->first_name,
+                    'last_name' => $data['last_name'] ?? $participant->last_name,
                     'email' => $data['email'] ?? $participant->email,
                     'phone' => $data['phone'] ?? $participant->phone,
                     'birth_date' => $data['birth_date'] ?? $participant->birth_date,
+                    'representative_name' => $data['representative_name'] ?? $participant->representative_name,
+                    'representative_document_type' => $data['representative_document_type'] ?? $participant->representative_document_type,
+                    'representative_document_number' => $data['representative_document_number'] ?? $participant->representative_document_number,
+                    'representative_address' => $data['representative_address'] ?? $participant->representative_address,
+                    'representative_phone' => $data['representative_phone'] ?? $participant->representative_phone,
+                    'representative_email' => $data['representative_email'] ?? $participant->representative_email,
+                    'representative_authorization' => $data['representative_authorization'] ?? $participant->representative_authorization,
                 ]);
 
                 \Log::info('Participant found by document, updated existing record', [
@@ -59,11 +77,20 @@ class ParticipantService
             // Create new participant only if document_number doesn't exist
             $participant = Participant::create([
                 'name' => $data['name'] ?? 'Usuario',
+                'first_name' => $data['first_name'] ?? '',
+                'last_name' => $data['last_name'] ?? '',
                 'email' => $data['email'],
                 'phone' => $data['phone'] ?? null,
                 'document_type' => $data['document_type'], // Save exactly as provided
                 'document_number' => $data['document_number'],
                 'birth_date' => $data['birth_date'] ?? null,
+                'representative_name' => $data['representative_name'] ?? null,
+                'representative_document_type' => $data['representative_document_type'] ?? null,
+                'representative_document_number' => $data['representative_document_number'] ?? null,
+                'representative_address' => $data['representative_address'] ?? null,
+                'representative_phone' => $data['representative_phone'] ?? null,
+                'representative_email' => $data['representative_email'] ?? null,
+                'representative_authorization' => $data['representative_authorization'] ?? false,
             ]);
 
             \Log::info('New participant created', [

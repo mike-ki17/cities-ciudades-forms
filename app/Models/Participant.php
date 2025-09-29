@@ -29,6 +29,13 @@ class Participant extends Model
         'document_type',
         'document_number',
         'birth_date',
+        'representative_name',
+        'representative_document_type',
+        'representative_document_number',
+        'representative_authorization',
+        'representative_address',
+        'representative_phone',
+        'representative_email',
     ];
 
     /**
@@ -38,6 +45,7 @@ class Participant extends Model
     {
         return [
             'birth_date' => 'date',
+            'representative_authorization' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

@@ -258,6 +258,121 @@
                     </div>
                 </div>
 
+                <!-- Representative Legal Information (only for minors) -->
+                @if($submission->participant && $submission->participant->representative_name)
+                <div class="mt-8 admin-form-section">
+                    <div class="admin-form-section-title">
+                        <svg class="w-5 h-5 inline-block mr-2" style="color: #ff6b35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        Información del Representante Legal
+                    </div>
+                    
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        <div class="admin-field-group">
+                            <label class="admin-field-label">
+                                <svg class="w-4 h-4 inline-block mr-1" style="color: #ff6b35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                Nombre del Representante Legal
+                            </label>
+                            <div class="admin-text font-medium text-lg">
+                                {{ $submission->participant->representative_name }}
+                            </div>
+                        </div>
+
+                        <div class="admin-field-group">
+                            <label class="admin-field-label">
+                                <svg class="w-4 h-4 inline-block mr-1" style="color: #ff6b35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Tipo de Documento
+                            </label>
+                            <div class="admin-text font-medium">
+                                {{ $submission->participant->representative_document_type }}
+                            </div>
+                        </div>
+
+                        <div class="admin-field-group">
+                            <label class="admin-field-label">
+                                <svg class="w-4 h-4 inline-block mr-1" style="color: #ff6b35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Número de Documento
+                            </label>
+                            <div class="admin-text font-medium">
+                                {{ $submission->participant->representative_document_number }}
+                            </div>
+                        </div>
+
+                        <div class="admin-field-group">
+                            <label class="admin-field-label">
+                                <svg class="w-4 h-4 inline-block mr-1" style="color: #ff6b35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Dirección
+                            </label>
+                            <div class="admin-text font-medium">
+                                {{ $submission->participant->representative_address }}
+                            </div>
+                        </div>
+
+                        <div class="admin-field-group">
+                            <label class="admin-field-label">
+                                <svg class="w-4 h-4 inline-block mr-1" style="color: #ff6b35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                </svg>
+                                Teléfono
+                            </label>
+                            <div class="admin-text font-medium">
+                                {{ $submission->participant->representative_phone }}
+                            </div>
+                        </div>
+
+                        <div class="admin-field-group">
+                            <label class="admin-field-label">
+                                <svg class="w-4 h-4 inline-block mr-1" style="color: #ff6b35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                                Correo Electrónico
+                            </label>
+                            <div class="admin-text font-medium">
+                                <a href="mailto:{{ $submission->participant->representative_email }}" class="text-blue-600 hover:text-blue-800">
+                                    {{ $submission->participant->representative_email }}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="admin-field-group">
+                            <label class="admin-field-label">
+                                <svg class="w-4 h-4 inline-block mr-1" style="color: #ff6b35;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Autorización
+                            </label>
+                            <div class="admin-text font-medium">
+                                @if($submission->participant->representative_authorization)
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Autorizado
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        No Autorizado
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                 <!-- Form Responses -->
                 <div class="mt-8 admin-form-section">
                     <div class="admin-form-section-title">
