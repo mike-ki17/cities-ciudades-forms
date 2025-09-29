@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Form\SubmitFormSlugRequest;
+use App\Mail\ParticipationNotificationMail;
 use App\Services\FormService;
 use App\Services\ParticipantService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class FormSlugSubmitController extends Controller
@@ -111,6 +113,24 @@ class FormSlugSubmitController extends Controller
 
             // Store participant ID in session for future form access
             $request->session()->put('participant_id', $participant->id);
+
+            // Send email notification to participant
+            try {
+                Mail::to($participant->email)->send(new ParticipationNotificationMail($form, $participant, $submission));
+                \Log::info('Email notification sent successfully', [
+                    'participant_email' => $participant->email,
+                    'form_id' => $form->id,
+                    'submission_id' => $submission->id
+                ]);
+            } catch (\Exception $emailException) {
+                // Log email error but don't fail the form submission
+                \Log::error('Failed to send email notification', [
+                    'participant_email' => $participant->email,
+                    'form_id' => $form->id,
+                    'submission_id' => $submission->id,
+                    'error' => $emailException->getMessage()
+                ]);
+            }
 
             // Redirect to success page after successful submission
             return redirect()->route('public.forms.slug.show', ['slug' => $slug]);
