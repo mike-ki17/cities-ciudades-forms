@@ -40,7 +40,9 @@ class FormSlugSubmitController extends Controller
         // Group 1: Fixed participant fields
         // Map form fields to participant fields (some form fields have different keys)
         $participantData = [
-            'name' => trim($allData['name'] ?? $allData['nombre'] ?? ''),
+            'first_name' => trim($allData['first_name'] ?? ''),
+            'last_name' => trim($allData['last_name'] ?? ''),
+            'name' => trim(($allData['first_name'] ?? '') . ' ' . ($allData['last_name'] ?? '')), // Concatenate for backward compatibility
             'email' => trim($allData['email'] ?? ''),
             'phone' => trim($allData['phone'] ?? $allData['telefono'] ?? ''),
             'document_type' => $allData['document_type'] ?? 'DNI',
@@ -72,7 +74,7 @@ class FormSlugSubmitController extends Controller
         // These fields always go to participants table, never to form_submissions
         // Include both standard keys and form-specific keys
         $fixedParticipantFields = [
-            'name', 'nombre',           // Name fields
+            'first_name', 'last_name', 'name', 'nombre',  // Name fields
             'email',                    // Email field
             'phone', 'telefono',        // Phone fields
             'document_type',            // Document type
@@ -81,9 +83,9 @@ class FormSlugSubmitController extends Controller
         ];
         
         foreach ($allData as $key => $value) {
-            // Only include fields that are in form JSON AND are not fixed participant fields
-            // Fixed participant fields take priority and are never stored in form_submissions
-            if (in_array($key, $formFieldKeys) && !in_array($key, $fixedParticipantFields)) {
+            // Fixed participant fields always go to participants table, never to form_submissions
+            // Only include fields that are NOT fixed participant fields
+            if (!in_array($key, $fixedParticipantFields)) {
                 // Filter out empty values to avoid storing unnecessary data
                 if (!empty($value) || $value === '0' || $value === 0) {
                     $dynamicFields[$key] = $value;

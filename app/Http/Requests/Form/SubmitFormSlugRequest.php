@@ -28,7 +28,8 @@ class SubmitFormSlugRequest extends FormRequest
 
         // Fixed participant fields validation rules
         $participantRules = [
-            'name' => ['required', 'string', 'min:2', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
+            'first_name' => ['required', 'string', 'min:2', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
+            'last_name' => ['required', 'string', 'min:2', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['required', 'string', 'regex:/^[0-9]{7,12}$/'],
             'document_type' => ['required', 'string', 'in:CC,TI,CE,NIT,PASAPORTE,RC,PEP,PPT,OTRO'],
@@ -71,8 +72,10 @@ class SubmitFormSlugRequest extends FormRequest
             'in' => 'El valor seleccionado para :attribute no es válido.',
             'before' => 'El campo :attribute debe ser una fecha anterior a hoy.',
             'before_or_equal' => 'El campo :attribute debe ser una fecha que indique que eres mayor de edad (18 años o más).',
-            'name.min' => 'El nombre debe tener al menos 2 letras.',
-            'name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'first_name.min' => 'El nombre debe tener al menos 2 letras.',
+            'first_name.regex' => 'El nombre solo puede contener letras y espacios.',
+            'last_name.min' => 'Los apellidos deben tener al menos 2 letras.',
+            'last_name.regex' => 'Los apellidos solo pueden contener letras y espacios.',
             'phone.regex' => 'El teléfono debe contener entre 7 y 12 números.',
             'birth_date.before_or_equal' => 'Debes ser mayor de edad (18 años o más) para participar.',
             'document_type.in' => 'El tipo de documento seleccionado no es válido.',
@@ -85,7 +88,8 @@ class SubmitFormSlugRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'nombre completo',
+            'first_name' => 'nombre',
+            'last_name' => 'apellidos',
             'email' => 'correo electrónico',
             'phone' => 'teléfono',
             'document_type' => 'tipo de documento',
@@ -310,7 +314,7 @@ class SubmitFormSlugRequest extends FormRequest
         $data = $this->all();
         
         // Clean spaces from text fields
-        $textFields = ['name', 'email', 'phone', 'document_number'];
+        $textFields = ['first_name', 'last_name', 'email', 'phone', 'document_number'];
         
         foreach ($textFields as $field) {
             if (isset($data[$field]) && is_string($data[$field])) {

@@ -129,18 +129,41 @@
                     
                     {{-- Nombre --}}
                     <div class="form-group mb-6">
-                        <label for="name" class="form-label">
-                            Nombre completo
+                        <label for="first_name" class="form-label">
+                            Nombre
                             <span class="text-red-500">*</span>
                         </label>
                         <input type="text" 
-                               id="name" 
-                               name="name" 
-                               value="{{ old('name') }}"
-                               placeholder="Ingresa tu nombre completo"
-                               class="form-input @error('name') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
+                               id="first_name" 
+                               name="first_name" 
+                               value="{{ old('first_name') }}"
+                               placeholder="Ingresa tu nombre"
+                               class="form-input @error('first_name') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                required>
-                        @error('name')
+                        @error('first_name')
+                            <div class="mt-1 flex items-center">
+                                <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                                <p class="form-error">{{ $message }}</p>
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Apellidos --}}
+                    <div class="form-group mb-6">
+                        <label for="last_name" class="form-label">
+                            Apellidos
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" 
+                               id="last_name" 
+                               name="last_name" 
+                               value="{{ old('last_name') }}"
+                               placeholder="Ingresa tus apellidos"
+                               class="form-input @error('last_name') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
+                               required>
+                        @error('last_name')
                             <div class="mt-1 flex items-center">
                                 <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414-1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
@@ -618,14 +641,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Validaciones específicas para campos fijos del participante
     function setupParticipantFieldValidations() {
         // Validación del campo nombre
-        const nameField = document.getElementById('name');
-        if (nameField) {
-            nameField.addEventListener('input', function() {
+        const firstNameField = document.getElementById('first_name');
+        if (firstNameField) {
+            firstNameField.addEventListener('input', function() {
                 const value = this.value.trim();
                 const isValid = value.length >= 2 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value);
                 
                 if (value && !isValid) {
                     this.setCustomValidity('El nombre debe tener al menos 2 letras y solo puede contener letras y espacios.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        }
+        
+        // Validación del campo apellidos
+        const lastNameField = document.getElementById('last_name');
+        if (lastNameField) {
+            lastNameField.addEventListener('input', function() {
+                const value = this.value.trim();
+                const isValid = value.length >= 2 && /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value);
+                
+                if (value && !isValid) {
+                    this.setCustomValidity('Los apellidos deben tener al menos 2 letras y solo pueden contener letras y espacios.');
                 } else {
                     this.setCustomValidity('');
                 }
@@ -975,12 +1013,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const allInputs = document.querySelectorAll('input, select, textarea');
         
         allInputs.forEach(function(input) {
-            // Si el campo está oculto o vacío, deshabilitarlo para que no se envíe
+            // Si el campo está oculto, deshabilitarlo para que no se envíe
             const fieldContainer = input.closest('[data-conditional-field="true"]');
             const isHidden = fieldContainer && fieldContainer.style.display === 'none';
-            const isEmpty = !input.value || input.value.trim() === '';
             
-            if (isHidden || isEmpty) {
+            // Solo deshabilitar campos ocultos, no campos vacíos
+            // Los campos vacíos deben enviarse para que la validación del servidor funcione
+            if (isHidden) {
                 input.disabled = true;
             } else {
                 input.disabled = false;

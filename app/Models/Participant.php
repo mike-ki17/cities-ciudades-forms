@@ -22,6 +22,8 @@ class Participant extends Model
      */
     protected $fillable = [
         'name',
+        'first_name',
+        'last_name',
         'email',
         'phone',
         'document_type',
@@ -79,6 +81,12 @@ class Participant extends Model
      */
     public function getFullNameAttribute(): string
     {
+        // If we have separate first_name and last_name, use them
+        if ($this->first_name && $this->last_name) {
+            return trim($this->first_name . ' ' . $this->last_name);
+        }
+        
+        // Fallback to the name field
         return $this->name;
     }
 
@@ -87,6 +95,12 @@ class Participant extends Model
      */
     public function getFirstNameAttribute(): string
     {
+        // If we have a separate first_name field, use it
+        if (isset($this->attributes['first_name']) && $this->attributes['first_name']) {
+            return $this->attributes['first_name'];
+        }
+        
+        // Fallback to parsing the name field
         return explode(' ', $this->name)[0] ?? $this->name;
     }
 
@@ -95,6 +109,12 @@ class Participant extends Model
      */
     public function getLastNameAttribute(): string
     {
+        // If we have a separate last_name field, use it
+        if (isset($this->attributes['last_name']) && $this->attributes['last_name']) {
+            return $this->attributes['last_name'];
+        }
+        
+        // Fallback to parsing the name field
         $nameParts = explode(' ', $this->name);
         return count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : '';
     }
