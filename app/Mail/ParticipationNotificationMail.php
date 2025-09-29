@@ -6,13 +6,12 @@ use App\Models\Form;
 use App\Models\FormSubmission;
 use App\Models\Participant;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ParticipationNotificationMail extends Mailable implements ShouldQueue
+class ParticipationNotificationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -46,7 +45,7 @@ class ParticipationNotificationMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.test-email', // Usar template simple que funciona
+            view: 'emails.participation-notification', // Usar template mejorado
             with: [
                 'form' => $this->form,
                 'participant' => $this->participant,
