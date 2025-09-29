@@ -320,7 +320,7 @@
                             @endif
                             
                             @if(isset($field['description']) && !empty($field['description']))
-                                <p class="mt-2 text-sm text-gray-600 leading-relaxed">
+                                <p class="mt-2 text-sm text-gray-600 leading-relaxed" style="text-align: justify !important;">
                                     {{ $field['description'] }}
                                 </p>
                             @endif
@@ -1135,7 +1135,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .form-styled a:hover {
     color: color-mix(in srgb, var(--primary-color) 85%, black) !important;
-    }
+}
+
+/* Estilos para justificación de texto en secciones */
+.section-field p {
+    text-align: justify !important;
+    text-justify: inter-word !important;
+}
 
 </style>
 @endsection
