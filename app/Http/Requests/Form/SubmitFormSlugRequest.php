@@ -31,8 +31,13 @@ class SubmitFormSlugRequest extends FormRequest
             'name' => ['required', 'string', 'min:2', 'max:255', 'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'],
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['required', 'string', 'regex:/^[0-9]{7,12}$/'],
-            'document_type' => ['required', 'string', 'max:50'], // Allow any document type up to 50 characters
-            'document_number' => ['required', 'string', 'max:50'],
+            'document_type' => ['required', 'string', 'in:CC,TI,CE,NIT,PASAPORTE,RC,PEP,PPT,OTRO'],
+            'document_number' => ['required', 'string', 'max:50', function ($attribute, $value, $fail) {
+                $documentType = $this->input('document_type');
+                if (!$this->validateDocumentNumber($documentType, $value)) {
+                    $fail($this->getDocumentValidationMessage($documentType));
+                }
+            }],
             'birth_date' => ['required', 'date', 'before:today', 'before_or_equal:' . now()->subYears(18)->format('Y-m-d')],
         ];
 
@@ -70,6 +75,7 @@ class SubmitFormSlugRequest extends FormRequest
             'name.regex' => 'El nombre solo puede contener letras y espacios.',
             'phone.regex' => 'El teléfono debe contener entre 7 y 12 números.',
             'birth_date.before_or_equal' => 'Debes ser mayor de edad (18 años o más) para participar.',
+            'document_type.in' => 'El tipo de documento seleccionado no es válido.',
         ];
     }
 
@@ -223,6 +229,101 @@ class SubmitFormSlugRequest extends FormRequest
         // For public access, we allow multiple submissions
         // This can be customized based on business requirements
         // For example, you could check by email or document number if needed
+    }
+
+    /**
+     * Validate document number based on document type.
+     */
+    protected function validateDocumentNumber(string $documentType, string $documentNumber): bool
+    {
+        // Clean the document number (remove spaces and convert to uppercase)
+        $cleanNumber = strtoupper(trim($documentNumber));
+        
+        switch ($documentType) {
+            case 'CC': // Cédula de Ciudadanía
+                return preg_match('/^[0-9]{6,10}$/', $cleanNumber);
+                
+            case 'TI': // Tarjeta de Identidad
+                return preg_match('/^[0-9]{6,11}$/', $cleanNumber);
+                
+            case 'CE': // Cédula de Extranjería
+                return preg_match('/^[0-9]{6,15}$/', $cleanNumber);
+                
+            case 'NIT': // Número de Identificación Tributaria
+                return preg_match('/^[0-9]{9,15}(-[0-9])?$/', $cleanNumber);
+                
+            case 'PASAPORTE': // Pasaporte
+                return preg_match('/^[A-Z0-9]{6,12}$/', $cleanNumber);
+                
+            case 'RC': // Registro Civil
+                return preg_match('/^[0-9]{10,15}$/', $cleanNumber);
+                
+            case 'PEP': // Permiso Especial de Permanencia
+            case 'PPT': // Permiso por Protección Temporal
+                return preg_match('/^[A-Z0-9]{6,15}$/', $cleanNumber);
+                
+            case 'OTRO': // Otros tipos (NUIP, Carné Diplomático, etc.)
+                // NUIP: hasta 15 dígitos numéricos
+                // Carné Diplomático: 6-12 caracteres alfanuméricos
+                return preg_match('/^[A-Z0-9]{6,15}$/', $cleanNumber);
+                
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Get validation message for document type.
+     */
+    protected function getDocumentValidationMessage(string $documentType): string
+    {
+        switch ($documentType) {
+            case 'CC':
+                return 'La Cédula de Ciudadanía debe contener solo números y tener entre 6 y 10 dígitos.';
+            case 'TI':
+                return 'La Tarjeta de Identidad debe contener solo números y tener entre 6 y 11 dígitos.';
+            case 'CE':
+                return 'La Cédula de Extranjería debe contener solo números y tener entre 6 y 15 dígitos.';
+            case 'NIT':
+                return 'El NIT debe contener entre 9 y 15 dígitos y puede incluir un dígito de verificación separado por guión (ej: 900123456-7).';
+            case 'PASAPORTE':
+                return 'El Pasaporte debe contener entre 6 y 12 caracteres alfanuméricos (letras y números).';
+            case 'RC':
+                return 'El Registro Civil debe contener solo números y tener entre 10 y 15 dígitos.';
+            case 'PEP':
+                return 'El PEP debe contener entre 6 y 15 caracteres alfanuméricos (letras y números).';
+            case 'PPT':
+                return 'El PPT debe contener entre 6 y 15 caracteres alfanuméricos (letras y números).';
+            case 'OTRO':
+                return 'El documento debe contener entre 6 y 15 caracteres alfanuméricos (letras y números).';
+            default:
+                return 'El formato del número de documento no es válido.';
+        }
+    }
+
+    /**
+     * Prepare the data for validation.
+     * Clean spaces from text fields.
+     */
+    protected function prepareForValidation(): void
+    {
+        $data = $this->all();
+        
+        // Clean spaces from text fields
+        $textFields = ['name', 'email', 'phone', 'document_number'];
+        
+        foreach ($textFields as $field) {
+            if (isset($data[$field]) && is_string($data[$field])) {
+                $data[$field] = trim($data[$field]);
+            }
+        }
+        
+        // Clean document number specifically (remove all spaces and convert to uppercase)
+        if (isset($data['document_number']) && is_string($data['document_number'])) {
+            $data['document_number'] = strtoupper(str_replace(' ', '', $data['document_number']));
+        }
+        
+        $this->merge($data);
     }
 
 }

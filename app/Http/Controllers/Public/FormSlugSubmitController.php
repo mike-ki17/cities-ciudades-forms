@@ -40,11 +40,11 @@ class FormSlugSubmitController extends Controller
         // Group 1: Fixed participant fields
         // Map form fields to participant fields (some form fields have different keys)
         $participantData = [
-            'name' => $allData['name'] ?? $allData['nombre'] ?? null,
-            'email' => $allData['email'] ?? null,
-            'phone' => $allData['phone'] ?? $allData['telefono'] ?? null,
+            'name' => trim($allData['name'] ?? $allData['nombre'] ?? ''),
+            'email' => trim($allData['email'] ?? ''),
+            'phone' => trim($allData['phone'] ?? $allData['telefono'] ?? ''),
             'document_type' => $allData['document_type'] ?? 'DNI',
-            'document_number' => $allData['document_number'] ?? null,
+            'document_number' => strtoupper(str_replace(' ', '', trim($allData['document_number'] ?? ''))),
             'birth_date' => $allData['birth_date'] ?? null,
             'event_id' => $form->event_id,
         ];

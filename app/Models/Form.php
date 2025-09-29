@@ -27,6 +27,7 @@ class Form extends Model
         'description',
         'schema_json',
         'style_json',
+        'validation_config',
         'is_active',
         'version',
     ];
@@ -39,6 +40,7 @@ class Form extends Model
         return [
             'schema_json' => 'array',
             'style_json' => 'array',
+            'validation_config' => 'array',
             'is_active' => 'boolean',
             'version' => 'integer',
             'created_at' => 'datetime',
@@ -726,5 +728,215 @@ class Form extends Model
         
         // Fallback to legacy schema_json
         return $this->schema_json ?? ['fields' => []];
+    }
+
+    /**
+     * Get the validation configuration for fixed fields.
+     */
+    public function getValidationConfigAttribute(): array
+    {
+        $defaults = $this->getDefaultValidationConfig();
+        $custom = $this->validation_config ?? [];
+        
+        // Merge custom config with defaults, giving priority to custom values
+        return array_merge($defaults, $custom);
+    }
+
+    /**
+     * Get default validation configuration for fixed fields.
+     */
+    public function getDefaultValidationConfig(): array
+    {
+        return [
+            'participant_fields' => [
+                'name' => [
+                    'min_length' => 2,
+                    'max_length' => 255,
+                    'pattern' => '^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$',
+                    'trim_spaces' => true,
+                ],
+                'email' => [
+                    'max_length' => 255,
+                    'trim_spaces' => true,
+                ],
+                'phone' => [
+                    'pattern' => '^[0-9]{7,12}$',
+                    'trim_spaces' => true,
+                ],
+                'document_type' => [
+                    'allowed_types' => ['CC', 'TI', 'CE', 'NIT', 'PASAPORTE', 'RC', 'PEP', 'PPT', 'OTRO'],
+                ],
+                'document_number' => [
+                    'max_length' => 50,
+                    'trim_spaces' => true,
+                    'uppercase' => true,
+                ],
+                'birth_date' => [
+                    'min_age' => 18,
+                    'max_age' => null,
+                    'before_today' => true,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get validation rules for fixed participant fields based on form configuration.
+     */
+    public function getFixedFieldValidationRules(): array
+    {
+        $config = $this->getValidationConfigAttribute();
+        $participantConfig = $config['participant_fields'] ?? [];
+        
+        $rules = [
+            'name' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'phone' => ['required', 'string'],
+            'document_type' => ['required', 'string'],
+            'document_number' => ['required', 'string'],
+            'birth_date' => ['required', 'date'],
+        ];
+
+        // Apply name validations
+        if (isset($participantConfig['name'])) {
+            $nameConfig = $participantConfig['name'];
+            if (isset($nameConfig['min_length'])) {
+                $rules['name'][] = 'min:' . $nameConfig['min_length'];
+            }
+            if (isset($nameConfig['max_length'])) {
+                $rules['name'][] = 'max:' . $nameConfig['max_length'];
+            }
+            if (isset($nameConfig['pattern'])) {
+                $rules['name'][] = 'regex:/' . $nameConfig['pattern'] . '/';
+            }
+        }
+
+        // Apply email validations
+        if (isset($participantConfig['email'])) {
+            $emailConfig = $participantConfig['email'];
+            if (isset($emailConfig['max_length'])) {
+                $rules['email'][] = 'max:' . $emailConfig['max_length'];
+            }
+        }
+
+        // Apply phone validations
+        if (isset($participantConfig['phone'])) {
+            $phoneConfig = $participantConfig['phone'];
+            if (isset($phoneConfig['pattern'])) {
+                $rules['phone'][] = 'regex:/' . $phoneConfig['pattern'] . '/';
+            }
+        }
+
+        // Apply document type validations
+        if (isset($participantConfig['document_type'])) {
+            $docTypeConfig = $participantConfig['document_type'];
+            if (isset($docTypeConfig['allowed_types'])) {
+                $rules['document_type'][] = 'in:' . implode(',', $docTypeConfig['allowed_types']);
+            }
+        }
+
+        // Apply document number validations
+        if (isset($participantConfig['document_number'])) {
+            $docNumberConfig = $participantConfig['document_number'];
+            if (isset($docNumberConfig['max_length'])) {
+                $rules['document_number'][] = 'max:' . $docNumberConfig['max_length'];
+            }
+            // Add custom validation for document number format
+            $rules['document_number'][] = function ($attribute, $value, $fail) {
+                $documentType = request()->input('document_type');
+                if (!$this->validateDocumentNumber($documentType, $value)) {
+                    $fail($this->getDocumentValidationMessage($documentType));
+                }
+            };
+        }
+
+        // Apply birth date validations
+        if (isset($participantConfig['birth_date'])) {
+            $birthConfig = $participantConfig['birth_date'];
+            
+            if (isset($birthConfig['before_today']) && $birthConfig['before_today']) {
+                $rules['birth_date'][] = 'before:today';
+            }
+            
+            if (isset($birthConfig['min_age'])) {
+                $maxDate = now()->subYears($birthConfig['min_age'])->format('Y-m-d');
+                $rules['birth_date'][] = 'before_or_equal:' . $maxDate;
+            }
+            
+            if (isset($birthConfig['max_age'])) {
+                $minDate = now()->subYears($birthConfig['max_age'])->format('Y-m-d');
+                $rules['birth_date'][] = 'after_or_equal:' . $minDate;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Validate document number based on document type (moved from Request).
+     */
+    public function validateDocumentNumber(string $documentType, string $documentNumber): bool
+    {
+        // Clean the document number (remove spaces and convert to uppercase)
+        $cleanNumber = strtoupper(trim($documentNumber));
+        
+        switch ($documentType) {
+            case 'CC': // Cédula de Ciudadanía
+                return preg_match('/^[0-9]{6,10}$/', $cleanNumber);
+                
+            case 'TI': // Tarjeta de Identidad
+                return preg_match('/^[0-9]{6,11}$/', $cleanNumber);
+                
+            case 'CE': // Cédula de Extranjería
+                return preg_match('/^[0-9]{6,15}$/', $cleanNumber);
+                
+            case 'NIT': // Número de Identificación Tributaria
+                return preg_match('/^[0-9]{9,15}(-[0-9])?$/', $cleanNumber);
+                
+            case 'PASAPORTE': // Pasaporte
+                return preg_match('/^[A-Z0-9]{6,12}$/', $cleanNumber);
+                
+            case 'RC': // Registro Civil
+                return preg_match('/^[0-9]{10,15}$/', $cleanNumber);
+                
+            case 'PEP': // Permiso Especial de Permanencia
+            case 'PPT': // Permiso por Protección Temporal
+                return preg_match('/^[A-Z0-9]{6,15}$/', $cleanNumber);
+                
+            case 'OTRO': // Otros tipos (NUIP, Carné Diplomático, etc.)
+                return preg_match('/^[A-Z0-9]{6,15}$/', $cleanNumber);
+                
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Get validation message for document type (moved from Request).
+     */
+    public function getDocumentValidationMessage(string $documentType): string
+    {
+        switch ($documentType) {
+            case 'CC':
+                return 'La Cédula de Ciudadanía debe contener solo números y tener entre 6 y 10 dígitos.';
+            case 'TI':
+                return 'La Tarjeta de Identidad debe contener solo números y tener entre 6 y 11 dígitos.';
+            case 'CE':
+                return 'La Cédula de Extranjería debe contener solo números y tener entre 6 y 15 dígitos.';
+            case 'NIT':
+                return 'El NIT debe contener entre 9 y 15 dígitos y puede incluir un dígito de verificación separado por guión (ej: 900123456-7).';
+            case 'PASAPORTE':
+                return 'El Pasaporte debe contener entre 6 y 12 caracteres alfanuméricos (letras y números).';
+            case 'RC':
+                return 'El Registro Civil debe contener solo números y tener entre 10 y 15 dígitos.';
+            case 'PEP':
+                return 'El PEP debe contener entre 6 y 15 caracteres alfanuméricos (letras y números).';
+            case 'PPT':
+                return 'El PPT debe contener entre 6 y 15 caracteres alfanuméricos (letras y números).';
+            case 'OTRO':
+                return 'El documento debe contener entre 6 y 15 caracteres alfanuméricos (letras y números).';
+            default:
+                return 'El formato del número de documento no es válido.';
+        }
     }
 }

@@ -211,13 +211,15 @@
                                 class="form-input @error('document_type') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                 required>
                             <option value="">Selecciona un tipo</option>
-                            <option value="CC" {{ old('document_type') == 'CC' ? 'selected' : '' }}>Cédula de Ciudadanía</option>
-                            <option value="CE" {{ old('document_type') == 'CE' ? 'selected' : '' }}>Cédula de Extranjería</option>
-                            {{-- <option value="DNI" {{ old('document_type') == 'DNI' ? 'selected' : '' }}>DNI</option> --}}
-                            <option value="PASAPORTE" {{ old('document_type') == 'PASAPORTE' ? 'selected' : '' }}>Pasaporte</option>
+                            <option value="CC" {{ old('document_type') == 'CC' ? 'selected' : '' }}>Cédula de Ciudadanía (CC)</option>
+                            <option value="TI" {{ old('document_type') == 'TI' ? 'selected' : '' }}>Tarjeta de Identidad (TI)</option>
+                            <option value="CE" {{ old('document_type') == 'CE' ? 'selected' : '' }}>Cédula de Extranjería (CE)</option>
                             <option value="NIT" {{ old('document_type') == 'NIT' ? 'selected' : '' }}>NIT</option>
-                            {{-- <option value="CEDULA" {{ old('document_type') == 'CEDULA' ? 'selected' : '' }}>Cédula</option> --}}
-                            <option value="OTRO" {{ old('document_type') == 'OTRO' ? 'selected' : '' }}>Otro</option>
+                            <option value="PASAPORTE" {{ old('document_type') == 'PASAPORTE' ? 'selected' : '' }}>Pasaporte (PA)</option>
+                            <option value="RC" {{ old('document_type') == 'RC' ? 'selected' : '' }}>Registro Civil (RC)</option>
+                            <option value="PEP" {{ old('document_type') == 'PEP' ? 'selected' : '' }}>Permiso Especial de Permanencia (PEP)</option>
+                            <option value="PPT" {{ old('document_type') == 'PPT' ? 'selected' : '' }}>Permiso por Protección Temporal (PPT)</option>
+                            <option value="OTRO" {{ old('document_type') == 'OTRO' ? 'selected' : '' }}>Otro (NUIP, Carné Diplomático, etc.)</option>
                         </select>
                         @error('document_type')
                             <div class="mt-1 flex items-center">
@@ -242,6 +244,9 @@
                                placeholder="Ingresa tu número de documento"
                                class="form-input @error('document_number') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
                                required>
+                        <div id="document_help" class="mt-1 text-sm text-gray-500">
+                            Selecciona el tipo de documento para ver el formato requerido.
+                        </div>
                         @error('document_number')
                             <div class="mt-1 flex items-center">
                                 <svg class="h-4 w-4 text-red-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -624,6 +629,109 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     this.setCustomValidity('');
                 }
+            });
+        }
+        
+        // Validación del campo tipo de documento
+        const documentTypeField = document.getElementById('document_type');
+        const documentNumberField = document.getElementById('document_number');
+        const documentHelp = document.getElementById('document_help');
+        
+        if (documentTypeField && documentNumberField && documentHelp) {
+            // Actualizar mensaje de ayuda cuando cambie el tipo de documento
+            documentTypeField.addEventListener('change', function() {
+                updateDocumentHelp(this.value);
+                validateDocumentNumber();
+            });
+            
+            // Validar número de documento cuando cambie
+            documentNumberField.addEventListener('input', function() {
+                validateDocumentNumber();
+            });
+            
+            // Función para actualizar el mensaje de ayuda
+            function updateDocumentHelp(documentType) {
+                const helpMessages = {
+                    'CC': 'Solo números. Entre 6 y 10 dígitos. Ejemplo: 1032456789',
+                    'TI': 'Solo números. Entre 6 y 11 dígitos. Ejemplo: 1002345678',
+                    'CE': 'Solo números. Entre 6 y 15 dígitos. Ejemplo: 987654321',
+                    'NIT': 'Entre 9 y 15 dígitos. Puede incluir dígito de verificación con guión. Ejemplo: 900123456-7',
+                    'PASAPORTE': 'Entre 6 y 12 caracteres alfanuméricos. Ejemplo: AB1234567',
+                    'RC': 'Solo números. Entre 10 y 15 dígitos. Ejemplo: 123456789012',
+                    'PEP': 'Entre 6 y 15 caracteres alfanuméricos. Ejemplo: PEP1234567',
+                    'PPT': 'Entre 6 y 15 caracteres alfanuméricos. Ejemplo: PPT1234567',
+                    'OTRO': 'Entre 6 y 15 caracteres alfanuméricos. Ejemplo: NUIP123456789'
+                };
+                
+                if (documentType && helpMessages[documentType]) {
+                    documentHelp.textContent = helpMessages[documentType];
+                    documentHelp.className = 'mt-1 text-sm text-blue-600';
+                } else {
+                    documentHelp.textContent = 'Selecciona el tipo de documento para ver el formato requerido.';
+                    documentHelp.className = 'mt-1 text-sm text-gray-500';
+                }
+            }
+            
+            // Función para validar el número de documento
+            function validateDocumentNumber() {
+                const documentType = documentTypeField.value;
+                const documentNumber = documentNumberField.value.trim().toUpperCase();
+                
+                if (!documentType || !documentNumber) {
+                    documentNumberField.setCustomValidity('');
+                    return;
+                }
+                
+                let isValid = false;
+                let errorMessage = '';
+                
+                switch (documentType) {
+                    case 'CC':
+                        isValid = /^[0-9]{6,10}$/.test(documentNumber);
+                        errorMessage = 'La Cédula de Ciudadanía debe contener solo números y tener entre 6 y 10 dígitos.';
+                        break;
+                    case 'TI':
+                        isValid = /^[0-9]{6,11}$/.test(documentNumber);
+                        errorMessage = 'La Tarjeta de Identidad debe contener solo números y tener entre 6 y 11 dígitos.';
+                        break;
+                    case 'CE':
+                        isValid = /^[0-9]{6,15}$/.test(documentNumber);
+                        errorMessage = 'La Cédula de Extranjería debe contener solo números y tener entre 6 y 15 dígitos.';
+                        break;
+                    case 'NIT':
+                        isValid = /^[0-9]{9,15}(-[0-9])?$/.test(documentNumber);
+                        errorMessage = 'El NIT debe contener entre 9 y 15 dígitos y puede incluir un dígito de verificación separado por guión.';
+                        break;
+                    case 'PASAPORTE':
+                        isValid = /^[A-Z0-9]{6,12}$/.test(documentNumber);
+                        errorMessage = 'El Pasaporte debe contener entre 6 y 12 caracteres alfanuméricos.';
+                        break;
+                    case 'RC':
+                        isValid = /^[0-9]{10,15}$/.test(documentNumber);
+                        errorMessage = 'El Registro Civil debe contener solo números y tener entre 10 y 15 dígitos.';
+                        break;
+                    case 'PEP':
+                    case 'PPT':
+                        isValid = /^[A-Z0-9]{6,15}$/.test(documentNumber);
+                        errorMessage = 'El documento debe contener entre 6 y 15 caracteres alfanuméricos.';
+                        break;
+                    case 'OTRO':
+                        isValid = /^[A-Z0-9]{6,15}$/.test(documentNumber);
+                        errorMessage = 'El documento debe contener entre 6 y 15 caracteres alfanuméricos.';
+                        break;
+                }
+                
+                if (!isValid) {
+                    documentNumberField.setCustomValidity(errorMessage);
+                } else {
+                    documentNumberField.setCustomValidity('');
+                }
+            }
+            
+            // Limpiar espacios automáticamente en el número de documento
+            documentNumberField.addEventListener('input', function() {
+                // Remover espacios y convertir a mayúsculas
+                this.value = this.value.replace(/\s/g, '').toUpperCase();
             });
         }
         
