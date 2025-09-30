@@ -106,21 +106,16 @@ class FormSlugSubmitController extends Controller
             }
         }
         
-        \Log::info('Form submission data separation', [
-            'participant_data' => $participantData,
-            'dynamic_fields' => $dynamicFields,
-            'form_field_keys' => $formFieldKeys
-        ]);
         
         // Create or get participant (will associate with existing if document_number exists)
         $participant = $this->participantService->createOrGetParticipant($participantData);
 
-        // Check if participant has already submitted this form
-        if ($this->formService->hasParticipantSubmitted($form, $participant)) {
-            return redirect()->back()
-                ->with('error', 'Ya has llenado este formulario anteriormente. No puedes enviarlo nuevamente.')
-                ->withInput();
-        }
+        // Allow multiple submissions - remove the check that prevents resubmission
+        // if ($this->formService->hasParticipantSubmitted($form, $participant)) {
+        //     return redirect()->back()
+        //         ->with('error', 'Ya has llenado este formulario anteriormente. No puedes enviarlo nuevamente.')
+        //         ->withInput();
+        // }
 
         try {
             // Submit the form with only dynamic fields
@@ -147,11 +142,12 @@ class FormSlugSubmitController extends Controller
                 ]);
             }
 
-            // Redirect to success page after successful submission
-            return redirect()->route('public.forms.slug.show', ['slug' => $slug]);
+            // Redirect back to form with success message (will disappear on reload)
+            return redirect()->route('public.forms.slug.show', ['slug' => $slug])
+                ->with('success', 'Formulario enviado exitosamente. Puedes enviar otra respuesta si lo deseas.');
                 
         } catch (ValidationException $e) {
-            \Log::info('Validation exception caught:', [
+            \Log::error('Validation error in form submission', [
                 'errors' => $e->errors(),
                 'form_slug' => $slug,
             ]);

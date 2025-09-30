@@ -38,6 +38,12 @@ class SubmitFormSlugRequest extends FormRequest
                 if (!$this->validateDocumentNumber($documentType, $value)) {
                     $fail($this->getDocumentValidationMessage($documentType));
                 }
+                
+                // Check if document already exists
+                $existingParticipant = \App\Models\Participant::byDocument($documentType, $value)->first();
+                if ($existingParticipant) {
+                    $fail('Ya existe un participante registrado con este tipo y número de documento.');
+                }
             }],
             'birth_date' => ['required', 'date', 'before:today', 'before_or_equal:' . now()->subYears(16)->format('Y-m-d')],
             

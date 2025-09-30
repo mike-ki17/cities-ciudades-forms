@@ -75,52 +75,62 @@
 
         <div class="card-body">
             @if($hasSubmitted && $latestSubmission)
-                <div class="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-6">
+                <div class="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
                     <div class="flex">
                         <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">
-                                Formulario ya enviado
+                            <h3 class="text-sm font-medium text-blue-800">
+                                Último envío realizado
                             </h3>
-                            <div class="mt-2 text-sm text-yellow-700">
-                                <p>Ya has llenado este formulario anteriormente el {{ $latestSubmission->submitted_at->format('d/m/Y H:i') }}.</p>
-                                <p class="mt-1 font-medium">No puedes enviarlo nuevamente.</p>
+                            <div class="mt-2 text-sm text-blue-700">
+                                <p>Tu último envío fue realizado el {{ $latestSubmission->submitted_at->format('d/m/Y H:i') }}.</p>
+                                <p class="mt-1 font-medium">Puedes enviar otra respuesta si lo deseas.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             @endif
 
-            {{-- Mostrar errores generales del formulario --}}
+            {{-- Mostrar errores generales del formulario (excepto documento duplicado que se muestra como modal) --}}
             @if($errors->any())
-                <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-sm font-medium text-red-800">
-                                Por favor corrige los siguientes errores:
-                            </h3>
-                            <div class="mt-2 text-sm text-red-700">
-                                <ul class="list-disc list-inside space-y-1">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
+                @php
+                    $filteredErrors = $errors->all();
+                    $documentDuplicateError = 'Ya existe un participante registrado con este tipo y número de documento.';
+                    $filteredErrors = array_filter($filteredErrors, function($error) use ($documentDuplicateError) {
+                        return !str_contains($error, $documentDuplicateError);
+                    });
+                @endphp
+                
+                @if(count($filteredErrors) > 0)
+                    <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">
+                                    Por favor corrige los siguientes errores:
+                                </h3>
+                                <div class="mt-2 text-sm text-red-700">
+                                    <ul class="list-disc list-inside space-y-1">
+                                        @foreach($filteredErrors as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
             @endif
 
-            <form method="POST" action="{{ route('public.forms.slug.submit', ['id' => $form->id, 'slug' => $form->slug]) }}" class="space-y-6" @if($hasSubmitted) style="opacity: 0.6; pointer-events: none;" @endif>
+            <form method="POST" action="{{ route('public.forms.slug.submit', ['id' => $form->id, 'slug' => $form->slug]) }}" class="space-y-6">
                 @csrf
                 
                 {{-- Campos fijos del participante --}}
@@ -716,24 +726,17 @@
                 @endif
 
                 <div class="flex justify-end space-x-3">
-                    @if($hasSubmitted)
-                        <button type="button" class="btn-primary opacity-50 cursor-not-allowed" 
-                                style="background-color: {{ $primaryColor }}; border-color: {{ $primaryColor }}; border-radius: {{ $borderRadius }};" 
-                                disabled>
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            Formulario ya enviado
-                        </button>
-                    @else
-                        <button type="submit" class="btn-primary" 
-                                style="background-color: {{ $primaryColor }}; border-color: {{ $primaryColor }}; border-radius: {{ $borderRadius }};">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                            </svg>
+                    <button type="submit" class="btn-primary" 
+                            style="background-color: {{ $primaryColor }}; border-color: {{ $primaryColor }}; border-radius: {{ $borderRadius }};">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        @if($hasSubmitted)
+                            Enviar Otra Respuesta
+                        @else
                             Enviar Formulario
-                        </button>
-                    @endif
+                        @endif
+                    </button>
                 </div>
             </form>
         </div>
@@ -1546,4 +1549,151 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 </style>
+
+<!-- Modal de Éxito -->
+<div id="successModal" class="fixed inset-0 bg-black bg-opacity-60 overflow-y-auto h-full w-full hidden z-50 backdrop-blur-sm">
+    <div class="relative top-10 mx-auto p-0 border-0 w-11/12 md:w-2/3 lg:w-1/2 shadow-2xl rounded-2xl bg-white overflow-hidden">
+        <!-- Header con gradiente -->
+        <div class="bg-gradient-to-r from-green-500 to-emerald-600 px-8 py-6 text-white">
+            <div class="flex items-center justify-center mb-4">
+                <div class="flex items-center justify-center h-20 w-20 rounded-full bg-white bg-opacity-20 backdrop-blur-sm">
+                    <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+            </div>
+            <h3 class="text-3xl font-bold text-center mb-2">¡Registro Exitoso!</h3>
+            <p class="text-lg text-green-100 text-center">Tu formulario ha sido procesado correctamente</p>
+        </div>
+        
+        <!-- Contenido principal -->
+        <div class="px-8 py-8">
+            <div class="text-center mb-6">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+                        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <h4 class="text-xl font-semibold text-gray-800 mb-3">Notificación por Correo</h4>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Hemos enviado una confirmación a tu correo electrónico con los detalles de tu registro.
+                </p>
+                <p class="text-sm text-gray-500 mb-6">
+                    Revisa tu bandeja de entrada y la carpeta de spam si no encuentras el mensaje.
+                </p>
+            </div>
+            
+            <!-- Información adicional -->
+            <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                <div class="flex items-center justify-center mb-2">
+                    <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-sm font-medium text-gray-700">¿Necesitas enviar otra respuesta?</span>
+                </div>
+                <p class="text-xs text-gray-500 text-center">
+                    Puedes llenar el formulario nuevamente si lo deseas
+                </p>
+            </div>
+            
+            <!-- Botón de acción -->
+            <div class="text-center">
+                <button onclick="closeSuccessModal()" 
+                        class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 px-10 rounded-xl text-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300"
+                        style="background: linear-gradient(135deg, {{ $primaryColor }}, {{ $primaryColor }}dd); border-radius: {{ $borderRadius }};">
+                    <span class="flex items-center justify-center">
+                        <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Continuar
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Error de Documento Duplicado -->
+<div id="errorModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                <svg class="h-8 w-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Documento Ya Registrado</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-lg text-gray-600 mb-4">
+                    Ya existe un participante registrado con este tipo y número de documento.
+                </p>
+                <p class="text-sm text-gray-500 mb-6">
+                    Por favor, verifica tus datos o contacta al administrador si crees que esto es un error.
+                </p>
+                <button onclick="closeErrorModal()" 
+                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-200 ease-in-out transform hover:scale-105">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Función para mostrar el modal de éxito
+function showSuccessModal() {
+    document.getElementById('successModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+// Función para cerrar el modal de éxito
+function closeSuccessModal() {
+    document.getElementById('successModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Función para mostrar el modal de error
+function showErrorModal() {
+    document.getElementById('errorModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+// Función para cerrar el modal de error
+function closeErrorModal() {
+    document.getElementById('errorModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Cerrar modales al hacer clic fuera de ellos
+document.getElementById('successModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeSuccessModal();
+    }
+});
+
+document.getElementById('errorModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeErrorModal();
+    }
+});
+
+// Mostrar modal de éxito si hay mensaje de éxito
+@if(session('success'))
+    document.addEventListener('DOMContentLoaded', function() {
+        showSuccessModal();
+    });
+@endif
+
+// Mostrar modal de error si hay error de documento duplicado
+@if($errors->has('document_number'))
+    @if(str_contains($errors->first('document_number'), 'Ya existe un participante registrado'))
+        document.addEventListener('DOMContentLoaded', function() {
+            showErrorModal();
+        });
+    @endif
+@endif
+</script>
+
 @endsection
