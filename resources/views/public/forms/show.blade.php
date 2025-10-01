@@ -314,10 +314,10 @@
                         @enderror
                     </div>
 
-                    {{-- Campos de datos del representante legal (solo para menores de edad) --}}
+                    {{-- Campos de datos del representante legal (para menores de edad y TI) --}}
                     <div id="representative-data-section" class="border-t border-gray-200 pt-6 mt-6" style="display: none;">
                         <h4 class="text-md font-semibold text-gray-800 mb-4">Datos del Representante Legal</h4>
-                        <p class="text-sm text-gray-600 mb-4">Los siguientes campos son obligatorios para menores de edad (menores de 18 años).</p>
+                        <p class="text-sm text-gray-600 mb-4">Los siguientes campos son obligatorios para menores de edad (menores de 18 años) y personas con Tarjeta de Identidad (TI).</p>
                         
                         {{-- Nombre del representante legal --}}
                         <div class="form-group mb-6">
@@ -352,7 +352,7 @@
                                     class="form-input @error('representative_document_type') border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror">
                                 <option value="">Selecciona un tipo</option>
                                 <option value="CC" {{ old('representative_document_type') == 'CC' ? 'selected' : '' }}>Cédula de Ciudadanía (CC)</option>
-                                <option value="TI" {{ old('representative_document_type') == 'TI' ? 'selected' : '' }}>Tarjeta de Identidad (TI)</option>
+                                {{-- <option value="TI" {{ old('representative_document_type') == 'TI' ? 'selected' : '' }}>Tarjeta de Identidad (TI)</option> --}}
                                 <option value="CE" {{ old('representative_document_type') == 'CE' ? 'selected' : '' }}>Cédula de Extranjería (CE)</option>
                                 <option value="NIT" {{ old('representative_document_type') == 'NIT' ? 'selected' : '' }}>NIT</option>
                                 <option value="PASAPORTE" {{ old('representative_document_type') == 'PASAPORTE' ? 'selected' : '' }}>Pasaporte (PA)</option>
@@ -990,12 +990,75 @@ document.addEventListener('DOMContentLoaded', function() {
         const representativeEmailField = document.getElementById('representative_email');
         const representativeAuthorizationField = document.getElementById('representative_authorization');
         
+        // Función para verificar si se deben mostrar los campos del representante legal
+        function checkRepresentativeFields() {
+            const selectedDate = birthDateField ? new Date(birthDateField.value) : null;
+            const today = new Date();
+            const adultDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            const documentType = documentTypeField ? documentTypeField.value : '';
+            
+            // Mostrar campos del representante legal si:
+            // 1. Es menor de edad (menos de 18 años) O
+            // 2. Tiene Tarjeta de Identidad (TI)
+            const shouldShowRepresentative = (selectedDate && selectedDate > adultDate) || documentType === 'TI';
+            
+            if (shouldShowRepresentative) {
+                // Mostrar campos del representante legal
+                if (representativeDataSection) {
+                    representativeDataSection.style.display = 'block';
+                }
+                
+                // Hacer obligatorios los campos del representante legal
+                if (representativeNameField) representativeNameField.required = true;
+                if (representativeDocumentTypeField) representativeDocumentTypeField.required = true;
+                if (representativeDocumentNumberField) representativeDocumentNumberField.required = true;
+                if (representativeAddressField) representativeAddressField.required = true;
+                if (representativePhoneField) representativePhoneField.required = true;
+                if (representativeEmailField) representativeEmailField.required = true;
+                if (representativeAuthorizationField) representativeAuthorizationField.required = true;
+            } else {
+                // Ocultar campos del representante legal
+                if (representativeDataSection) {
+                    representativeDataSection.style.display = 'none';
+                }
+                
+                // Limpiar y hacer opcionales los campos del representante legal
+                if (representativeNameField) {
+                    representativeNameField.value = '';
+                    representativeNameField.required = false;
+                }
+                if (representativeDocumentTypeField) {
+                    representativeDocumentTypeField.value = '';
+                    representativeDocumentTypeField.required = false;
+                }
+                if (representativeDocumentNumberField) {
+                    representativeDocumentNumberField.value = '';
+                    representativeDocumentNumberField.required = false;
+                }
+                if (representativeAddressField) {
+                    representativeAddressField.value = '';
+                    representativeAddressField.required = false;
+                }
+                if (representativePhoneField) {
+                    representativePhoneField.value = '';
+                    representativePhoneField.required = false;
+                }
+                if (representativeEmailField) {
+                    representativeEmailField.value = '';
+                    representativeEmailField.required = false;
+                }
+                if (representativeAuthorizationField) {
+                    representativeAuthorizationField.checked = false;
+                    representativeAuthorizationField.required = false;
+                }
+            }
+        }
+        
         if (birthDateField) {
             birthDateField.addEventListener('change', function() {
                 const selectedDate = new Date(this.value);
                 const today = new Date();
                 const minDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate());
-                const adultDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
                 
                 // Validar edad mínima (16 años)
                 if (this.value && selectedDate > minDate) {
@@ -1004,57 +1067,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.setCustomValidity('');
                 }
                 
-                // Mostrar/ocultar campos del representante legal según la edad
-                if (this.value && selectedDate > adultDate) {
-                    // Es menor de edad (menos de 18 años) - mostrar campos del representante legal
-                    if (representativeDataSection) {
-                        representativeDataSection.style.display = 'block';
-                    }
-                    
-                    // Hacer obligatorios los campos del representante legal
-                    if (representativeNameField) representativeNameField.required = true;
-                    if (representativeDocumentTypeField) representativeDocumentTypeField.required = true;
-                    if (representativeDocumentNumberField) representativeDocumentNumberField.required = true;
-                    if (representativeAddressField) representativeAddressField.required = true;
-                    if (representativePhoneField) representativePhoneField.required = true;
-                    if (representativeEmailField) representativeEmailField.required = true;
-                    if (representativeAuthorizationField) representativeAuthorizationField.required = true;
-                } else {
-                    // Es mayor de edad (18 años o más) - ocultar campos del representante legal
-                    if (representativeDataSection) {
-                        representativeDataSection.style.display = 'none';
-                    }
-                    
-                    // Limpiar y hacer opcionales los campos del representante legal
-                    if (representativeNameField) {
-                        representativeNameField.value = '';
-                        representativeNameField.required = false;
-                    }
-                    if (representativeDocumentTypeField) {
-                        representativeDocumentTypeField.value = '';
-                        representativeDocumentTypeField.required = false;
-                    }
-                    if (representativeDocumentNumberField) {
-                        representativeDocumentNumberField.value = '';
-                        representativeDocumentNumberField.required = false;
-                    }
-                    if (representativeAddressField) {
-                        representativeAddressField.value = '';
-                        representativeAddressField.required = false;
-                    }
-                    if (representativePhoneField) {
-                        representativePhoneField.value = '';
-                        representativePhoneField.required = false;
-                    }
-                    if (representativeEmailField) {
-                        representativeEmailField.value = '';
-                        representativeEmailField.required = false;
-                    }
-                    if (representativeAuthorizationField) {
-                        representativeAuthorizationField.checked = false;
-                        representativeAuthorizationField.required = false;
-                    }
-                }
+                // Verificar campos del representante legal
+                checkRepresentativeFields();
             });
             
             // Ejecutar la lógica al cargar la página si ya hay una fecha
@@ -1062,6 +1076,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 birthDateField.dispatchEvent(new Event('change'));
             }
         }
+        
+        if (documentTypeField) {
+            documentTypeField.addEventListener('change', function() {
+                // Verificar campos del representante legal cuando cambie el tipo de documento
+                checkRepresentativeFields();
+            });
+            
+            // Ejecutar la lógica al cargar la página si ya hay un tipo de documento seleccionado
+            if (documentTypeField.value) {
+                checkRepresentativeFields();
+            }
+        }
+        
+        // Ejecutar la verificación inicial al cargar la página
+        checkRepresentativeFields();
         
         // Validación de campos del representante legal
         const representativeDocumentHelp = document.getElementById('representative_document_help');
