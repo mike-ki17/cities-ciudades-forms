@@ -477,9 +477,7 @@
                                 <div class="ml-3">
                                     <label for="representative_authorization" class="text-sm text-gray-700 leading-relaxed" style="text-align: justify !important;">
                                         <span class="text-red-500">*</span>
-                                        Como padre/madre/representante legal del menor autorizo de manera expresa, libre e informada la participación del menor al que represento en el Festival SMARTFILMS® Bogotá 2025, igualmente autorizo el tratamiento de los datos personales e imagen del menor de manera conjunta por parte de Valencia Producciones FX SAS, NIT.900.525.880-3, y de La Cámara de Comercio de Bogotá - CCB, NIT.860.007.322-9 conforme a las finalidades establecidas y en cumplimiento de la normativa vigente sobre protección de datos personales.
-                                        <br><br>
-                                        Declaro haber sido informado/a sobre el uso que se dará a dicha información, conforme a lo previsto en la política de protección de datos personales de Valencia Producciones FX S.AS. publicada en www.valenciaproducciones.com, así como la política de protección de datos de la Cámara de Comercio de Bogotá – CCB ubicada en www.ccb.org.co/proteccion-de-datos-personales.
+                                        Como padre/madre/representante legal del menor autorizo de manera expresa, libre e informada la participación del menor al que represento en el Festival SMARTFILMS® Bogotá 2025, igualmente autorizo el tratamiento de sus datos personales por parte de La Cámara de Comercio de Bogotá - CCB, NIT.860.007.322-9 conforme a lo establecido en el formulario de registro y en la política de protección de datos de la CCB ubicada en  www.ccb.org.co/proteccion-de-datos-personales. Entiendo que mis datos registrados serán utilizados para la validación de la veracidad de la información y la comprobación de la autorización otorgada.
                                     </label>
                                     @error('representative_authorization')
                                         <div class="mt-1 flex items-center">
