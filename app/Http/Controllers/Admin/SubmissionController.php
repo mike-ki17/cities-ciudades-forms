@@ -25,10 +25,13 @@ class SubmissionController extends Controller
         
         $submissions = $this->submissionRepository->getWithFilters($filters);
         
+        // Calcular estadísticas para las tarjetas de resumen
+        $statistics = $this->submissionRepository->getStatistics($filters);
+        
         $forms = Form::with('event')->orderBy('name')->get();
         $events = Event::orderBy('name')->orderBy('city')->orderBy('year')->get();
 
-        return view('admin.submissions.index', compact('submissions', 'forms', 'events', 'filters'));
+        return view('admin.submissions.index', compact('submissions', 'forms', 'events', 'filters', 'statistics'));
     }
 
     /**

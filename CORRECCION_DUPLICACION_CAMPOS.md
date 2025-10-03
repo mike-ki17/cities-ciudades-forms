@@ -53,3 +53,4 @@ if ($request->hasFile('csv_file') && isset($validated['csv_options'])) {
 - ✅ `app/Http/Controllers/Admin/FieldJsonController.php`
 - ✅ `app/Http/Requests/Field/StoreFieldJsonRequest.php`
 - ✅ `CORRECCION_DUPLICACION_CAMPOS.md` (este archivo)
+

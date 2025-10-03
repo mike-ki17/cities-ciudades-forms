@@ -165,7 +165,7 @@
                             <div class="ml-4 flex-1">
                                 <dl>
                                     <dt class="text-sm font-medium admin-text-secondary truncate">Hoy</dt>
-                                    <dd class="text-2xl font-bold admin-text">{{ $submissions->where('submitted_at', '>=', today())->count() }}</dd>
+                                    <dd class="text-2xl font-bold admin-text">{{ $statistics['today_submissions'] }}</dd>
                                 </dl>
                             </div>
                         </div>
@@ -181,7 +181,7 @@
                             <div class="ml-4 flex-1">
                                 <dl>
                                     <dt class="text-sm font-medium admin-text-secondary truncate">Esta Semana</dt>
-                                    <dd class="text-2xl font-bold admin-text">{{ $submissions->where('submitted_at', '>=', now()->startOfWeek())->count() }}</dd>
+                                    <dd class="text-2xl font-bold admin-text">{{ $statistics['this_week_submissions'] }}</dd>
                                 </dl>
                             </div>
                         </div>
@@ -198,7 +198,7 @@
                             <div class="ml-4 flex-1">
                                 <dl>
                                     <dt class="text-sm font-medium admin-text-secondary truncate">Este Mes</dt>
-                                    <dd class="text-2xl font-bold admin-text">{{ $submissions->where('submitted_at', '>=', now()->startOfMonth())->count() }}</dd>
+                                    <dd class="text-2xl font-bold admin-text">{{ $statistics['this_month_submissions'] }}</dd>
                                 </dl>
                             </div>
                         </div>

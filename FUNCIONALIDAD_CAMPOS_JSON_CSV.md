@@ -123,3 +123,4 @@ Se incluye `ejemplo_barrios_suba.csv` con datos de ejemplo para probar la funcio
 - **Barrios por localidad:** Cargar barrios específicos de cada localidad
 - **Opciones dinámicas:** Crear campos que aparecen según selecciones previas
 - **Formularios complejos:** Implementar lógica condicional avanzada
+

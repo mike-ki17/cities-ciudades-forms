@@ -283,6 +283,11 @@ class SubmissionRepository
         $conversionRate = $uniqueParticipants > 0 ? 
             round(($totalSubmissions / $uniqueParticipants) * 100, 2) : 0;
 
+        // Estadísticas específicas para las tarjetas de resumen
+        $todaySubmissions = $this->getTodaySubmissions($filters);
+        $thisWeekSubmissions = $this->getThisWeekSubmissions($filters);
+        $thisMonthSubmissions = $this->getThisMonthSubmissions($filters);
+
         return [
             'total_submissions' => $totalSubmissions,
             'unique_participants' => $uniqueParticipants,
@@ -293,11 +298,74 @@ class SubmissionRepository
             'submissions_by_city' => $submissionsByCity,
             'submissions_by_hour' => $submissionsByHour,
             'submissions_by_day_of_week' => $submissionsByDayOfWeek,
+            'today_submissions' => $todaySubmissions,
+            'this_week_submissions' => $thisWeekSubmissions,
+            'this_month_submissions' => $thisMonthSubmissions,
             'date_range' => [
                 'from' => $dateFrom,
                 'to' => $dateTo
             ]
         ];
+    }
+
+    /**
+     * Get submissions for today.
+     */
+    public function getTodaySubmissions(array $filters = []): int
+    {
+        $query = FormSubmission::whereDate('submitted_at', today());
+
+        if (isset($filters['form_id'])) {
+            $query->where('form_id', $filters['form_id']);
+        }
+
+        if (isset($filters['event_id'])) {
+            $query->whereHas('form', function ($q) use ($filters) {
+                $q->where('event_id', $filters['event_id']);
+            });
+        }
+
+        return $query->count();
+    }
+
+    /**
+     * Get submissions for this week.
+     */
+    public function getThisWeekSubmissions(array $filters = []): int
+    {
+        $query = FormSubmission::where('submitted_at', '>=', now()->startOfWeek());
+
+        if (isset($filters['form_id'])) {
+            $query->where('form_id', $filters['form_id']);
+        }
+
+        if (isset($filters['event_id'])) {
+            $query->whereHas('form', function ($q) use ($filters) {
+                $q->where('event_id', $filters['event_id']);
+            });
+        }
+
+        return $query->count();
+    }
+
+    /**
+     * Get submissions for this month.
+     */
+    public function getThisMonthSubmissions(array $filters = []): int
+    {
+        $query = FormSubmission::where('submitted_at', '>=', now()->startOfMonth());
+
+        if (isset($filters['form_id'])) {
+            $query->where('form_id', $filters['form_id']);
+        }
+
+        if (isset($filters['event_id'])) {
+            $query->whereHas('form', function ($q) use ($filters) {
+                $q->where('event_id', $filters['event_id']);
+            });
+        }
+
+        return $query->count();
     }
 
     /**

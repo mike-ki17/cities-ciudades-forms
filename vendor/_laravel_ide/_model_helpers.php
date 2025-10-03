@@ -2910,6 +2910,7 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property \Illuminate\Support\Carbon $submitted_at
      * @property array $data_json
+     * @property string|null $ip_address
      * @property int $participant_id
      * @property int $form_id
      * @property int $id
@@ -2918,6 +2919,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereFormId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereParticipantId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereIpAddress($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereDataJson($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereSubmittedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereCreatedAt($value)
@@ -3546,6 +3548,13 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $deleted_at
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property string|null $representative_email
+     * @property string|null $representative_phone
+     * @property string|null $representative_address
+     * @property boolean $representative_authorization
+     * @property string|null $representative_document_number
+     * @property string|null $representative_document_type
+     * @property string|null $representative_name
      * @property \Illuminate\Support\Carbon|null $birth_date
      * @property string $document_number
      * @property string $document_type
@@ -3553,9 +3562,9 @@ namespace App\Models {
      * @property string|null $email
      * @property string $name
      * @property int $id
-     * @property-read mixed $full_name
      * @property-read mixed $first_name
      * @property-read mixed $last_name
+     * @property-read mixed $full_name
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Attendance> $attendances
      * @property-read int|null $attendances_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FormSubmission> $formSubmissions
@@ -3571,6 +3580,13 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereDocumentType($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereDocumentNumber($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereBirthDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeName($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeDocumentType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeDocumentNumber($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeAuthorization($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeAddress($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativePhone($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeEmail($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereDeletedAt($value)
