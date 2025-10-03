@@ -229,7 +229,7 @@ class SubmissionRepository
             })
             ->get()
             ->groupBy(function ($submission) {
-                return $submission->form->event ? $submission->form->event->name : 'Sin Evento';
+                return $submission->form && $submission->form->event ? $submission->form->event->name : 'Sin Evento';
             })
             ->map(function ($submissions) {
                 return $submissions->count();
