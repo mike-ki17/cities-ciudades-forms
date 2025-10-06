@@ -35,6 +35,11 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
+        // Redirect metrics viewers to metrics dashboard
+        if ($user->isMetricsViewer()) {
+            return redirect()->intended(route('admin.metrics.index'));
+        }
+
         // Redirect to welcome page if user has a participant
         if ($user->participant) {
             return redirect()->intended('/');

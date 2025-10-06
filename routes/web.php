@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FormController;
 use App\Http\Controllers\Admin\FieldController;
 use App\Http\Controllers\Admin\SubmissionController;
+use App\Http\Controllers\Admin\MetricsController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -132,4 +133,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/submissions/export/csv', [SubmissionController::class, 'export'])->name('submissions.export');
     Route::get('/submissions/statistics', [SubmissionController::class, 'statistics'])->name('submissions.statistics');
     Route::get('/submissions/{submission}', [SubmissionController::class, 'show'])->name('submissions.show');
+});
+
+// Metrics routes (for restricted users)
+Route::middleware(['auth', 'metrics.viewer'])->prefix('admin')->name('admin.metrics.')->group(function () {
+    Route::get('/metrics', [MetricsController::class, 'index'])->name('index');
+    Route::get('/metrics/statistics', [MetricsController::class, 'statistics'])->name('statistics');
 });

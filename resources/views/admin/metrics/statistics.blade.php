@@ -335,6 +335,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
+    console.log('Chart.js version:', Chart.version);
+    console.log('Chart.js plugins available:', Object.keys(Chart.plugins || {}));
+    
     // Configuración de colores del tema
     const primaryColor = '#00ffbd';
     const secondaryColor = '#bb2558';
@@ -344,6 +347,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Datos de las estadísticas
     const statistics = @json($statistics);
     console.log('Statistics data:', statistics);
+    console.log('Submissions by date:', statistics.submissions_by_date);
+    console.log('Submissions by date length:', statistics.submissions_by_date ? statistics.submissions_by_date.length : 'undefined');
     
     // Configuración común para las gráficas
     const chartOptions = {
@@ -396,19 +401,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Gráfica de respuestas por fecha
     try {
         const submissionsByDateCtx = document.getElementById('submissionsByDateChart').getContext('2d');
-        const submissionsByDateData = statistics.submissions_by_date.map(item => ({
-            x: item.date,
-            y: item.count
-        }));
         
-        console.log('Creating date chart with data:', submissionsByDateData);
+        console.log('Raw submissions_by_date:', statistics.submissions_by_date);
+        console.log('Type of submissions_by_date:', typeof statistics.submissions_by_date);
+        console.log('Is array:', Array.isArray(statistics.submissions_by_date));
+        
+        if (!statistics.submissions_by_date || statistics.submissions_by_date.length === 0) {
+            console.warn('No data available for date chart');
+            return;
+        }
+        
+        const labels = statistics.submissions_by_date.map(item => item.date);
+        const data = statistics.submissions_by_date.map(item => item.count);
+        
+        console.log('Chart labels:', labels);
+        console.log('Chart data:', data);
         
         new Chart(submissionsByDateCtx, {
             type: 'line',
             data: {
+                labels: labels,
                 datasets: [{
                     label: 'Respuestas',
-                    data: submissionsByDateData,
+                    data: data,
                     borderColor: primaryColor,
                     backgroundColor: backgroundColor,
                     tension: 0.4,
@@ -420,17 +435,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 }]
             },
             options: {
-                ...chartOptions,
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#e2e8f0',
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1a2332',
+                        titleColor: '#e2e8f0',
+                        bodyColor: '#a0aec0',
+                        borderColor: '#2d3748',
+                        borderWidth: 1
+                    }
+                },
                 scales: {
-                    ...chartOptions.scales,
                     x: {
-                        ...chartOptions.scales.x,
-                        type: 'time',
-                        time: {
-                            unit: 'day',
-                            displayFormats: {
-                                day: 'MMM dd'
-                            }
+                        ticks: {
+                            color: '#a0aec0'
+                        },
+                        grid: {
+                            color: '#2d3748',
+                            drawBorder: false
+                        },
+                        border: {
+                            color: '#2d3748'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#a0aec0'
+                        },
+                        grid: {
+                            color: '#2d3748',
+                            drawBorder: false
+                        },
+                        border: {
+                            color: '#2d3748'
                         }
                     }
                 }
@@ -439,6 +484,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Date chart created successfully');
     } catch (error) {
         console.error('Error creating date chart:', error);
+        console.error('Error details:', error.message);
+        console.error('Error stack:', error.stack);
     }
 
     // Gráfica de respuestas por formulario

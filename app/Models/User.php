@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'participant_id',
+        'role',
     ];
 
     /**
@@ -73,6 +74,30 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->is_admin;
+    }
+
+    /**
+     * Check if the user has a specific role.
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * Check if the user is a metrics viewer (restricted role).
+     */
+    public function isMetricsViewer(): bool
+    {
+        return $this->role === 'metrics_viewer';
+    }
+
+    /**
+     * Check if the user is a regular user.
+     */
+    public function isRegularUser(): bool
+    {
+        return $this->role === 'user';
     }
 
     /**

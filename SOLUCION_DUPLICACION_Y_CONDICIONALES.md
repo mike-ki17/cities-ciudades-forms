@@ -127,3 +127,4 @@ El JavaScript del frontend estaba agregando las opciones del CSV al JSON, y lueg
 
 ¡La funcionalidad está completamente operativa!
 
+

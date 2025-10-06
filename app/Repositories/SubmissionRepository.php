@@ -275,6 +275,28 @@ class SubmissionRepository
             ->orderBy('day_of_week')
             ->get();
 
+        // Estadísticas por mes (últimos 12 meses)
+        $submissionsByMonth = FormSubmission::selectRaw('YEAR(submitted_at) as year, MONTH(submitted_at) as month, COUNT(*) as count')
+            ->where('submitted_at', '>=', now()->subMonths(12))
+            ->when(isset($filters['form_id']), function ($q) use ($filters) {
+                $q->where('form_id', $filters['form_id']);
+            })
+            ->when(isset($filters['event_id']), function ($q) use ($filters) {
+                $q->whereHas('form', function ($formQuery) use ($filters) {
+                    $formQuery->where('event_id', $filters['event_id']);
+                });
+            })
+            ->when(isset($filters['date_from']), function ($q) use ($filters) {
+                $q->where('submitted_at', '>=', $filters['date_from']);
+            })
+            ->when(isset($filters['date_to']), function ($q) use ($filters) {
+                $q->where('submitted_at', '<=', $filters['date_to']);
+            })
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->get();
+
         // Promedio de envíos por día
         $avgSubmissionsPerDay = $totalSubmissions > 0 ? 
             round($totalSubmissions / max(1, (strtotime($dateTo) - strtotime($dateFrom)) / 86400), 2) : 0;
@@ -293,11 +315,12 @@ class SubmissionRepository
             'unique_participants' => $uniqueParticipants,
             'avg_submissions_per_day' => $avgSubmissionsPerDay,
             'conversion_rate' => $conversionRate,
-            'submissions_by_date' => $submissionsByDate,
+            'submissions_by_date' => $submissionsByDate->toArray(),
             'submissions_by_form' => $submissionsByForm,
             'submissions_by_city' => $submissionsByCity,
-            'submissions_by_hour' => $submissionsByHour,
-            'submissions_by_day_of_week' => $submissionsByDayOfWeek,
+            'submissions_by_hour' => $submissionsByHour->toArray(),
+            'submissions_by_day_of_week' => $submissionsByDayOfWeek->toArray(),
+            'submissions_by_month' => $submissionsByMonth->toArray(),
             'today_submissions' => $todaySubmissions,
             'this_week_submissions' => $thisWeekSubmissions,
             'this_month_submissions' => $thisMonthSubmissions,

@@ -147,3 +147,4 @@ Después de crear los 3 campos:
 - ✅ **Orden correcto**: Ciudad (1) → Localidad (2) → Barrios (3)
 - ✅ **Modelos correctos**: `ciudad` → `localidad_bogota` → `barrios_bogota_barrios_unidos`
 
+

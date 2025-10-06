@@ -292,67 +292,107 @@
         <div class="hidden md:flex md:w-64 md:flex-col">
             <div class="flex flex-col flex-grow pt-5 admin-sidebar overflow-y-auto">
                 <div class="flex items-center flex-shrink-0 px-4">
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3">
-                        <img src="https://d1qdwr9la23cpt.cloudfront.net/uploads/2025/Isotipo.png" alt="Smartfilms Forms" class="h-8 w-8">
-                        <span class="text-xl font-bold admin-link">Smartfilms Forms</span>
-                    </a>
+                    @if(Auth::user()->isMetricsViewer())
+                        <a href="{{ route('admin.metrics.index') }}" class="flex items-center space-x-3">
+                            <img src="https://d1qdwr9la23cpt.cloudfront.net/uploads/2025/Isotipo.png" alt="Smartfilms Forms" class="h-8 w-8">
+                            <span class="text-xl font-bold admin-link">Smartfilms Forms</span>
+                        </a>
+                    @else
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3">
+                            <img src="https://d1qdwr9la23cpt.cloudfront.net/uploads/2025/Isotipo.png" alt="Smartfilms Forms" class="h-8 w-8">
+                            <span class="text-xl font-bold admin-link">Smartfilms Forms</span>
+                        </a>
+                    @endif
                 </div>
                 <div class="mt-5 flex-grow flex flex-col">
                     <nav class="flex-1 px-2 pb-4 space-y-1">
                         <!-- Dashboard -->
-                        <a href="{{ route('admin.dashboard') }}" 
-                           class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.dashboard') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
-                            <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
-                            </svg>
-                            Dashboard
-                        </a>
+                        @if(Auth::user()->isMetricsViewer())
+                            <a href="{{ route('admin.metrics.index') }}" 
+                               class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.metrics.index') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                                <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+                                </svg>
+                                Dashboard
+                            </a>
+                        @else
+                            <a href="{{ route('admin.dashboard') }}" 
+                               class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.dashboard') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                                <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
+                                </svg>
+                                Dashboard
+                            </a>
+                        @endif
 
-                        <!-- Events -->
-                        <a href="{{ route('admin.events.index') }}" 
-                           class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.events.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
-                            <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 0V5a2 2 0 012-2h4a2 2 0 012 2v2m-6 0h6m-6 0l-2 2m8-2l2 2m-2-2v10a2 2 0 01-2 2H8a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H8a2 2 0 01-2-2V9z" />
-                            </svg>
-                            Eventos
-                        </a>
+                        @if(!Auth::user()->isMetricsViewer())
+                            <!-- Events -->
+                            <a href="{{ route('admin.events.index') }}" 
+                               class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.events.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                                <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 0V5a2 2 0 012-2h4a2 2 0 012 2v2m-6 0h6m-6 0l-2 2m8-2l2 2m-2-2v10a2 2 0 01-2 2H8a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 01-2 2H8a2 2 0 01-2-2V9z" />
+                                </svg>
+                                Eventos
+                            </a>
 
-                        <!-- Forms -->
-                        <a href="{{ route('admin.forms.index') }}" 
-                           class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.forms.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
-                            <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            Formularios
-                        </a>
+                            <!-- Forms -->
+                            <a href="{{ route('admin.forms.index') }}" 
+                               class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.forms.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                                <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Formularios
+                            </a>
 
-                        <!-- Fields -->
-                        <a href="{{ route('admin.fields.index') }}" 
-                           class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.fields.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
-                            <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                            </svg>
-                            Campos
-                        </a>
+                            <!-- Fields -->
+                            <a href="{{ route('admin.fields.index') }}" 
+                               class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.fields.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                                <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                                Campos
+                            </a>
 
-                        <!-- Submissions -->
-                        <a href="{{ route('admin.submissions.index') }}" 
-                           class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.submissions.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
-                            <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                            Respuestas
-                        </a>
+                            <!-- Submissions -->
+                            <a href="{{ route('admin.submissions.index') }}" 
+                               class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.submissions.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                                <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                Respuestas
+                            </a>
+                        @endif
 
                         <!-- Statistics -->
-                        <a href="{{ route('admin.submissions.statistics') }}" 
-                           class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.submissions.statistics') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
-                            <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                            Estadísticas
-                        </a>
+                        @if(Auth::user()->isMetricsViewer())
+                            <a href="{{ route('admin.metrics.statistics') }}" 
+                               class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.metrics.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                                <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                                Estadísticas
+                            </a>
+                        @else
+                            <!-- Para administradores, mostrar ambas opciones -->
+                            <div class="space-y-1">
+                                <a href="{{ route('admin.metrics.statistics') }}" 
+                                   class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.metrics.*') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                                    <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                    Estadísticas
+                                </a>
+                                {{-- <a href="{{ route('admin.submissions.statistics') }}" 
+                                   class="group flex items-center px-2 py-2 text-sm font-medium rounded-md {{ request()->routeIs('admin.submissions.statistics') ? 'admin-button-primary' : 'admin-text-secondary hover:admin-button-outline' }}">
+                                    <svg class="mr-3 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                    Estadísticas (Admin)
+                                </a> --}}
+                            </div>
+                        @endif
                     </nav>
                 </div>
             </div>
