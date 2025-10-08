@@ -20,3 +20,5 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 .cursorrules
+
+/database/migrations/2025_09_29_220000_fix_representative_fields_production.php
