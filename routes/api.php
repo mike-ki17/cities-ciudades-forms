@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\FileUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -145,4 +146,46 @@ Route::get('/localities/{city}', function (Request $request, string $city) {
         'city' => $city,
         'localities' => $localities
     ]);
+});
+
+// File upload routes
+Route::prefix('files')->group(function () {
+    Route::post('/upload', [FileUploadController::class, 'upload']);
+    Route::get('/info', [FileUploadController::class, 'info']);
+    Route::delete('/delete', [FileUploadController::class, 'delete']);
+    
+    // Test route
+    Route::post('/test', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'message' => 'API funcionando correctamente',
+            'data' => $request->all()
+        ]);
+    });
+    
+    // Simple file test route
+    Route::post('/test-file', function (Request $request) {
+        try {
+            $file = $request->file('file');
+            if (!$file) {
+                return response()->json(['success' => false, 'message' => 'No file provided'], 400);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'File received successfully',
+                'file_info' => [
+                    'name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                    'mime' => $file->getMimeType(),
+                    'extension' => $file->getClientOriginalExtension()
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    });
 });

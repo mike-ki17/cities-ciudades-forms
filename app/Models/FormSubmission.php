@@ -126,4 +126,38 @@ class FormSubmission extends Model
 
         return $formatted;
     }
+
+    /**
+     * Get file information for a specific field.
+     */
+    public function getFileInfo(string $fieldKey): ?array
+    {
+        return $this->data_json[$fieldKey] ?? null;
+    }
+
+    /**
+     * Set file information for a specific field.
+     */
+    public function setFileInfo(string $fieldKey, array $fileInfo): void
+    {
+        $dataJson = $this->data_json ?? [];
+        $dataJson[$fieldKey] = $fileInfo;
+        $this->data_json = $dataJson;
+    }
+
+    /**
+     * Get all file information.
+     */
+    public function getAllFileInfo(): array
+    {
+        return $this->data_json ?? [];
+    }
+
+    /**
+     * Check if a field has an associated file.
+     */
+    public function hasFile(string $fieldKey): bool
+    {
+        return isset($this->data_json[$fieldKey]);
+    }
 }

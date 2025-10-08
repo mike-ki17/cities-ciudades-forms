@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\FormController;
 use App\Http\Controllers\Admin\FieldController;
 use App\Http\Controllers\Admin\SubmissionController;
 use App\Http\Controllers\Admin\MetricsController;
+use App\Http\Controllers\Api\FileUploadController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -140,3 +141,7 @@ Route::middleware(['auth', 'metrics.viewer'])->prefix('admin')->name('admin.metr
     Route::get('/metrics', [MetricsController::class, 'index'])->name('index');
     Route::get('/metrics/statistics', [MetricsController::class, 'statistics'])->name('statistics');
 });
+
+// File download route (for local storage)
+Route::get('/form/file/download/{encodedPath}', [FileUploadController::class, 'download'])
+    ->name('form.file.download');

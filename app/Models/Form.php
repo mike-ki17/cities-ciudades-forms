@@ -351,6 +351,16 @@ class Form extends Model
                     $this->addCheckboxValidations($fieldRules, $field);
                     break;
 
+                case 'file':
+                    // For file fields, we don't validate as files during form submission
+                    // because the file is already uploaded and we only have JSON info
+                    $fieldRules = ['nullable', 'string'];
+                    \Log::info('File field validation rules generated in Form model', [
+                        'field_key' => $field['key'] ?? 'unknown',
+                        'rules' => $fieldRules
+                    ]);
+                    break;
+
                 case 'section':
                     // Los campos de sección no se validan como campos de entrada
                     $fieldRules = ['nullable'];
@@ -637,12 +647,13 @@ class Form extends Model
         }
 
         // Validación de tipo de archivo (para futuras implementaciones)
-        if (isset($validations['file_types'])) {
-            $types = is_array($validations['file_types']) 
-                ? implode(',', $validations['file_types'])
-                : $validations['file_types'];
-            $fieldRules[] = 'mimes:' . $types;
-        }
+        // Note: File validation is handled separately during file upload, not during form submission
+        // if (isset($validations['file_types'])) {
+        //     $types = is_array($validations['file_types']) 
+        //         ? implode(',', $validations['file_types'])
+        //         : $validations['file_types'];
+        //     $fieldRules[] = 'mimes:' . $types;
+        // }
     }
 
     /**

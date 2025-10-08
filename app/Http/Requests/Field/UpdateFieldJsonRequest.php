@@ -91,7 +91,7 @@ class UpdateFieldJsonRequest extends FormRequest
         if (!isset($field['type']) || empty($field['type'])) {
             $validator->errors()->add('field_json.type', 'El campo debe tener un tipo (type).');
         } else {
-            $validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date', 'section', 'tel'];
+            $validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date', 'section', 'tel', 'file'];
             if (!in_array($field['type'], $validTypes)) {
                 $validator->errors()->add('field_json.type', 'El tipo de campo debe ser uno de: ' . implode(', ', $validTypes));
             }

@@ -1,0 +1,30 @@
+{
+  "name": "Formulario de Prueba con Campo de Archivo",
+  "description": "Formulario simple para probar el campo tipo file",
+  "event_id": 20,
+  "is_active": true,
+  "fields": [
+    {
+      "key": "foto_perfil",
+      "label": "Foto de Perfil",
+      "type": "file",
+      "required": true,
+      "description": "Sube una foto reciente tuya",
+      "validations": {
+        "file_types": ["jpg", "jpeg", "png"],
+        "max_file_size": 2048
+      }
+    },
+    {
+      "key": "documento_identidad",
+      "label": "Documento de Identidad",
+      "type": "file",
+      "required": true,
+      "description": "Sube una copia clara de tu documento de identidad",
+      "validations": {
+        "file_types": ["jpg", "jpeg", "png", "pdf"],
+        "max_file_size": 5120
+      }
+    }
+  ]
+}

@@ -89,7 +89,7 @@ class StoreFieldJsonRequest extends FormRequest
         if (!isset($field['type']) || empty($field['type'])) {
             $validator->errors()->add('field_json.type', 'El campo debe tener un tipo (type).');
         } else {
-            $validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date', 'dynamic_select', 'section', 'tel'];
+            $validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date', 'dynamic_select', 'section', 'tel', 'file'];
             if (!in_array($field['type'], $validTypes)) {
                 $validator->errors()->add('field_json.type', 'El tipo de campo debe ser uno de: ' . implode(', ', $validTypes));
             }
@@ -121,6 +121,21 @@ class StoreFieldJsonRequest extends FormRequest
             
             if (!isset($field['options']) || !is_array($field['options']) || empty($field['options'])) {
                 $validator->errors()->add('field_json.options', 'Los campos de tipo dynamic_select deben tener opciones para el campo padre.');
+            }
+        }
+
+        // Validate file field options
+        if (isset($field['type']) && $field['type'] === 'file') {
+            if (!isset($field['validations'])) {
+                $validator->errors()->add('field_json.validations', 'Los campos de tipo file deben tener validaciones.');
+            } else {
+                $validations = $field['validations'];
+                if (!isset($validations['file_types']) || !is_array($validations['file_types']) || empty($validations['file_types'])) {
+                    $validator->errors()->add('field_json.validations.file_types', 'Los campos de tipo file deben especificar los tipos de archivo permitidos.');
+                }
+                if (!isset($validations['max_file_size']) || !is_numeric($validations['max_file_size']) || $validations['max_file_size'] <= 0) {
+                    $validator->errors()->add('field_json.validations.max_file_size', 'Los campos de tipo file deben especificar un tamaño máximo válido en KB.');
+                }
             }
         }
 

@@ -96,9 +96,11 @@ class SubmitFormSlugRequest extends FormRequest
         try {
             $formService = app(\App\Services\FormService::class);
             $dynamicRules = $formService->generateValidationRulesFromRelational($form, $this->all());
+            \Log::info('Using relational validation rules', ['rules' => $dynamicRules]);
         } catch (\Exception $e) {
             // Fallback to legacy JSON validation
             $dynamicRules = $form->getValidationRules($this->all());
+            \Log::info('Using legacy JSON validation rules', ['rules' => $dynamicRules, 'error' => $e->getMessage()]);
         }
 
         // Merge participant rules with dynamic rules

@@ -1927,10 +1927,10 @@ namespace App\Models {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
-     * @property boolean $is_active
+     * @property boolean|null $is_active
      * @property string|null $description
-     * @property string $name
-     * @property string $code
+     * @property string|null $name
+     * @property string|null $code
      * @property int $id
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\FormOption> $formOptions
      * @property-read int|null $formOptions_count
@@ -2909,8 +2909,8 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property \Illuminate\Support\Carbon $submitted_at
+     * @property string|null $file_info
      * @property array $data_json
-     * @property string|null $ip_address
      * @property int $participant_id
      * @property int $form_id
      * @property int $id
@@ -2919,8 +2919,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereFormId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereParticipantId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereIpAddress($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereDataJson($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereFileInfo($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereSubmittedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FormSubmission>|FormSubmission whereUpdatedAt($value)
@@ -3545,9 +3545,6 @@ namespace App\Models {
     /**
      * App\Models\Participant
      *
-     * @property \Illuminate\Support\Carbon|null $deleted_at
-     * @property \Illuminate\Support\Carbon|null $updated_at
-     * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $representative_email
      * @property string|null $representative_phone
      * @property string|null $representative_address
@@ -3555,6 +3552,9 @@ namespace App\Models {
      * @property string|null $representative_document_number
      * @property string|null $representative_document_type
      * @property string|null $representative_name
+     * @property \Illuminate\Support\Carbon|null $deleted_at
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
      * @property \Illuminate\Support\Carbon|null $birth_date
      * @property string $document_number
      * @property string $document_type
@@ -3580,6 +3580,9 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereDocumentType($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereDocumentNumber($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereBirthDate($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereDeletedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeDocumentType($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeDocumentNumber($value)
@@ -3587,9 +3590,6 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeAddress($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativePhone($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereRepresentativeEmail($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereCreatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereUpdatedAt($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant whereDeletedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant byEmailInsensitive()
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant byDocument()
      * @method static \Illuminate\Database\Eloquent\Builder<Participant>|Participant newModelQuery()

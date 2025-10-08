@@ -999,7 +999,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!field.type || field.type.trim() === '') {
                     fieldErrors.push(`${fieldPrefix}: Falta la propiedad "type"`);
                 } else {
-                    const validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date', 'section', 'tel'];
+                    const validTypes = ['text', 'email', 'number', 'textarea', 'select', 'checkbox', 'date', 'section', 'tel', 'file'];
                     if (!validTypes.includes(field.type)) {
                         fieldErrors.push(`${fieldPrefix}: Tipo "${field.type}" no válido. Tipos válidos: ${validTypes.join(', ')}`);
                     }
@@ -1009,6 +1009,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (field.type === 'select') {
                     if (!field.options || !Array.isArray(field.options) || field.options.length === 0) {
                         fieldErrors.push(`${fieldPrefix}: Los campos de tipo "select" deben tener opciones`);
+                    }
+                }
+                
+                // Validar campos file
+                if (field.type === 'file') {
+                    if (!field.validations) {
+                        fieldErrors.push(`${fieldPrefix}: Los campos de tipo "file" deben tener validaciones`);
+                    } else {
+                        if (!field.validations.file_types || !Array.isArray(field.validations.file_types) || field.validations.file_types.length === 0) {
+                            fieldErrors.push(`${fieldPrefix}: Los campos de tipo "file" deben especificar los tipos de archivo permitidos (file_types)`);
+                        }
+                        if (!field.validations.max_file_size || !Number.isInteger(field.validations.max_file_size) || field.validations.max_file_size <= 0) {
+                            fieldErrors.push(`${fieldPrefix}: Los campos de tipo "file" deben especificar un tamaño máximo válido (max_file_size en KB)`);
+                        }
                     }
                 }
                 

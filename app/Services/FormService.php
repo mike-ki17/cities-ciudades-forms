@@ -303,6 +303,16 @@ class FormService
                     $this->addCheckboxValidations($fieldRules, $field);
                     break;
 
+                case 'file':
+                    // For file fields, we don't validate as files during form submission
+                    // because the file is already uploaded and we only have JSON info
+                    $fieldRules = ['nullable', 'string'];
+                    \Log::info('File field validation rules generated', [
+                        'field_key' => $field['key'] ?? 'unknown',
+                        'rules' => $fieldRules
+                    ]);
+                    break;
+
                 case 'section':
                     // Los campos de sección no se validan como campos de entrada
                     $fieldRules = ['nullable'];
@@ -589,12 +599,13 @@ class FormService
         }
 
         // Validación de tipo de archivo (para futuras implementaciones)
-        if (isset($validations['file_types'])) {
-            $types = is_array($validations['file_types']) 
-                ? implode(',', $validations['file_types'])
-                : $validations['file_types'];
-            $fieldRules[] = 'mimes:' . $types;
-        }
+        // Note: File validation is handled separately during file upload, not during form submission
+        // if (isset($validations['file_types'])) {
+        //     $types = is_array($validations['file_types']) 
+        //         ? implode(',', $validations['file_types'])
+        //         : $validations['file_types'];
+        //     $fieldRules[] = 'mimes:' . $types;
+        // }
     }
 
     /**
@@ -720,5 +731,38 @@ class FormService
             ->where('participant_id', $participant->id)
             ->latest('submitted_at')
             ->first();
+    }
+
+    /**
+     * Add file validation rules.
+     */
+    private function addFileValidations(array &$fieldRules, array $field): void
+    {
+        $validations = $field['validations'] ?? [];
+
+        // File type validation - DISABLED for form submission
+        // File validation is handled separately during file upload, not during form submission
+        // if (isset($validations['file_types']) && is_array($validations['file_types'])) {
+        //     $types = implode(',', $validations['file_types']);
+        //     $fieldRules[] = "mimes:{$types}";
+        //     \Log::info('File validation rules generated', [
+        //         'field_key' => $field['key'] ?? 'unknown',
+        //         'file_types' => $validations['file_types'],
+        //         'mimes_rule' => "mimes:{$types}",
+        //         'all_rules' => $fieldRules
+        //     ]);
+        // }
+
+        // File size validation (in KB)
+        if (isset($validations['max_file_size']) && is_numeric($validations['max_file_size'])) {
+            $maxSizeKB = $validations['max_file_size'];
+            $maxSizeMB = $maxSizeKB / 1024; // Convert KB to MB for Laravel validation
+            $fieldRules[] = "max:{$maxSizeMB}";
+        }
+
+        // Default file validation if no specific rules
+        if (empty($validations)) {
+            $fieldRules[] = 'file';
+        }
     }
 }

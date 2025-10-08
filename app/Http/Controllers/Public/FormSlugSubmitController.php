@@ -95,7 +95,19 @@ class FormSlugSubmitController extends Controller
             'representative_authorization'      // Representative authorization
         ];
         
+        // Separate file info from regular data
+        $fileInfo = [];
+        
         foreach ($allData as $key => $value) {
+            // Handle file info fields
+            if (str_starts_with($key, 'file_info_')) {
+                $fieldKey = str_replace('file_info_', '', $key);
+                if (!empty($value)) {
+                    $fileInfo[$fieldKey] = json_decode($value, true);
+                }
+                continue;
+            }
+            
             // Fixed participant fields always go to participants table, never to form_submissions
             // Only include fields that are NOT fixed participant fields
             if (!in_array($key, $fixedParticipantFields)) {
@@ -118,8 +130,11 @@ class FormSlugSubmitController extends Controller
         // }
 
         try {
-            // Submit the form with only dynamic fields
-            $submission = $this->formService->submitForm($form, $participant, $dynamicFields, $user);
+            // Merge file information with dynamic fields
+            $allFormData = array_merge($dynamicFields, $fileInfo);
+            
+            // Submit the form with all data (including file info)
+            $submission = $this->formService->submitForm($form, $participant, $allFormData, $user);
 
             // Store participant ID in session for future form access
             $request->session()->put('participant_id', $participant->id);

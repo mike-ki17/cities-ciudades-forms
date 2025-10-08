@@ -1,0 +1,156 @@
+{
+  "name": "Formulario de Registro con Archivos",
+  "description": "Ejemplo de formulario que incluye campos de archivo para diferentes propósitos",
+  "event_id": 1,
+  "is_active": true,
+  "fields": [
+    {
+      "key": "informacion_personal",
+      "label": "Información Personal",
+      "type": "section",
+      "level": "h2",
+      "description": "Completa tus datos personales básicos"
+    },
+    {
+      "key": "foto_perfil",
+      "label": "Foto de Perfil",
+      "type": "file",
+      "required": true,
+      "description": "Sube una foto reciente tuya",
+      "validations": {
+        "file_types": ["jpg", "jpeg", "png"],
+        "max_file_size": 2048
+      }
+    },
+    {
+      "key": "documento_identidad",
+      "label": "Documento de Identidad",
+      "type": "file",
+      "required": true,
+      "description": "Sube una copia clara de tu documento de identidad",
+      "validations": {
+        "file_types": ["jpg", "jpeg", "png", "pdf"],
+        "max_file_size": 5120
+      }
+    },
+    {
+      "key": "tipo_participante",
+      "label": "Tipo de Participante",
+      "type": "select",
+      "required": true,
+      "options": [
+        {"value": "estudiante", "label": "Estudiante"},
+        {"value": "profesional", "label": "Profesional"},
+        {"value": "empresario", "label": "Empresario"},
+        {"value": "otro", "label": "Otro"}
+      ]
+    },
+    {
+      "key": "certificado_estudios",
+      "label": "Certificado de Estudios",
+      "type": "file",
+      "required": true,
+      "description": "Sube tu certificado de estudios más reciente",
+      "validations": {
+        "file_types": ["pdf", "jpg", "jpeg", "png"],
+        "max_file_size": 10240
+      },
+      "visible": {
+        "model": "tipo_participante",
+        "value": ["estudiante", "profesional"],
+        "condition": "contains"
+      }
+    },
+    {
+      "key": "portafolio",
+      "label": "Portafolio de Trabajos",
+      "type": "file",
+      "required": false,
+      "description": "Sube tu portafolio o muestras de trabajo (opcional)",
+      "validations": {
+        "file_types": ["pdf", "doc", "docx", "jpg", "jpeg", "png"],
+        "max_file_size": 20480
+      },
+      "visible": {
+        "model": "tipo_participante",
+        "value": ["profesional", "empresario"],
+        "condition": "contains"
+      }
+    },
+    {
+      "key": "experiencia_laboral",
+      "label": "Experiencia Laboral",
+      "type": "section",
+      "level": "h3",
+      "description": "Información sobre tu experiencia profesional"
+    },
+    {
+      "key": "cv",
+      "label": "Currículum Vitae",
+      "type": "file",
+      "required": true,
+      "description": "Sube tu CV actualizado",
+      "validations": {
+        "file_types": ["pdf", "doc", "docx"],
+        "max_file_size": 10240
+      },
+      "visible": {
+        "model": "tipo_participante",
+        "value": ["profesional", "empresario"],
+        "condition": "contains"
+      }
+    },
+    {
+      "key": "carta_recomendacion",
+      "label": "Carta de Recomendación",
+      "type": "file",
+      "required": false,
+      "description": "Sube una carta de recomendación (opcional)",
+      "validations": {
+        "file_types": ["pdf", "jpg", "jpeg", "png"],
+        "max_file_size": 5120
+      }
+    },
+    {
+      "key": "documentos_adicionales",
+      "label": "Documentos Adicionales",
+      "type": "section",
+      "level": "h3",
+      "description": "Otros documentos que consideres relevantes"
+    },
+    {
+      "key": "certificaciones",
+      "label": "Certificaciones",
+      "type": "file",
+      "required": false,
+      "description": "Sube certificaciones o diplomas adicionales",
+      "validations": {
+        "file_types": ["pdf", "jpg", "jpeg", "png"],
+        "max_file_size": 10240
+      }
+    },
+    {
+      "key": "proyectos",
+      "label": "Proyectos Realizados",
+      "type": "file",
+      "required": false,
+      "description": "Sube documentación de proyectos que hayas realizado",
+      "validations": {
+        "file_types": ["pdf", "doc", "docx", "jpg", "jpeg", "png"],
+        "max_file_size": 20480
+      }
+    },
+    {
+      "key": "autorizacion_datos",
+      "label": "Autorización de Uso de Datos",
+      "type": "file",
+      "required": true,
+      "description": "Sube el documento de autorización firmado",
+      "validations": {
+        "file_types": ["pdf", "jpg", "jpeg", "png"],
+        "max_file_size": 2048
+      }
+    }
+  ]
+}
+

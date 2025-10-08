@@ -695,6 +695,62 @@
                                     </div>
                                 @endif
                                 @break
+
+                            @case('file')
+                                <div class="file-upload-container">
+                                    <input type="file" 
+                                           id="{{ $field['key'] }}" 
+                                           name="{{ $field['key'] }}" 
+                                           class="form-input @error($field['key']) border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-500 @enderror"
+                                           data-field-key="{{ $field['key'] }}"
+                                           data-form-id="{{ $form->id }}"
+                                           data-file-types="{{ isset($field['validations']['file_types']) ? implode(',', $field['validations']['file_types']) : '' }}"
+                                           data-max-size="{{ $field['validations']['max_file_size'] ?? '' }}"
+                                           {{ ($field['required'] ?? false) ? 'required' : '' }}>
+                                    
+                                    <div class="file-info mt-2" id="file-info-{{ $field['key'] }}" style="display: none;">
+                                        <div class="bg-green-50 border border-green-200 rounded-md p-3">
+                                            <div class="flex items-center">
+                                                <svg class="h-5 w-5 text-green-400 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 0116 0zm-3.707-9.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                                </svg>
+                                                <div>
+                                                    <p class="text-sm font-medium text-green-800" id="file-name-{{ $field['key'] }}"></p>
+                                                    <p class="text-xs text-green-600" id="file-size-{{ $field['key'] }}"></p>
+                                                </div>
+                                                <button type="button" class="ml-auto text-red-600 hover:text-red-800" onclick="removeFile('{{ $field['key'] }}')">
+                                                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="file-error mt-2" id="file-error-{{ $field['key'] }}" style="display: none;">
+                                        <div class="bg-red-50 border border-red-200 rounded-md p-3">
+                                            <div class="flex items-center">
+                                                <svg class="h-5 w-5 text-red-400 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 0116 0zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                                </svg>
+                                                <p class="text-sm text-red-800" id="file-error-message-{{ $field['key'] }}"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    @if(isset($field['validations']['file_types']) && is_array($field['validations']['file_types']))
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            Tipos permitidos: {{ implode(', ', $field['validations']['file_types']) }}
+                                        </p>
+                                    @endif
+                                    
+                                    @if(isset($field['validations']['max_file_size']))
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            Tamaño máximo: {{ $field['validations']['max_file_size'] }} KB
+                                        </p>
+                                    @endif
+                                </div>
+                                @break
                         @endswitch
 
                         @error($field['key'])
@@ -1692,6 +1748,167 @@ document.getElementById('errorModal').addEventListener('click', function(e) {
         });
     @endif
 @endif
+
+// File upload functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize file upload handlers for all file inputs
+    const fileInputs = document.querySelectorAll('input[type="file"][data-field-key]');
+    
+    fileInputs.forEach(input => {
+        input.addEventListener('change', function(e) {
+            handleFileUpload(e.target);
+        });
+    });
+});
+
+function handleFileUpload(input) {
+    const file = input.files[0];
+    const fieldKey = input.dataset.fieldKey;
+    const formId = input.dataset.formId;
+    const allowedTypes = input.dataset.fileTypes ? input.dataset.fileTypes.split(',') : [];
+    const maxSize = parseInt(input.dataset.maxSize) || 0;
+    
+    // Hide previous messages
+    hideFileMessages(fieldKey);
+    
+    if (!file) {
+        return;
+    }
+    
+    // Validate file type
+    if (allowedTypes.length > 0) {
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (!allowedTypes.includes(fileExtension)) {
+            showFileError(fieldKey, `Tipo de archivo no permitido. Tipos permitidos: ${allowedTypes.join(', ')}`);
+            input.value = '';
+            return;
+        }
+    }
+    
+    // Validate file size (convert KB to bytes)
+    if (maxSize > 0) {
+        const maxSizeBytes = maxSize * 1024;
+        if (file.size > maxSizeBytes) {
+            showFileError(fieldKey, `El archivo es demasiado grande. Tamaño máximo permitido: ${maxSize} KB`);
+            input.value = '';
+            return;
+        }
+    }
+    
+    // Show file info
+    showFileInfo(fieldKey, file);
+    
+    // Upload file
+    uploadFile(file, fieldKey, formId);
+}
+
+function uploadFile(file, fieldKey, formId) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('form_id', formId);
+    formData.append('field_key', fieldKey);
+    
+    // Show loading state
+    showFileLoading(fieldKey);
+    
+    fetch('/api/files/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Store file info in hidden input for form submission
+            storeFileInfo(fieldKey, data.file_info);
+            showFileSuccess(fieldKey, data.file_info);
+        } else {
+            showFileError(fieldKey, data.message || 'Error al subir el archivo');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showFileError(fieldKey, 'Error de conexión al subir el archivo');
+    });
+}
+
+function storeFileInfo(fieldKey, fileInfo) {
+    // Create or update hidden input with file info
+    let hiddenInput = document.getElementById(`file_info_${fieldKey}`);
+    if (!hiddenInput) {
+        hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.id = `file_info_${fieldKey}`;
+        hiddenInput.name = `file_info_${fieldKey}`;
+        document.querySelector('form').appendChild(hiddenInput);
+    }
+    hiddenInput.value = JSON.stringify(fileInfo);
+}
+
+function showFileInfo(fieldKey, file) {
+    const fileInfoDiv = document.getElementById(`file-info-${fieldKey}`);
+    const fileNameSpan = document.getElementById(`file-name-${fieldKey}`);
+    const fileSizeSpan = document.getElementById(`file-size-${fieldKey}`);
+    
+    fileNameSpan.textContent = file.name;
+    fileSizeSpan.textContent = formatFileSize(file.size);
+    fileInfoDiv.style.display = 'block';
+}
+
+function showFileLoading(fieldKey) {
+    const fileInfoDiv = document.getElementById(`file-info-${fieldKey}`);
+    const fileNameSpan = document.getElementById(`file-name-${fieldKey}`);
+    const fileSizeSpan = document.getElementById(`file-size-${fieldKey}`);
+    
+    fileNameSpan.textContent = 'Subiendo archivo...';
+    fileSizeSpan.textContent = '';
+    fileInfoDiv.style.display = 'block';
+}
+
+function showFileSuccess(fieldKey, fileInfo) {
+    const fileInfoDiv = document.getElementById(`file-info-${fieldKey}`);
+    const fileNameSpan = document.getElementById(`file-name-${fieldKey}`);
+    const fileSizeSpan = document.getElementById(`file-size-${fieldKey}`);
+    
+    fileNameSpan.textContent = fileInfo.original_name;
+    fileSizeSpan.textContent = formatFileSize(fileInfo.size);
+    fileInfoDiv.style.display = 'block';
+}
+
+function showFileError(fieldKey, message) {
+    const errorDiv = document.getElementById(`file-error-${fieldKey}`);
+    const errorMessageSpan = document.getElementById(`file-error-message-${fieldKey}`);
+    
+    errorMessageSpan.textContent = message;
+    errorDiv.style.display = 'block';
+}
+
+function hideFileMessages(fieldKey) {
+    const fileInfoDiv = document.getElementById(`file-info-${fieldKey}`);
+    const errorDiv = document.getElementById(`file-error-${fieldKey}`);
+    
+    if (fileInfoDiv) fileInfoDiv.style.display = 'none';
+    if (errorDiv) errorDiv.style.display = 'none';
+}
+
+function removeFile(fieldKey) {
+    const input = document.getElementById(fieldKey);
+    const hiddenInput = document.getElementById(`file_info_${fieldKey}`);
+    
+    if (input) input.value = '';
+    if (hiddenInput) hiddenInput.remove();
+    
+    hideFileMessages(fieldKey);
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
 </script>
 
 @endsection
